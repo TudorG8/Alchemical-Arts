@@ -6,7 +6,10 @@
         "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
         "PotionCraft.Core",
-        "PotionCraft.Scripts.Gameplay"
+        "PotionCraft.Scripts.Gameplay",
+        "Unity.Scenes",
+        "Unity.Entities",
+        "Unity.Collections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

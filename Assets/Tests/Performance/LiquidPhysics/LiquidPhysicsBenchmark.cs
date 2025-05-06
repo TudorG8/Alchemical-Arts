@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using PotionCraft.Tests.Performance.Scopes;
 using PotionCraft.Tests.Performance.Utility;
+using Unity.Entities;
+using Unity.Scenes;
+using Unity.Entities.Serialization;
+using UnityEditor;
 
 namespace PotionCraft.Tests.Performance
 {
@@ -27,7 +31,6 @@ namespace PotionCraft.Tests.Performance
 		public static UnityTestCase[] TestCases =
 		{
 			new() { RigidbodyInterpolation = RigidbodyInterpolation.None, CollisionDetectionMode = CollisionDetectionMode.Discrete},
-			new() { RigidbodyInterpolation = RigidbodyInterpolation.None, CollisionDetectionMode = CollisionDetectionMode.ContinuousDynamic},
 			new() { RigidbodyInterpolation = RigidbodyInterpolation.Extrapolate, CollisionDetectionMode = CollisionDetectionMode.Discrete},
 		};
 
@@ -35,7 +38,9 @@ namespace PotionCraft.Tests.Performance
 		[UnityTest, Performance]
 		public IEnumerator LiquidBouncyness_WithUnity3D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
-			yield return SceneManager.LoadSceneAsync("BenchMark");
+			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark");
+			var prefab = Resources.Load("LiquidPhysicsBenchmark - Unity Wriggler");
+			var obj = GameObject.Instantiate(prefab);
 			var wriggler = UnityEngine.Object.FindFirstObjectByType<WrigglerBehaviour>();
 			var spawnerCount = UnityEngine.Object.FindObjectsByType<LiquidSpawnerBehaviour>(FindObjectsSortMode.None).Count();
 			var wrigglerRigidBody = wriggler.GetComponent<Rigidbody>();
@@ -55,6 +60,38 @@ namespace PotionCraft.Tests.Performance
 			using var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder();
 
 			yield return new WaitForSecondsRealtime(5);
+		}
+
+		[UnityTest, Performance]
+		public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
+		{
+			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark");
+	
+			var world = World.DefaultGameObjectInjectionWorld;
+			
+			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmarkEntities.unity");
+			var reference = new EntitySceneReference(sceneAsset);
+			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
+
+			sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmark/Test.unity");
+			reference = new EntitySceneReference(sceneAsset);
+			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
+
+			yield return new WaitForSecondsRealtime(5f);
+
+			using var fps = new FramesPerSecondScope();
+			using var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder();
+
+			yield return new WaitForSecondsRealtime(5f);
+		}
+
+		public static async Awaitable LoadEntitySceneAsync(WorldUnmanaged world, EntitySceneReference scene)
+		{
+			Entity handle = SceneSystem.LoadSceneAsync(world, scene);
+			while (!SceneSystem.IsSceneLoaded(world, handle))
+			{
+				await Awaitable.NextFrameAsync();
+			}
 		}
 	}
 }

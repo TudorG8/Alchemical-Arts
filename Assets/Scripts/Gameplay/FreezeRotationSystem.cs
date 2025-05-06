@@ -18,7 +18,9 @@ partial struct FreezeRotationSystem : ISystem
 
 		foreach (var (velocity, localTransform, _) in SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<LocalTransform>, Liquid>())
 		{
-			velocity.ValueRW.Angular = float3.zero;
+			var angular = velocity.ValueRW.Angular;
+			angular.z = 0; 
+			velocity.ValueRW.Angular = angular;
 			velocity.ValueRW.Linear.z = 0f;
 			var tf = localTransform.ValueRO;
 			tf.Position.z = 0f;

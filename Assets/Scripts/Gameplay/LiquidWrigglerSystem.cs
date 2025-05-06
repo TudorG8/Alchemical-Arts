@@ -24,6 +24,6 @@ public partial struct LiquidWrigglerSystem : ISystem
 			physicsVelocity.ValueRW.Linear = SystemAPI.Time.DeltaTime * wriggler.ValueRO.moveSpeed * direction;
 		}
 
-		Physics.SyncTransforms();
+		// Physics.SyncTransforms();
 	}
 }
