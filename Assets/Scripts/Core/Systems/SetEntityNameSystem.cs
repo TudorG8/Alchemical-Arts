@@ -25,7 +25,6 @@ partial struct SetEntityNameSystem : ISystem
 	
 		foreach(var (entityName, entity) in SystemAPI.Query<_EntityName>().WithEntityAccess())
 		{
-			Debug.Log("hmm");
 			state.EntityManager.SetName(entity, entityName.name);
 			state.EntityManager.SetComponentEnabled<_EntityName>(entity, false);
 		}

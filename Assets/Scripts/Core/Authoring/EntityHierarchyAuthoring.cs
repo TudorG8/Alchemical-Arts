@@ -50,8 +50,7 @@ public class EntityHierarchyAuthoring : MonoBehaviour
 			{
 				Parent = parentEntity,
 				Child = entity,
-				Name = transform.gameObject.name,
-				LocalPosition = transform.localPosition
+				Name = transform.gameObject.name
 			});
 		}
 	}
@@ -64,8 +63,6 @@ public struct TransformLinkData : IBufferElementData
 	public Entity Child;
 
 	public FixedString64Bytes Name;
-
-	public float3 LocalPosition;
 }
 
 public struct _EntityName : IComponentData, IEnableableComponent

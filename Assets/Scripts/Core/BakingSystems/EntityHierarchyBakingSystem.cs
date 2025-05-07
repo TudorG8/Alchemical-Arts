@@ -10,33 +10,23 @@ partial struct EntityHierarchyBakingSystem : ISystem
 	[BurstCompile]
 	public void OnUpdate(ref SystemState state)
 	{
-		var entitiesToReparent = new NativeList<NativeArray<TransformLinkData>>(Allocator.Temp);
-		var entitiesWithBuffer = new NativeList<Entity>(Allocator.Temp);
+		using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-		foreach (var (transformLinks, entity) in SystemAPI.Query<DynamicBuffer<TransformLinkData>>()
+		foreach (var (transformLinkBuffer, entity) in SystemAPI.Query<DynamicBuffer<TransformLinkData>>()
 			.WithOptions(EntityQueryOptions.IncludePrefab)
 			.WithEntityAccess())
 		{
-			entitiesToReparent.Add(transformLinks.ToNativeArray(Allocator.Temp));
-			entitiesWithBuffer.Add(entity);
-		}
-		
-		foreach(var entityToReparent in entitiesToReparent)
-		{
-			foreach(var transformLink in entityToReparent)
+			foreach(var transformLink in transformLinkBuffer.ToNativeArray(Allocator.Temp))
 			{
-				state.EntityManager.AddComponentData(transformLink.Child, new _EntityName { name = transformLink.Name });
+				commandBuffer.AddComponent(transformLink.Child, new _EntityName { name = transformLink.Name });
 				if (transformLink.Parent != Entity.Null)
 				{
-					state.EntityManager.AddComponentData(transformLink.Child, new Parent { Value = transformLink.Parent });
-					state.EntityManager.SetComponentData(transformLink.Child, LocalTransform.FromPosition(transformLink.LocalPosition));
+					ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);
 				}
 			}
+			commandBuffer.RemoveComponent<TransformLinkData>(entity);
 		}
-
-		foreach(var entityWithBuffer in entitiesWithBuffer)
-		{
-			state.EntityManager.RemoveComponent<TransformLinkData>(entityWithBuffer);
-		}
+		
+		commandBuffer.Playback(state.EntityManager);
 	}
 }
