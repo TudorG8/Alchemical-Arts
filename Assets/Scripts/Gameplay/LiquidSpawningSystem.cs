@@ -25,7 +25,8 @@ partial struct LiquidSpawningSystem : ISystem
 	{
 		var elapsedTime = SystemAPI.Time.ElapsedTime;
 		var commandBuffer = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-		
+		var liquidFolder = SystemAPI.GetSingleton<_FolderManagerData>().LiquidFolder;
+
 		var wriggler = SystemAPI.GetSingleton<Wriggler>();
 		var limit = wriggler.limit;
 		int count = spawnerCountQuery.CalculateEntityCount();
@@ -37,6 +38,7 @@ partial struct LiquidSpawningSystem : ISystem
 
 			var obj = commandBuffer.Instantiate(liquidSpawner.ValueRO.liquid);
 			commandBuffer.SetComponent(obj, LocalTransform.FromPosition(localToWorld.ValueRO.Position));
+			commandBuffer.AddComponent(obj, new Parent() { Value = liquidFolder });
 			liquidSpawner.ValueRW.count++;
 
 			liquidSpawner.ValueRW.timer = elapsedTime + liquidSpawner.ValueRO.cooldown;

@@ -1,37 +1,74 @@
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-public class EntityHierarchyAuthoring : MonoBehaviour {}
-
-public class EntityHierarchyBaker : Baker<EntityHierarchyAuthoring>
+public class EntityHierarchyAuthoring : MonoBehaviour 
 {
-	public override void Bake(EntityHierarchyAuthoring authoring)
+	[SerializeField]
+	private bool includeChildren = true;
+	
+	
+	public class EntityHierarchyBaker : Baker<EntityHierarchyAuthoring>
 	{
-		ApplyHierarchy(authoring.transform);
-	}
-
-	private void ApplyHierarchy(Transform transform)
-	{
-		var entity = GetEntity(transform, TransformUsageFlags.Dynamic);
-		if (transform.parent != null)
+		public override void Bake(EntityHierarchyAuthoring authoring)
 		{
-			var parentEntity = GetEntity(transform.parent, TransformUsageFlags.Dynamic);
-			AddComponent(entity, new NeedsReparenting 
+			var entity = GetEntity(authoring.transform, TransformUsageFlags.Dynamic);
+			var buffer = AddBuffer<TransformLinkData>(entity);
+
+			if (authoring.includeChildren)
 			{
-				target = parentEntity,
-				localPosition = transform.localPosition
-			});
+				ApplyHirarchyRecursively(buffer, authoring.transform);
+			}
+			else
+			{
+				ApplyHierarchy(buffer, authoring.transform);
+			}
 		}
 
-		AddComponent(entity, new _EntityName() { name = transform.gameObject.name});
+		private void ApplyHirarchyRecursively(DynamicBuffer<TransformLinkData> buffer, Transform transform)
+		{
+			ApplyHierarchy(buffer, transform);
+			foreach(Transform child in transform)
+			{
+				if (child.GetComponent<EntityHierarchyAuthoring>() != null)
+					continue;
+				ApplyHirarchyRecursively(buffer, child);
+			}
+		}
+
+		private void ApplyHierarchy(DynamicBuffer<TransformLinkData> buffer, Transform transform)
+		{
+			var entity = GetEntity(transform, TransformUsageFlags.Dynamic);
+
+			var parentEntity = transform.parent == null
+				? Entity.Null
+				: GetEntity(transform.parent, TransformUsageFlags.Dynamic);
+
+			buffer.Add(new TransformLinkData
+			{
+				Parent = parentEntity,
+				Child = entity,
+				Name = transform.gameObject.name,
+				LocalPosition = transform.localPosition
+			});
+		}
 	}
 }
 
-public struct NeedsReparenting : IComponentData
+public struct TransformLinkData : IBufferElementData
 {
-	public Entity target;
+	public Entity Parent;
 
-	public float3 localPosition;
+	public Entity Child;
+
+	public FixedString64Bytes Name;
+
+	public float3 LocalPosition;
+}
+
+public struct _EntityName : IComponentData, IEnableableComponent
+{
+	public FixedString64Bytes name;
 }

@@ -25,27 +25,28 @@ partial struct SetEntityNameSystem : ISystem
 	
 		foreach(var (entityName, entity) in SystemAPI.Query<_EntityName>().WithEntityAccess())
 		{
+			Debug.Log("hmm");
 			state.EntityManager.SetName(entity, entityName.name);
 			state.EntityManager.SetComponentEnabled<_EntityName>(entity, false);
 		}
 
-		foreach(var (entityName, entity) in SystemAPI.Query<_EntityName>().WithPresent<Prefab>().WithEntityAccess())
-		{
-			state.EntityManager.SetName(entity, $"Prefab - {entityName.name}");
-			state.EntityManager.SetComponentEnabled<_EntityName>(entity, false);
-		}
+		// foreach(var (entityName, entity) in SystemAPI.Query<_EntityName>().WithPresent<Prefab>().WithEntityAccess())
+		// {
+		// 	state.EntityManager.SetName(entity, $"Prefab - {entityName.name}");
+		// 	state.EntityManager.SetComponentEnabled<_EntityName>(entity, false);
+		// }
 
-		var noNameEntities = entitiesWithoutNameQuery.ToEntityArray(Allocator.Temp);
-		foreach (var entity in noNameEntities)
-		{
-			var componentTypes = state.EntityManager.GetComponentTypes(entity, Allocator.Temp);
-			foreach(var type in componentTypes)
-			{
-				if (type.GetManagedType().Name == "PublicEntityRef")
-				{
-					commandBuffer.AddComponent(entity, new _EntityName() { name = "Unity Debug Helper"});
-				}
-			}
-		}
+		// var noNameEntities = entitiesWithoutNameQuery.ToEntityArray(Allocator.Temp);
+		// foreach (var entity in noNameEntities)
+		// {
+		// 	var componentTypes = state.EntityManager.GetComponentTypes(entity, Allocator.Temp);
+		// 	foreach(var type in componentTypes)
+		// 	{
+		// 		if (type.GetManagedType().Name == "PublicEntityRef")
+		// 		{
+		// 			commandBuffer.AddComponent(entity, new _EntityName() { name = "Unity Debug Helper"});
+		// 		}
+		// 	}
+		// }
 	}
 }

@@ -69,7 +69,7 @@ namespace PotionCraft.Tests.Performance
 	
 			var world = World.DefaultGameObjectInjectionWorld;
 			
-			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmarkEntities.unity");
+			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmark - Entities.unity");
 			var reference = new EntitySceneReference(sceneAsset);
 			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
 

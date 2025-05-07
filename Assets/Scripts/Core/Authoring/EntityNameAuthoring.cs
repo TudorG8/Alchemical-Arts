@@ -15,8 +15,3 @@ public class EntityNameAuthoring : MonoBehaviour
 		}
 	}
 }
-
-public struct _EntityName : IComponentData, IEnableableComponent
-{
-	public FixedString64Bytes name;
-}

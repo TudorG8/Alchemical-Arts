@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9042330382858514552}
   - component: {fileID: 6581650007542270267}
-  - component: {fileID: 152051154826623998}
   m_Layer: 0
   m_Name: LiquidPhysicsBenchmark - DOTS Wriggler
   m_TagString: Untagged
@@ -48,18 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16549610bfe4458aa9389201d072bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &152051154826623998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 437232650061469083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &590066853321719388
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,7 +57,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1893994987316850810}
   - component: {fileID: 2402497144053567429}
-  - component: {fileID: 9111022335875753429}
   m_Layer: 0
   m_Name: Spawner (6)
   m_TagString: Untagged
@@ -106,18 +92,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &9111022335875753429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590066853321719388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &652223871057527291
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +102,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4606188314295903321}
   - component: {fileID: 7923141387991897921}
-  - component: {fileID: 5264195833407541825}
   m_Layer: 0
   m_Name: Spawner (8)
   m_TagString: Untagged
@@ -164,18 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &5264195833407541825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652223871057527291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1663654041348559561
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,7 +147,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4531264199074519326}
   - component: {fileID: 7382411486580734915}
-  - component: {fileID: 6659391232764848288}
   m_Layer: 0
   m_Name: Spawner (5)
   m_TagString: Untagged
@@ -222,18 +182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &6659391232764848288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663654041348559561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1728264160721428652
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +191,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6659455438369248074}
-  - component: {fileID: 3175617590448036035}
   m_Layer: 0
   m_Name: Waypoint 1
   m_TagString: Untagged
@@ -266,18 +213,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9042330382858514552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3175617590448036035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728264160721428652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2138700134978699405
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +222,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4444880176343491975}
-  - component: {fileID: 8974033827204937555}
   m_Layer: 0
   m_Name: Spawners
   m_TagString: Untagged
@@ -320,18 +254,6 @@ Transform:
   - {fileID: 6401611323992791253}
   m_Father: {fileID: 209586882101655869}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8974033827204937555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138700134978699405}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2340576972804181698
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +265,6 @@ GameObject:
   - component: {fileID: 209586882101655869}
   - component: {fileID: 5941052683735538338}
   - component: {fileID: 657651422337674839}
-  - component: {fileID: 8233150127551479264}
   m_Layer: 0
   m_Name: Wriggler
   m_TagString: Untagged
@@ -412,21 +333,9 @@ MonoBehaviour:
   waypoints:
   - {fileID: 6659455438369248074}
   - {fileID: 3303772447274618363}
-  limit: 4000
+  limit: 5000
   liquid: {fileID: 7768919653814679508, guid: a0ac77b1f7aed2841a938d27515cc23f, type: 3}
   cooldown: 0
---- !u!114 &8233150127551479264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2340576972804181698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2510104454023219252
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,7 +348,6 @@ GameObject:
   - component: {fileID: 5182263512119887444}
   - component: {fileID: 2773913708938909811}
   - component: {fileID: 6151427444177982258}
-  - component: {fileID: 8071343296728215891}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -536,18 +444,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8071343296728215891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2510104454023219252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2574897926845663368
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,7 +456,6 @@ GameObject:
   - component: {fileID: 6882088086249019158}
   - component: {fileID: 1474663316322433037}
   - component: {fileID: 6037825283635899859}
-  - component: {fileID: 858671378197476968}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -657,18 +552,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &858671378197476968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2574897926845663368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2877626280135647933
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,7 +562,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5778694734060623885}
   - component: {fileID: 1728318794942312342}
-  - component: {fileID: 5021425347398342146}
   m_Layer: 0
   m_Name: Spawner (7)
   m_TagString: Untagged
@@ -715,18 +597,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &5021425347398342146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2877626280135647933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6219901740333923298
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +607,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1157043043351277628}
   - component: {fileID: 8211405632905780686}
-  - component: {fileID: 930458490450071792}
   m_Layer: 0
   m_Name: Spawner (1)
   m_TagString: Untagged
@@ -773,18 +642,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &930458490450071792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6219901740333923298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6275413133591654435
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,7 +651,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5963369948130746627}
-  - component: {fileID: 204746869756917474}
   m_Layer: 0
   m_Name: Structure
   m_TagString: Untagged
@@ -821,18 +677,6 @@ Transform:
   - {fileID: 1529030816444558395}
   m_Father: {fileID: 209586882101655869}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &204746869756917474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6275413133591654435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6492677468739007412
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,7 +687,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6401611323992791253}
   - component: {fileID: 6250884093794945768}
-  - component: {fileID: 1023321393379468448}
   m_Layer: 0
   m_Name: Spawner (9)
   m_TagString: Untagged
@@ -879,18 +722,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &1023321393379468448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6492677468739007412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6617557269901084369
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,7 +732,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4883900183519636641}
   - component: {fileID: 8305250783001424912}
-  - component: {fileID: 5419436313569895648}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -937,18 +767,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &5419436313569895648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6617557269901084369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6981800168197155312
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +777,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9157901476463099509}
   - component: {fileID: 6081730459720896782}
-  - component: {fileID: 4807104356067514631}
   m_Layer: 0
   m_Name: Spawner (3)
   m_TagString: Untagged
@@ -995,18 +812,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &4807104356067514631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6981800168197155312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7358897603889885846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,7 +824,6 @@ GameObject:
   - component: {fileID: 5654546709199054814}
   - component: {fileID: 823650876865903417}
   - component: {fileID: 5121908309084025939}
-  - component: {fileID: 3668810684365269474}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -1116,18 +920,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3668810684365269474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7358897603889885846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7950626039523756644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,7 +930,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4703031137689145}
   - component: {fileID: 3256435824411732899}
-  - component: {fileID: 6877588172598328747}
   m_Layer: 0
   m_Name: Spawner (2)
   m_TagString: Untagged
@@ -1174,18 +965,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &6877588172598328747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7950626039523756644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7978640919013137759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,7 +974,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3303772447274618363}
-  - component: {fileID: 8561741115866644481}
   m_Layer: 0
   m_Name: Waypoint 2
   m_TagString: Untagged
@@ -1218,18 +996,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9042330382858514552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8561741115866644481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7978640919013137759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8304521823492699805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,7 +1006,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1243549686678450149}
   - component: {fileID: 6033188400307728069}
-  - component: {fileID: 1931661200667680439}
   m_Layer: 0
   m_Name: Spawner (4)
   m_TagString: Untagged
@@ -1276,18 +1041,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wrigglerAuthoring: {fileID: 657651422337674839}
---- !u!114 &1931661200667680439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8304521823492699805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &9207407873904568573
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,7 +1053,6 @@ GameObject:
   - component: {fileID: 5559554429977786517}
   - component: {fileID: 4712612481176544302}
   - component: {fileID: 4162840703122552045}
-  - component: {fileID: 1884992567175937432}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1397,15 +1149,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1884992567175937432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9207407873904568573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
