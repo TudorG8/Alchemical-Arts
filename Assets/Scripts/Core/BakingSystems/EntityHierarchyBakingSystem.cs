@@ -1,32 +1,35 @@
+using PotionCraft.Core.Authoring;
+using PotionCraft.Core.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
 
-[WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
-partial struct EntityHierarchyBakingSystem : ISystem
+namespace PotionCraft.Core.BakingSystems
 {
-	[BurstCompile]
-	public void OnUpdate(ref SystemState state)
+	[WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
+	partial struct EntityHierarchyBakingSystem : ISystem
 	{
-		using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
-
-		foreach (var (transformLinkBuffer, entity) in SystemAPI.Query<DynamicBuffer<TransformLinkData>>()
-			.WithOptions(EntityQueryOptions.IncludePrefab)
-			.WithEntityAccess())
+		[BurstCompile]
+		public void OnUpdate(ref SystemState state)
 		{
-			foreach(var transformLink in transformLinkBuffer.ToNativeArray(Allocator.Temp))
+			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+
+			foreach (var (transformLinkBuffer, entity) in SystemAPI.Query<DynamicBuffer<_TransformLinkData>>()
+				.WithOptions(EntityQueryOptions.IncludePrefab)
+				.WithEntityAccess())
 			{
-				commandBuffer.AddComponent(transformLink.Child, new _EntityName { name = transformLink.Name });
-				if (transformLink.Parent != Entity.Null)
+				foreach(var transformLink in transformLinkBuffer.ToNativeArray(Allocator.Temp))
 				{
-					ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);
+					commandBuffer.AddComponent(transformLink.Child, new _EntityNameData { Value = transformLink.Name });
+					if (transformLink.Parent != Entity.Null)
+					{
+						ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);
+					}
 				}
+				commandBuffer.RemoveComponent<_TransformLinkData>(entity);
 			}
-			commandBuffer.RemoveComponent<TransformLinkData>(entity);
+			
+			commandBuffer.Playback(state.EntityManager);
 		}
-		
-		commandBuffer.Playback(state.EntityManager);
 	}
 }

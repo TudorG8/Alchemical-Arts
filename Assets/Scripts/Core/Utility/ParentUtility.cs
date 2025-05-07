@@ -3,13 +3,16 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-public class ParentUtility : MonoBehaviour
+namespace PotionCraft.Core.Utility
 {
-	[BurstCompile]
-	public static void ReparentLocalPosition(ref SystemState state, EntityCommandBuffer commandBuffer, Entity child, Entity parent)
+	public class ParentUtility : MonoBehaviour
 	{
-		var localTransform = state.GetComponentLookup<LocalTransform>().GetRefRO(child).ValueRO;
-		commandBuffer.AddComponent(child, new Parent { Value = parent });
-		commandBuffer.SetComponent(child, localTransform);
+		[BurstCompile]
+		public static void ReparentLocalPosition(ref SystemState state, EntityCommandBuffer commandBuffer, Entity child, Entity parent)
+		{
+			var localTransform = state.GetComponentLookup<LocalTransform>().GetRefRO(child).ValueRO;
+			commandBuffer.AddComponent(child, new Parent { Value = parent });
+			commandBuffer.SetComponent(child, localTransform);
+		}
 	}
 }

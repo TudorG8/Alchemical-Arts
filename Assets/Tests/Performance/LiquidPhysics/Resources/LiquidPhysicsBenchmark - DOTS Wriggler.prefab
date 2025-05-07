@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &652223871057527291
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &1663654041348559561
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &1728264160721428652
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,14 +328,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f44fcb422c17a2b4993e0c787e8c8c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  rotationSpeed: 1
-  waypoints:
+  <Limit>k__BackingField: 1000
+  <Liquid>k__BackingField: {fileID: 7768919653814679508, guid: a0ac77b1f7aed2841a938d27515cc23f, type: 3}
+  <Cooldown>k__BackingField: 0
+  <MoveSpeed>k__BackingField: 0
+  <RotationSpeed>k__BackingField: 1
+  <Waypoints>k__BackingField:
   - {fileID: 6659455438369248074}
   - {fileID: 3303772447274618363}
-  limit: 5000
-  liquid: {fileID: 7768919653814679508, guid: a0ac77b1f7aed2841a938d27515cc23f, type: 3}
-  cooldown: 0
 --- !u!1 &2510104454023219252
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &6219901740333923298
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &6275413133591654435
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,7 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &6617557269901084369
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,7 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &6981800168197155312
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &7358897603889885846
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &7978640919013137759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,7 +1040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wrigglerAuthoring: {fileID: 657651422337674839}
+  <WrigglerAuthoring>k__BackingField: {fileID: 657651422337674839}
 --- !u!1 &9207407873904568573
 GameObject:
   m_ObjectHideFlags: 0

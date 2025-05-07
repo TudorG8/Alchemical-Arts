@@ -1,32 +1,35 @@
 using Unity.Entities;
 using UnityEngine;
 
-public struct _FolderManagerData : IComponentData
+namespace PotionCraft.Core.Authoring
 {
-	public Entity LiquidFolder;
-
-	public Entity BuildingFolder;
-}
-
-class FolderManagerAuthoring : MonoBehaviour
-{
-	[field: SerializeField]
-	public Transform LiquidFolder { get; private set; }
-
-	[field: SerializeField]
-	public Transform BuildingFolder { get; private set; }
-
-
-	class FolderManagerAuthoringBaker : Baker<FolderManagerAuthoring>
+	public struct _FolderManagerData : IComponentData
 	{
-		public override void Bake(FolderManagerAuthoring authoring)
+		public Entity LiquidFolder;
+
+		public Entity BuildingFolder;
+	}
+
+	public class FolderManagerAuthoring : MonoBehaviour
+	{
+		[field: SerializeField]
+		private Transform LiquidFolder { get; set; }
+
+		[field: SerializeField]
+		private Transform BuildingFolder { get; set; }
+
+
+		public class FolderManagerAuthoringBaker : Baker<FolderManagerAuthoring>
 		{
-			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new _FolderManagerData()
+			public override void Bake(FolderManagerAuthoring authoring)
 			{
-				LiquidFolder = GetEntity(authoring.LiquidFolder, TransformUsageFlags.Dynamic),
-				BuildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),
-			});
+				var entity = GetEntity(TransformUsageFlags.Dynamic);
+				AddComponent(entity, new _FolderManagerData()
+				{
+					LiquidFolder = GetEntity(authoring.LiquidFolder, TransformUsageFlags.Dynamic),
+					BuildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),
+				});
+			}
 		}
 	}
 }

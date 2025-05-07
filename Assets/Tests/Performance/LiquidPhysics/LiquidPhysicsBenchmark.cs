@@ -11,6 +11,7 @@ using Unity.Entities;
 using Unity.Scenes;
 using Unity.Entities.Serialization;
 using UnityEditor;
+using PotionCraft.Gameplay.Behaviours;
 
 namespace PotionCraft.Tests.Performance
 {
@@ -38,7 +39,7 @@ namespace PotionCraft.Tests.Performance
 		[UnityTest, Performance]
 		public IEnumerator LiquidBouncyness_WithUnity3D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
-			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark");
+			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
 			var prefab = Resources.Load("LiquidPhysicsBenchmark - Unity Wriggler");
 			var obj = GameObject.Instantiate(prefab);
 			var wriggler = UnityEngine.Object.FindFirstObjectByType<WrigglerBehaviour>();
@@ -65,15 +66,17 @@ namespace PotionCraft.Tests.Performance
 		[UnityTest, Performance]
 		public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
-			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark");
+			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
 	
 			var world = World.DefaultGameObjectInjectionWorld;
 			
-			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmark - Entities.unity");
+			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(
+				"Assets/Tests/Performance/LiquidPhysics/Resources/LiquidPhysicsBenchmark - Empty Subscene.unity");
 			var reference = new EntitySceneReference(sceneAsset);
 			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
 
-			sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Tests/Performance/LiquidPhysics/LiquidPhysicsBenchmark/Test.unity");
+			sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(
+				"Assets/Tests/Performance/LiquidPhysics/Resources/LiquidPhysicsBenchmark - Baked Prefabs.unity");
 			reference = new EntitySceneReference(sceneAsset);
 			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
 

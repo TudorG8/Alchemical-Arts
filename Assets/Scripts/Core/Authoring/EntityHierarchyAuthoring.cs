@@ -1,71 +1,73 @@
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 
-public class EntityHierarchyAuthoring : MonoBehaviour 
+namespace PotionCraft.Core.Authoring
 {
-	[SerializeField]
-	private bool includeChildren = true;
-	
-	
-	public class EntityHierarchyBaker : Baker<EntityHierarchyAuthoring>
+	public struct _TransformLinkData : IBufferElementData
 	{
-		public override void Bake(EntityHierarchyAuthoring authoring)
+		public Entity Parent;
+
+		public Entity Child;
+
+		public FixedString64Bytes Name;
+	}
+
+	public struct _EntityNameData : IComponentData, IEnableableComponent
+	{
+		public FixedString64Bytes Value;
+	}
+
+
+	public class EntityHierarchyAuthoring : MonoBehaviour 
+	{
+		[SerializeField]
+		private bool IncludeChildren { get; set; } = true;
+		
+		
+		public class EntityHierarchyBaker : Baker<EntityHierarchyAuthoring>
 		{
-			var entity = GetEntity(authoring.transform, TransformUsageFlags.Dynamic);
-			var buffer = AddBuffer<TransformLinkData>(entity);
-
-			if (authoring.includeChildren)
+			public override void Bake(EntityHierarchyAuthoring authoring)
 			{
-				ApplyHirarchyRecursively(buffer, authoring.transform);
+				var entity = GetEntity(authoring.transform, TransformUsageFlags.Dynamic);
+				var buffer = AddBuffer<_TransformLinkData>(entity);
+
+				if (authoring.IncludeChildren)
+				{
+					ApplyHirarchyRecursively(buffer, authoring.transform);
+				}
+				else
+				{
+					ApplyHierarchy(buffer, authoring.transform);
+				}
 			}
-			else
+
+			private void ApplyHirarchyRecursively(DynamicBuffer<_TransformLinkData> buffer, Transform transform)
 			{
-				ApplyHierarchy(buffer, authoring.transform);
+				ApplyHierarchy(buffer, transform);
+				foreach(Transform child in transform)
+				{
+					if (child.GetComponent<EntityHierarchyAuthoring>() != null)
+						continue;
+					ApplyHirarchyRecursively(buffer, child);
+				}
 			}
-		}
 
-		private void ApplyHirarchyRecursively(DynamicBuffer<TransformLinkData> buffer, Transform transform)
-		{
-			ApplyHierarchy(buffer, transform);
-			foreach(Transform child in transform)
+			private void ApplyHierarchy(DynamicBuffer<_TransformLinkData> buffer, Transform transform)
 			{
-				if (child.GetComponent<EntityHierarchyAuthoring>() != null)
-					continue;
-				ApplyHirarchyRecursively(buffer, child);
+				var entity = GetEntity(transform, TransformUsageFlags.Dynamic);
+
+				var parentEntity = transform.parent == null
+					? Entity.Null
+					: GetEntity(transform.parent, TransformUsageFlags.Dynamic);
+
+				buffer.Add(new _TransformLinkData
+				{
+					Parent = parentEntity,
+					Child = entity,
+					Name = transform.gameObject.name
+				});
 			}
-		}
-
-		private void ApplyHierarchy(DynamicBuffer<TransformLinkData> buffer, Transform transform)
-		{
-			var entity = GetEntity(transform, TransformUsageFlags.Dynamic);
-
-			var parentEntity = transform.parent == null
-				? Entity.Null
-				: GetEntity(transform.parent, TransformUsageFlags.Dynamic);
-
-			buffer.Add(new TransformLinkData
-			{
-				Parent = parentEntity,
-				Child = entity,
-				Name = transform.gameObject.name
-			});
 		}
 	}
-}
-
-public struct TransformLinkData : IBufferElementData
-{
-	public Entity Parent;
-
-	public Entity Child;
-
-	public FixedString64Bytes Name;
-}
-
-public struct _EntityName : IComponentData, IEnableableComponent
-{
-	public FixedString64Bytes name;
 }

@@ -1,17 +1,17 @@
 using Unity.Entities;
 using UnityEngine;
-using Unity.Mathematics;
-using Unity.Collections;
 
-
-public class EntityNameAuthoring : MonoBehaviour 
+namespace PotionCraft.Core.Authoring
 {
-	public class EntityNameBaker : Baker<EntityNameAuthoring>
+	public class EntityNameAuthoring : MonoBehaviour 
 	{
-		public override void Bake(EntityNameAuthoring authoring)
+		public class EntityNameBaker : Baker<EntityNameAuthoring>
 		{
-			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new _EntityName() { name = authoring.gameObject.name});
+			public override void Bake(EntityNameAuthoring authoring)
+			{
+				var entity = GetEntity(TransformUsageFlags.Dynamic);
+				AddComponent(entity, new _EntityNameData() { Value = authoring.gameObject.name});
+			}
 		}
 	}
 }
