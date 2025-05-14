@@ -63,21 +63,19 @@ namespace PotionCraft.Tests.Performance
 			yield return new WaitForSecondsRealtime(5);
 		}
 
+
+		private static Entity loadedEntity;
+
 		[UnityTest, Performance]
 		public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
 			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
 	
 			var world = World.DefaultGameObjectInjectionWorld;
-			
-			var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(
-				"Assets/Tests/Performance/LiquidPhysics/Resources/LiquidPhysicsBenchmark - Empty Subscene.unity");
-			var reference = new EntitySceneReference(sceneAsset);
-			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
-
-			sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(
-				"Assets/Tests/Performance/LiquidPhysics/Resources/LiquidPhysicsBenchmark - Baked Prefabs.unity");
-			reference = new EntitySceneReference(sceneAsset);
+			var subScenePrefab = Resources.Load("LiquidPhysicsBenchmark - Subscene Reference");
+			var subSceneGO = GameObject.Instantiate(subScenePrefab) as GameObject;
+			var subSceneComponent = subSceneGO.GetComponent<SubScene>();
+			var reference = new EntitySceneReference(subSceneComponent.SceneAsset);
 			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
 
 			yield return new WaitForSecondsRealtime(5f);
@@ -86,12 +84,23 @@ namespace PotionCraft.Tests.Performance
 			using var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder();
 
 			yield return new WaitForSecondsRealtime(5f);
+
+			yield return UnloadEntitySceneAsync(world.Unmanaged, loadedEntity);
 		}
 
 		public static async Awaitable LoadEntitySceneAsync(WorldUnmanaged world, EntitySceneReference scene)
 		{
-			Entity handle = SceneSystem.LoadSceneAsync(world, scene);
-			while (!SceneSystem.IsSceneLoaded(world, handle))
+			loadedEntity = SceneSystem.LoadSceneAsync(world, scene);
+			while (!SceneSystem.IsSceneLoaded(world, loadedEntity))
+			{
+				await Awaitable.NextFrameAsync();
+			}
+		}
+
+		public static async Awaitable UnloadEntitySceneAsync(WorldUnmanaged world, Entity scene)
+		{
+			SceneSystem.UnloadScene(world, scene, SceneSystem.UnloadParameters.Default);
+			while (SceneSystem.IsSceneLoaded(world, scene))
 			{
 				await Awaitable.NextFrameAsync();
 			}

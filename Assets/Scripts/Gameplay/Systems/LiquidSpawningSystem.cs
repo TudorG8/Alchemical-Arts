@@ -21,7 +21,7 @@ namespace PotionCraft.Gameplay.Systems
 			state.RequireForUpdate<_WrigglerData>();
 			state.RequireForUpdate<_FolderManagerData>();
 			spawnerCountQuery = new EntityQueryBuilder(Allocator.Temp)
-				.WithAll<LiquidSpawner>()
+				.WithAll<_LiquidSpawner>()
 				.Build(ref state);
 		}
 
@@ -36,7 +36,7 @@ namespace PotionCraft.Gameplay.Systems
 			var limit = wriggler.SpawnLimit;
 			int count = spawnerCountQuery.CalculateEntityCount();
 			var actualLimit = limit / count;
-			foreach(var (localToWorld, liquidSpawner) in SystemAPI.Query<RefRW<LocalToWorld>, RefRW<LiquidSpawner>>())
+			foreach(var (localToWorld, liquidSpawner) in SystemAPI.Query<RefRW<LocalToWorld>, RefRW<_LiquidSpawner>>())
 			{
 				if (liquidSpawner.ValueRO.Timer > elapsedTime) continue;
 				if (liquidSpawner.ValueRO.Count >= actualLimit) continue;

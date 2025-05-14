@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f44fcb422c17a2b4993e0c787e8c8c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Limit>k__BackingField: 1000
+  <Limit>k__BackingField: 4000
   <Liquid>k__BackingField: {fileID: 7768919653814679508, guid: a0ac77b1f7aed2841a938d27515cc23f, type: 3}
   <Cooldown>k__BackingField: 0
   <MoveSpeed>k__BackingField: 0

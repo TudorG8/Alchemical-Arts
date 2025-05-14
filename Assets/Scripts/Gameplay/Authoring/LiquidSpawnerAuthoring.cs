@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PotionCraft.Gameplay.Authoring
 {
-	public struct LiquidSpawner : IComponentData
+	public struct _LiquidSpawner : IComponentData
 	{
 		public int Count;
 
@@ -30,7 +30,7 @@ namespace PotionCraft.Gameplay.Authoring
 				DependsOn(authoring.WrigglerAuthoring);
 
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new LiquidSpawner()
+				AddComponent(entity, new _LiquidSpawner()
 				{
 					Limit = authoring.WrigglerAuthoring.Limit,
 					Liquid = GetEntity(authoring.WrigglerAuthoring.Liquid, TransformUsageFlags.Dynamic),
