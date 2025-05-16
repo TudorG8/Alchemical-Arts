@@ -14,7 +14,7 @@ namespace PotionCraft.Gameplay.Systems
 		{
 			foreach(var (localTransform, physicsVelocity, wriggler, wrigglerTargetBuffer) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PhysicsVelocity>, RefRW<_WrigglerData>, DynamicBuffer<_WrigglerTargetBufferData>>())
 			{
-				var angularVelocity = new float3(0, 0, wriggler.ValueRO.RotationSpeed);
+				var angularVelocity = new float3(0, 0, SystemAPI.Time.DeltaTime * wriggler.ValueRO.RotationSpeed);
 				physicsVelocity.ValueRW.Angular = angularVelocity;
 
 				var currentTarget = wrigglerTargetBuffer[wriggler.ValueRO.WaypointIndex];

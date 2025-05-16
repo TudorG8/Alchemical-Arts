@@ -33,20 +33,17 @@ namespace PotionCraft.Gameplay.Systems
 			var liquidFolder = SystemAPI.GetSingleton<_FolderManagerData>().LiquidFolder;
 
 			var wriggler = SystemAPI.GetSingleton<_WrigglerData>();
-			var limit = wriggler.SpawnLimit;
-			int count = spawnerCountQuery.CalculateEntityCount();
-			var actualLimit = limit / count;
 			foreach(var (localToWorld, liquidSpawner) in SystemAPI.Query<RefRW<LocalToWorld>, RefRW<_LiquidSpawner>>())
 			{
 				if (liquidSpawner.ValueRO.Timer > elapsedTime) continue;
-				if (liquidSpawner.ValueRO.Count >= actualLimit) continue;
+				if (liquidSpawner.ValueRO.Count >= wriggler.LimitPerSpawner) continue;
 
-				var obj = commandBuffer.Instantiate(liquidSpawner.ValueRO.Liquid);
+				var obj = commandBuffer.Instantiate(wriggler.Liquid);
 				commandBuffer.SetComponent(obj, LocalTransform.FromPosition(localToWorld.ValueRO.Position));
 				commandBuffer.AddComponent(obj, new Parent() { Value = liquidFolder });
 				liquidSpawner.ValueRW.Count++;
 
-				liquidSpawner.ValueRW.Timer = elapsedTime + liquidSpawner.ValueRO.Cooldown;
+				liquidSpawner.ValueRW.Timer = elapsedTime + wriggler.SpawnerDelay;
 			}
 		}
 	}

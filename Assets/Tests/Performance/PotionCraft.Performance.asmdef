@@ -10,7 +10,9 @@
         "Unity.Scenes",
         "Unity.Entities",
         "Unity.Collections",
-        "Unity.Entities.Hybrid"
+        "Unity.Entities.Hybrid",
+        "UniTask",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

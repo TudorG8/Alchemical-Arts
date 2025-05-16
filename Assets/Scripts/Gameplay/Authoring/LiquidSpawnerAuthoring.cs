@@ -7,12 +7,6 @@ namespace PotionCraft.Gameplay.Authoring
 	{
 		public int Count;
 
-		public int Limit;
-
-		public Entity Liquid;
-
-		public double Cooldown;
-
 		public double Timer;
 	}
 
@@ -27,15 +21,8 @@ namespace PotionCraft.Gameplay.Authoring
 		{
 			public override void Bake(LiquidSpawnerAuthoring authoring)
 			{
-				DependsOn(authoring.WrigglerAuthoring);
-
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new _LiquidSpawner()
-				{
-					Limit = authoring.WrigglerAuthoring.Limit,
-					Liquid = GetEntity(authoring.WrigglerAuthoring.Liquid, TransformUsageFlags.Dynamic),
-					Cooldown = authoring.WrigglerAuthoring.Cooldown,
-				});
+				AddComponent(entity, new _LiquidSpawner());
 			}
 		}
 	}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Authoring
 {
+	[BakingType]
 	public struct _TransformLinkData : IBufferElementData
 	{
 		public Entity Parent;

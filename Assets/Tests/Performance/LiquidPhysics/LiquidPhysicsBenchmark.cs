@@ -10,8 +10,13 @@ using PotionCraft.Tests.Performance.Utility;
 using Unity.Entities;
 using Unity.Scenes;
 using Unity.Entities.Serialization;
-using UnityEditor;
 using PotionCraft.Gameplay.Behaviours;
+using Cysharp.Threading.Tasks;
+using Unity.Collections;
+using PotionCraft.Gameplay.Authoring;
+using System;
+using System.Threading.Tasks;
+using Object = UnityEngine.Object;
 
 namespace PotionCraft.Tests.Performance
 {
@@ -40,18 +45,18 @@ namespace PotionCraft.Tests.Performance
 		public IEnumerator LiquidBouncyness_WithUnity3D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
 			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
+
 			var prefab = Resources.Load("LiquidPhysicsBenchmark - Unity Wriggler");
-			var obj = GameObject.Instantiate(prefab);
-			var wriggler = UnityEngine.Object.FindFirstObjectByType<WrigglerBehaviour>();
-			var spawnerCount = UnityEngine.Object.FindObjectsByType<LiquidSpawnerBehaviour>(FindObjectsSortMode.None).Count();
+			var wriggler = Object.Instantiate(prefab) as WrigglerBehaviour;
+			var spawnerCount = Object.FindObjectsByType<LiquidSpawnerBehaviour>(FindObjectsSortMode.None).Count();
 			var wrigglerRigidBody = wriggler.GetComponent<Rigidbody>();
 			wrigglerRigidBody.interpolation = testCase.RigidbodyInterpolation;
 			wrigglerRigidBody.collisionDetectionMode = testCase.CollisionDetectionMode;
-			wriggler.spawnerDelay = -1;
-			wriggler.limitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
-			wriggler.speed = 100;
-			wriggler.rotationSpeed = 45;
-			var liquidRigidbody = wriggler.liquid.GetComponent<Rigidbody>();
+			wriggler.LimitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
+			wriggler.SpawnerDelay = -1;
+			wriggler.MovementSpeed = 100;
+			wriggler.RotationSpeed = 45;
+			var liquidRigidbody = wriggler.Liquid.GetComponent<Rigidbody>();
 			liquidRigidbody.interpolation = testCase.RigidbodyInterpolation;
 			liquidRigidbody.collisionDetectionMode = testCase.CollisionDetectionMode;
 
@@ -63,38 +68,111 @@ namespace PotionCraft.Tests.Performance
 			yield return new WaitForSecondsRealtime(5);
 		}
 
-
-		private static Entity loadedEntity;
-
 		[UnityTest, Performance]
 		public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
 		{
-			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
-	
-			var world = World.DefaultGameObjectInjectionWorld;
-			var subScenePrefab = Resources.Load("LiquidPhysicsBenchmark - Subscene Reference");
-			var subSceneGO = GameObject.Instantiate(subScenePrefab) as GameObject;
-			var subSceneComponent = subSceneGO.GetComponent<SubScene>();
-			var reference = new EntitySceneReference(subSceneComponent.SceneAsset);
-			yield return LoadEntitySceneAsync(world.Unmanaged, reference);
+			static async Awaitable Test()
+			{
+				await using (var loadScene = await SceneLoadingScope.Create("LiquidPhysicsBenchmark - Empty Scene"))
+				await using (var loadSubscene = await EntitySceneLoadingScope.Create("LiquidPhysicsBenchmark - Subscene Reference"))
+				{
+					var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+					var wrigglerEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<_WrigglerData>().Build(entityManager).GetSingletonEntity();
+					var spawnerCount = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidSpawner>().Build(entityManager).CalculateEntityCount();
+					var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
+					wrigglerData.LimitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
+					wrigglerData.SpawnerDelay = 0f;
+					wrigglerData.MovementSpeed = 100;
+					wrigglerData.RotationSpeed = 45;
+					entityManager.SetComponentData(wrigglerEntity, wrigglerData);
 
-			yield return new WaitForSecondsRealtime(5f);
+					await Awaitable.WaitForSecondsAsync(5f);
 
-			using var fps = new FramesPerSecondScope();
-			using var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder();
+					using (var fps = new FramesPerSecondScope())
+					using (var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder())
+					{
+						await Awaitable.WaitForSecondsAsync(5f);
+					}
+				}
+			}
 
-			yield return new WaitForSecondsRealtime(5f);
-
-			yield return UnloadEntitySceneAsync(world.Unmanaged, loadedEntity);
+			yield return Test();
 		}
 
-		public static async Awaitable LoadEntitySceneAsync(WorldUnmanaged world, EntitySceneReference scene)
+		public class SceneLoadingScope : IAsyncDisposable
 		{
-			loadedEntity = SceneSystem.LoadSceneAsync(world, scene);
+			private readonly Scene scene;
+
+
+			private SceneLoadingScope(Scene scene)
+			{
+				this.scene = scene;
+			}
+
+
+			public static async Awaitable<SceneLoadingScope> Create(string scenePath)
+			{
+				await SceneManager.LoadSceneAsync(scenePath, LoadSceneMode.Additive);
+
+				var scene = SceneManager.GetSceneByName(scenePath);
+				SceneManager.SetActiveScene(scene);
+				
+				return new SceneLoadingScope(scene);
+			}
+
+			public async ValueTask DisposeAsync()
+			{
+				await SceneManager.UnloadSceneAsync(scene);
+			}
+		}
+
+		public class EntitySceneLoadingScope : IAsyncDisposable
+		{
+			private readonly Entity sceneEntity;
+
+
+			private EntitySceneLoadingScope(Entity sceneEntity)
+			{
+				this.sceneEntity = sceneEntity;
+			}
+
+
+			public static async Awaitable<EntitySceneLoadingScope> Create(string scenePath)
+			{
+				var entity = await LoadEntitySceneAsync(scenePath);
+				return new EntitySceneLoadingScope(entity);
+			}
+
+			public async ValueTask DisposeAsync()
+			{
+				await UnloadEntitySceneAsync(sceneEntity);
+			}
+		}
+
+		public static async Awaitable<Entity> LoadEntitySceneAsync(string resourceName)
+		{
+			var world = World.DefaultGameObjectInjectionWorld;
+			var subScenePrefab = Resources.Load(resourceName);
+			var subSceneGO = Object.Instantiate(subScenePrefab) as GameObject;
+			var subSceneComponent = subSceneGO.GetComponent<SubScene>();
+			var reference = new EntitySceneReference(subSceneComponent.SceneAsset);
+
+			return await LoadEntitySceneAsync(world.Unmanaged, reference);
+		}
+
+		public static async Awaitable<Entity> LoadEntitySceneAsync(WorldUnmanaged world, EntitySceneReference scene)
+		{
+			var loadedEntity = SceneSystem.LoadSceneAsync(world, scene);
 			while (!SceneSystem.IsSceneLoaded(world, loadedEntity))
 			{
-				await Awaitable.NextFrameAsync();
+				await UniTask.NextFrame();
 			}
+			return loadedEntity;
+		}
+
+		public static async Awaitable UnloadEntitySceneAsync(Entity scene)
+		{
+			await UnloadEntitySceneAsync(World.DefaultGameObjectInjectionWorld.Unmanaged, scene);
 		}
 
 		public static async Awaitable UnloadEntitySceneAsync(WorldUnmanaged world, Entity scene)

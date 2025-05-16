@@ -1,6 +1,9 @@
 using PotionCraft.Core.Authoring;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using UnityEditor.SearchService;
+using UnityEngine;
 
 namespace PotionCraft.Core.Systems
 {
@@ -9,7 +12,7 @@ namespace PotionCraft.Core.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			foreach(var (entityName, entity) in SystemAPI.Query<_EntityNameData>().WithEntityAccess())
+			foreach(var (entityName, entity) in SystemAPI.Query<_EntityNameData>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludePrefab))
 			{
 				state.EntityManager.SetName(entity, entityName.Value);
 				state.EntityManager.SetComponentEnabled<_EntityNameData>(entity, false);

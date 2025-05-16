@@ -7,13 +7,17 @@ namespace PotionCraft.Gameplay.Authoring
 {
 	public struct _WrigglerData : IComponentData
 	{
+		public Entity Liquid;
+
 		public float MovementSpeed;
 
 		public float RotationSpeed;
 
 		public int WaypointIndex;
 
-		public int SpawnLimit;
+		public int LimitPerSpawner;
+
+		public float SpawnerDelay;
 	}
 
 	public struct _WrigglerTargetBufferData : IBufferElementData
@@ -52,8 +56,10 @@ namespace PotionCraft.Gameplay.Authoring
 				{ 
 					MovementSpeed = authoring.MoveSpeed, 
 					RotationSpeed = authoring.RotationSpeed,
-					SpawnLimit = authoring.Limit,
+					LimitPerSpawner = authoring.Limit,
+					Liquid = GetEntity(authoring.Liquid, TransformUsageFlags.Dynamic)
 				});
+				
 				var buffer = AddBuffer<_WrigglerTargetBufferData>(entity);
 				foreach (var waypoint in authoring.Waypoints)
 				{

@@ -29,22 +29,22 @@ namespace PotionCraft.Gameplay.Behaviours
 
 		private async void Generate(CancellationToken token)
 		{
-			while (counter < wriggler.limitPerSpawner)
+			while (counter < wriggler.LimitPerSpawner)
 			{
 				if (token.IsCancellationRequested)
 					break;
 
-				var obj = Instantiate(wriggler.liquid, transform.position, Quaternion.identity);
+				var obj = Instantiate(wriggler.Liquid, transform.position, Quaternion.identity);
 				obj.transform.SetParent(parent);
 				counter++;
 
-				if (wriggler.spawnerDelay <= 0)
+				if (wriggler.SpawnerDelay <= 0)
 				{
 					await Awaitable.EndOfFrameAsync();
 				}
 				else
 				{
-					await Awaitable.WaitForSecondsAsync(wriggler.spawnerDelay);
+					await Awaitable.WaitForSecondsAsync(wriggler.SpawnerDelay);
 				}
 			}
 		}

@@ -5,7 +5,7 @@ namespace PotionCraft.Gameplay.Behaviours
 {
 	public class WrigglerBehaviour : MonoBehaviour
 	{
-		public GameObject liquid;
+		public GameObject Liquid;
 
 		public Rigidbody rigidbody;
 
@@ -15,13 +15,13 @@ namespace PotionCraft.Gameplay.Behaviours
 
 		public int index;
 
-		public float speed = 100;
+		public float MovementSpeed = 100;
 
-		public int limitPerSpawner = 100;
+		public int LimitPerSpawner = 100;
 
-		public float spawnerDelay = 0.1f;
+		public float SpawnerDelay = 0.1f;
 
-		public float rotationSpeed = 60;
+		public float RotationSpeed = 60;
 
 
 		private void FixedUpdate()
@@ -34,12 +34,12 @@ namespace PotionCraft.Gameplay.Behaviours
 			}
 			
 			if (rigidbody != null)
-				rigidbody.linearVelocity = speed * Time.fixedDeltaTime * direction;
+				rigidbody.linearVelocity = MovementSpeed * Time.fixedDeltaTime * direction;
 
 			if (rigidbody2D != null)
-				rigidbody2D.linearVelocity = speed * Time.fixedDeltaTime * direction;
+				rigidbody2D.linearVelocity = MovementSpeed * Time.fixedDeltaTime * direction;
 
-			transform.Rotate(0, 0, rotationSpeed * Time.fixedDeltaTime);
+			transform.Rotate(0, 0, RotationSpeed * Time.fixedDeltaTime);
 		}
 	}
 }
