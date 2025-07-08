@@ -52,12 +52,13 @@ namespace PotionCraft.Gameplay.Authoring
 			public override void Bake(WrigglerAuthoring authoring)
 			{
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new _WrigglerData() 
-				{ 
-					MovementSpeed = authoring.MoveSpeed, 
+				AddComponent(entity, new _WrigglerData()
+				{
+					MovementSpeed = authoring.MoveSpeed,
 					RotationSpeed = authoring.RotationSpeed,
 					LimitPerSpawner = authoring.Limit,
-					Liquid = GetEntity(authoring.Liquid, TransformUsageFlags.Dynamic)
+					Liquid = GetEntity(authoring.Liquid, TransformUsageFlags.Dynamic),
+					SpawnerDelay = authoring.Cooldown
 				});
 				
 				var buffer = AddBuffer<_WrigglerTargetBufferData>(entity);

@@ -47,15 +47,16 @@ namespace PotionCraft.Tests.Performance
 			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
 
 			var prefab = Resources.Load("LiquidPhysicsBenchmark - Unity Wriggler");
-			var wriggler = Object.Instantiate(prefab) as WrigglerBehaviour;
+			var wrigglerGO = Object.Instantiate(prefab) as GameObject;
+			var wriggler = wrigglerGO.GetComponentInChildren<WrigglerBehaviour>();
 			var spawnerCount = Object.FindObjectsByType<LiquidSpawnerBehaviour>(FindObjectsSortMode.None).Count();
 			var wrigglerRigidBody = wriggler.GetComponent<Rigidbody>();
 			wrigglerRigidBody.interpolation = testCase.RigidbodyInterpolation;
 			wrigglerRigidBody.collisionDetectionMode = testCase.CollisionDetectionMode;
 			wriggler.LimitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
-			wriggler.SpawnerDelay = -1;
-			wriggler.MovementSpeed = 100;
-			wriggler.RotationSpeed = 45;
+			wriggler.SpawnerDelay = 0;
+			wriggler.MovementSpeed = 0;
+			wriggler.RotationSpeed = 0;
 			var liquidRigidbody = wriggler.Liquid.GetComponent<Rigidbody>();
 			liquidRigidbody.interpolation = testCase.RigidbodyInterpolation;
 			liquidRigidbody.collisionDetectionMode = testCase.CollisionDetectionMode;
@@ -82,8 +83,8 @@ namespace PotionCraft.Tests.Performance
 					var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
 					wrigglerData.LimitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
 					wrigglerData.SpawnerDelay = 0f;
-					wrigglerData.MovementSpeed = 100;
-					wrigglerData.RotationSpeed = 45;
+					wrigglerData.MovementSpeed = 0;
+					wrigglerData.RotationSpeed = 0;
 					entityManager.SetComponentData(wrigglerEntity, wrigglerData);
 
 					await Awaitable.WaitForSecondsAsync(5f);

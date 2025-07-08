@@ -3,6 +3,7 @@ using PotionCraft.Gameplay.Authoring;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace PotionCraft.Gameplay.Systems
@@ -14,8 +15,10 @@ namespace PotionCraft.Gameplay.Systems
 	{
 		private EntityQuery spawnerCountQuery;
 
+		private Random random;
 
-		[BurstCompile]
+
+		// [BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<_WrigglerData>();
@@ -23,6 +26,7 @@ namespace PotionCraft.Gameplay.Systems
 			spawnerCountQuery = new EntityQueryBuilder(Allocator.Temp)
 				.WithAll<_LiquidSpawner>()
 				.Build(ref state);
+			random = new Random(0x6E624EB7u);
 		}
 
 		[BurstCompile]
@@ -39,7 +43,7 @@ namespace PotionCraft.Gameplay.Systems
 				if (liquidSpawner.ValueRO.Count >= wriggler.LimitPerSpawner) continue;
 
 				var obj = commandBuffer.Instantiate(wriggler.Liquid);
-				commandBuffer.SetComponent(obj, LocalTransform.FromPosition(localToWorld.ValueRO.Position));
+				commandBuffer.SetComponent(obj, LocalTransform.FromPosition(localToWorld.ValueRO.Position));// + new float3(random.NextFloat(-0.01f, 0.01f), 0, 0)));
 				commandBuffer.AddComponent(obj, new Parent() { Value = liquidFolder });
 				liquidSpawner.ValueRW.Count++;
 

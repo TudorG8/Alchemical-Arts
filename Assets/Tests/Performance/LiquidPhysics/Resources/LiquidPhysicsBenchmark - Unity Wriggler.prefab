@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &437232650061469083
 GameObject:
@@ -127,7 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &2084876462847992629
 GameObject:
@@ -174,7 +172,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &2340576972804181698
 GameObject:
@@ -266,16 +263,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e9a3ed1e7877a4a8da4b3e022301fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liquid: {fileID: 7768919653814679508, guid: 6af9dc054f2a7bf49822ac4ab509a4ed, type: 3}
+  Liquid: {fileID: 7768919653814679508, guid: 6af9dc054f2a7bf49822ac4ab509a4ed, type: 3}
   rigidbody: {fileID: 5941052683735538338}
   rigidbody2D: {fileID: 0}
   targets:
   - {fileID: 5714492861483978941}
   - {fileID: 7997777318639760002}
   index: 0
-  speed: 200
-  limitPerSpawner: 100
-  rotationSpeed: 20
+  MovementSpeed: 100
+  LimitPerSpawner: 100
+  SpawnerDelay: 0.1
+  RotationSpeed: 60
 --- !u!1 &2400595136593989385
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,7 +458,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &2574897926845663368
 GameObject:
@@ -615,7 +612,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &3249112112092959464
 GameObject:
@@ -662,7 +658,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &3375627606252250790
 GameObject:
@@ -709,7 +704,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &4181096386460656153
 GameObject:
@@ -756,7 +750,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &4774495217895832092
 GameObject:
@@ -834,7 +827,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &6010371781454938681
 GameObject:
@@ -881,7 +873,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &6726187091395331213
 GameObject:
@@ -928,7 +919,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &7279927398673944624
 GameObject:
@@ -975,7 +965,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &7358897603889885846
 GameObject:
@@ -1161,7 +1150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &8524847813983155411
 GameObject:
@@ -1208,7 +1196,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 3748685508382905211}
-  timer: 1
   counter: 0
 --- !u!1 &9207407873904568573
 GameObject:
