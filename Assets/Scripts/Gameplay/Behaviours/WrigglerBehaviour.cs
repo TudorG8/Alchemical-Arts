@@ -7,9 +7,9 @@ namespace PotionCraft.Gameplay.Behaviours
 	{
 		public GameObject Liquid;
 
-		public Rigidbody rigidbody;
+		public new Rigidbody rigidbody;
 
-		public Rigidbody2D rigidbody2D;
+		public new Rigidbody2D rigidbody2D;
 
 		public List<Transform> targets;
 
