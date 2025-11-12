@@ -1,0 +1,65 @@
+using System;
+using System.Linq;
+using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.Physics.Extensions;
+using PotionCraft.Shared.Extensions;
+using PotionCraft.Shared.Scopes;
+using Unity.Entities;
+using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
+
+namespace PotionCraft.Core.Physics.Authoring
+{
+	[RequireComponent(typeof(BoxCollider2D))]
+	public class PhysicsBoxSetupAuthoring : MonoBehaviour, IDrawableShape
+	{
+		[field: SerializeField]
+		public PhysicsBodyAuthoring PhysicsBodyAuthoring { get; set; }
+
+		[field: SerializeField]
+		public BoxCollider2D BoxCollider2D { get; set; }
+
+		[field: SerializeField]
+		public PhysicsShapeDefinition ShapeDefinition { get; set; } = PhysicsShapeDefinition.defaultDefinition;
+
+
+		public PolygonGeometry ToGeometry(PhysicsTransform offset)
+		{
+			var matrix = transform.localToWorldMatrix;
+			var offsetMatrix = Matrix4x4.Translate(BoxCollider2D.offset - offset.position);
+			var rotateMatrix = Matrix4x4.Rotate((-offset.rotation.angle).ToQuaternion());
+
+			var localVerts = BoxCollider2D.ToLocalCorners().ToArray();
+
+			return PolygonGeometry.Create(localVerts, BoxCollider2D.edgeRadius, rotateMatrix * offsetMatrix * matrix);
+		}
+
+
+		private void OnValidate()
+		{
+			PhysicsBodyAuthoring = this.ValidateComponent(PhysicsBodyAuthoring);
+			BoxCollider2D = this.ValidateComponent(BoxCollider2D);
+		}
+	}
+	
+	public class PhysicsBoxSetupAuthoringBaker : Baker<PhysicsBoxSetupAuthoring>
+	{
+		public override void Bake(PhysicsBoxSetupAuthoring authoring)
+		{
+			DependsOn(authoring.PhysicsBodyAuthoring);
+
+			var physicsBody = GetEntity(authoring.PhysicsBodyAuthoring, TransformUsageFlags.Dynamic);
+			var geometry = authoring.ToGeometry(authoring.PhysicsBodyAuthoring.transform.ToPhysicsTransform());
+
+			var entity = GetEntity(TransformUsageFlags.Dynamic);
+			var buffer = AddBuffer<PolygonGeometryBufferData>(entity);
+			AddComponent(entity, new PhysicsBoxSetupComponent()
+			{
+				shapeDefinition = authoring.ShapeDefinition,
+				bodyEntity = physicsBody
+			});
+			buffer.Add(new PolygonGeometryBufferData() { geometry = geometry });
+		}
+	}
+}

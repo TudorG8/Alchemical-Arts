@@ -1,0 +1,24 @@
+using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Physics.Components;
+using Unity.Entities;
+using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
+
+namespace PotionCraft.Core.Physics.Authoring
+{
+	[RequireComponent(typeof(EntityHierarchyAuthoring))]
+	public class PhysicsWorldSetupAuthoring : MonoBehaviour
+	{
+		[field: SerializeField]
+		public PhysicsWorldDefinition WorldDefinition { get; set; } = PhysicsWorldDefinition.defaultDefinition;
+	}
+
+	public class PhysicsWorldAuthoringBaker : Baker<PhysicsWorldSetupAuthoring>
+	{
+		public override void Bake(PhysicsWorldSetupAuthoring authoring)
+		{
+			var entity = GetEntity(TransformUsageFlags.Dynamic);
+			AddComponent(entity, new PhysicsWorldSetupComponent() { worldDefinition = authoring.WorldDefinition });
+		}
+	}
+}
