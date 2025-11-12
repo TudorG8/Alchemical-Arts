@@ -2,7 +2,7 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Authoring
+namespace PotionCraft.Core.Naming.Authoring
 {
 	[BakingType]
 	public struct _TransformLinkData : IBufferElementData
@@ -22,7 +22,7 @@ namespace PotionCraft.Core.Authoring
 
 	public class EntityHierarchyAuthoring : MonoBehaviour 
 	{
-		[SerializeField]
+		[field:SerializeField]
 		private bool IncludeChildren { get; set; } = true;
 		
 		

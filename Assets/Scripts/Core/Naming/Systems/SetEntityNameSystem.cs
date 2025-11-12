@@ -1,11 +1,11 @@
-using PotionCraft.Core.Authoring;
+using PotionCraft.Core.Naming.Authoring;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEditor.SearchService;
 using UnityEngine;
 
-namespace PotionCraft.Core.Systems
+namespace PotionCraft.Core.Naming.Systems
 {
 	partial struct SetEntityNameSystem : ISystem
 	{

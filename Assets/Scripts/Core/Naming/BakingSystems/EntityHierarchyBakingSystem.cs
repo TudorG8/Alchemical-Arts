@@ -1,10 +1,10 @@
-using PotionCraft.Core.Authoring;
-using PotionCraft.Core.Utility;
+using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Shared.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.BakingSystems
+namespace PotionCraft.Core.Naming.BakingSystems
 {
 	[WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
 	partial struct EntityHierarchyBakingSystem : ISystem
@@ -18,7 +18,7 @@ namespace PotionCraft.Core.BakingSystems
 				.WithOptions(EntityQueryOptions.IncludePrefab)
 				.WithEntityAccess())
 			{
-				foreach(var transformLink in transformLinkBuffer.ToNativeArray(Allocator.Temp))
+				foreach(var transformLink in transformLinkBuffer)
 				{
 					commandBuffer.AddComponent(transformLink.Child, new _EntityNameData { Value = transformLink.Name });
 					if (transformLink.Parent != Entity.Null)

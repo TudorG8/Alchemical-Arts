@@ -1,12 +1,14 @@
-using PotionCraft.Core.Authoring;
+using PotionCraft.Core.Naming.Authoring;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Systems
+namespace PotionCraft.Core.Naming.Systems
 {
 	partial struct SetDebugHelperNameSystem : ISystem
 	{
+		public const string NAME_REFERENCE = "PublicEntityRef";
+
 		private EntityQuery entitiesWithoutNameQuery;
 
 
@@ -17,6 +19,7 @@ namespace PotionCraft.Core.Systems
 				.WithAll<SceneSection, SceneTag>()
 				.WithAbsent<_EntityNameData>()
 				.Build(ref state);
+			state.RequireForUpdate(entitiesWithoutNameQuery);
 		}
 
 		public void OnUpdate(ref SystemState state)
@@ -29,7 +32,7 @@ namespace PotionCraft.Core.Systems
 				var componentTypes = state.EntityManager.GetComponentTypes(entity, Allocator.Temp);
 				foreach(var type in componentTypes)
 				{
-					if (type.GetManagedType().Name == "PublicEntityRef")
+					if (type.GetManagedType().Name == NAME_REFERENCE)
 					{
 						commandBuffer.AddComponent(entity, new _EntityNameData() { Value = "Unity Debug Helper"});
 					}

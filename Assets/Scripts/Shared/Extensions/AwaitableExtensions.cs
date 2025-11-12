@@ -3,7 +3,7 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace PotionCraft.Core.Extensions
+namespace PotionCraft.Shared.Extensions
 {
 	public static class AwaitableExtensions
 	{

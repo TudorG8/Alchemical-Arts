@@ -2,7 +2,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace PotionCraft.Core.Extensions
+namespace PotionCraft.Shared.Extensions
 {
 	public static class TaskExtensions
 	{

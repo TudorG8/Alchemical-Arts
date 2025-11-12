@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Authoring
+namespace PotionCraft.Core.Naming.Authoring
 {
 	public struct _FolderManagerData : IComponentData
 	{

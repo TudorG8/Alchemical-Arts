@@ -1,0 +1,21 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+namespace PotionCraft.Shared.Extensions
+{
+	public static class BoxCollider2DExtensions
+	{
+		public static IEnumerable<Vector2> ToLocalCorners(this BoxCollider2D input)
+		{
+			var half = input.size * 0.5f;
+			
+			yield return new(-half.x, -half.y);
+			yield return new(-half.x,  half.y);
+			yield return new( half.x,  half.y);
+			yield return new( half.x, -half.y);
+		}
+	}
+}

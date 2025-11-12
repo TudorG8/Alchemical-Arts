@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Authoring
+namespace PotionCraft.Core.Naming.Authoring
 {
 	public class EntityNameAuthoring : MonoBehaviour 
 	{

@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-using PotionCraft.Core.Utility;
+using PotionCraft.Shared.Utility;
 using Unity.PerformanceTesting;
 using UnityEngine;
 

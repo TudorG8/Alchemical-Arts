@@ -1,4 +1,4 @@
-using PotionCraft.Core.Authoring;
+using PotionCraft.Core.Naming.Authoring;
 using PotionCraft.Gameplay.Authoring;
 using Unity.Burst;
 using Unity.Collections;
