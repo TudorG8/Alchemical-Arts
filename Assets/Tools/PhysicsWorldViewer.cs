@@ -118,7 +118,7 @@ public class CircleCreator : ICreator<PhysicsBody, PhysicsShape>, IChildAdder<Ph
 	}
 
 
-	public PhysicsShape Create(PhysicsBody body) => body.CreateShape(circleAuthoring.ToCircleGeometry(), blueColor);
+	public PhysicsShape Create(PhysicsBody body) => body.CreateShape(circleAuthoring.ToCircleGeometry(body.ToPhysicsTransform()), blueColor);
 
 
 	public void AddChildTo(NodeWrapper<PhysicsWorld, PhysicsBody> parent)

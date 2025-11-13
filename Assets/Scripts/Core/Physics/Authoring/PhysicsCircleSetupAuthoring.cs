@@ -1,5 +1,6 @@
 using PotionCraft.Core.Naming.Authoring;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.Physics.Extensions;
 using PotionCraft.Shared.Extensions;
 using PotionCraft.Shared.Scopes;
 using Unity.Entities;
@@ -28,14 +29,14 @@ namespace PotionCraft.Core.Physics.Authoring
 		public PhysicsShapeDefinition ShapeDefinition { get; set; } = PhysicsShapeDefinition.defaultDefinition;
 
 
-		public CircleGeometry ToCircleGeometry()
+		public CircleGeometry ToCircleGeometry(PhysicsTransform offset)
 		{
-			var body = PhysicsBodyAuthoring.transform;
-			var shape = transform;
+			var resultMatrix = offset.MultiplyBy(-1).ToMatrix() * transform.localToWorldMatrix;
 
-			var radius = CircleCollider2D.radius * shape.ToCircleScale();
-			var position = shape.position - body.position;
-			var circleGeometry = new CircleGeometry() { center = position, radius = radius };
+			var center = resultMatrix.MultiplyPoint3x4(CircleCollider2D.offset);
+			var radius = CircleCollider2D.radius * transform.ToCircleScale();
+
+			var circleGeometry = new CircleGeometry() { center = center, radius = radius };
 
 			return circleGeometry;
 		}
@@ -57,7 +58,7 @@ namespace PotionCraft.Core.Physics.Authoring
 
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			var physicsBody = GetEntity(authoring.PhysicsBodyAuthoring, TransformUsageFlags.Dynamic);
-			var circleGeometry = authoring.ToCircleGeometry();
+			var circleGeometry = authoring.ToCircleGeometry(authoring.PhysicsBodyAuthoring.transform.ToPhysicsTransform());
 
 			AddComponent(entity, new PhysicsCircleSetupComponent()
 			{

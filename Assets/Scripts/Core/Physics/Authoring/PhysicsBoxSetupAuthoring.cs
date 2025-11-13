@@ -26,13 +26,11 @@ namespace PotionCraft.Core.Physics.Authoring
 
 		public PolygonGeometry ToGeometry(PhysicsTransform offset)
 		{
-			var matrix = transform.localToWorldMatrix;
-			var offsetMatrix = Matrix4x4.Translate(BoxCollider2D.offset - offset.position);
-			var rotateMatrix = Matrix4x4.Rotate((-offset.rotation.angle).ToQuaternion());
+			var resultMatrix = offset.MultiplyBy(-1).ToMatrix() * transform.localToWorldMatrix;
 
 			var localVerts = BoxCollider2D.ToLocalCorners().ToArray();
 
-			return PolygonGeometry.Create(localVerts, BoxCollider2D.edgeRadius, rotateMatrix * offsetMatrix * matrix);
+			return PolygonGeometry.Create(localVerts, BoxCollider2D.edgeRadius, resultMatrix);
 		}
 
 
