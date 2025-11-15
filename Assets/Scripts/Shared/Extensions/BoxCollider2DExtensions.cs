@@ -22,5 +22,13 @@ namespace PotionCraft.Shared.Extensions
 		{
 			return input.ToLocalCorners(input.offset);
 		}
+
+		public static IEnumerable<Vector2> ApplyMatrix(this IEnumerable<Vector2> input, Matrix4x4 matrix)
+		{
+			foreach(var vector in input)
+			{
+				yield return matrix.MultiplyPoint3x4(vector);
+			}
+		}
 	}
 }

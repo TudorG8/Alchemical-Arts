@@ -150,6 +150,29 @@ public class BoxCreator : ICreator<PhysicsBody, PhysicsShape>, IChildAdder<Physi
 	}
 }
 
+public class PolygonCreator : ICreator<PhysicsBody, PhysicsShape>, IChildAdder<PhysicsWorld, PhysicsBody>
+{
+	private readonly PhysicsPolygonSetupAuthoring polygonAuthoring;
+
+
+	public PolygonCreator(PhysicsPolygonSetupAuthoring boxAuthoring)
+	{
+		this.polygonAuthoring = boxAuthoring;
+	}
+
+
+	public PhysicsShape Create(PhysicsBody body) 
+	{
+		using var geometries = polygonAuthoring.ToGeometry(body.ToPhysicsTransform());
+		return body.CreateShapeBatch(geometries, polygonAuthoring.ShapeDefinition.WithColor(Color.softRed))[0];
+	}
+	public void AddChildTo(NodeWrapper<PhysicsWorld, PhysicsBody> parent)
+	{
+		var circleNode = new NodeWrapper<PhysicsBody, PhysicsShape>(this);
+		parent.AddChild(circleNode);
+	}
+}
+
 [InitializeOnLoad]
 public static class PhysicsWorldCreator
 {
@@ -211,6 +234,7 @@ public static class PhysicsWorldCreator
 		{
 			PhysicsCircleSetupAuthoring circle => new CircleCreator(circle),
 			PhysicsBoxSetupAuthoring box => new BoxCreator(box),
+			PhysicsPolygonSetupAuthoring polygon => new PolygonCreator(polygon),
 			_ => null
 		};
 	}
