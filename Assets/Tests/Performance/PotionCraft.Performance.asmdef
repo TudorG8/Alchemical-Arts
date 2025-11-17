@@ -6,22 +6,21 @@
         "Unity.Entities",
         "Unity.Collections",
         "Unity.Entities.Hybrid",
-        "Unity.Mathematics",
         "Unity.PerformanceTesting",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "UniTask",
         "PotionCraft.Scripts.Gameplay",
         "PotionCraft.Shared",
-        ""
+        "Unity.Mathematics"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
     "autoReferenced": false,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
