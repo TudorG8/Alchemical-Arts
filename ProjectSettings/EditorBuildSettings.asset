@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Game Scene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Tests/Performance/LiquidPhysics/Resources/LiquidPhysicsBenchmark
+    path: Assets/Tests/Performance/LiquidPhysics/Resources/Shared/LiquidPhysicsBenchmark
       - Empty Scene.unity
     guid: cbaa1bc174776b14c8aad3de873bd24f
   m_configObjects:

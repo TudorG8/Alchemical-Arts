@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8245919656372936492}
   - component: {fileID: 8951785215353446393}
   m_Layer: 0
-  m_Name: LiquidPhysicsBenchmark - Subscene Reference
+  m_Name: LiquidPhysicsBenchmark - DOTS - Subscene Reference
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

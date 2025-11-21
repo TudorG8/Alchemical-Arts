@@ -20,7 +20,7 @@ namespace PotionCraft.Core.Physics.Extensions
 
 		public static quaternion ToECSQuaternion(this PhysicsRotate input)
 		{
-			return quaternion.RotateZ(math.radians(input.angle));
+			return quaternion.RotateZ(input.angle);
 		}
 
 		public static PhysicsTransform MultiplyBy(this PhysicsTransform input, float value)
