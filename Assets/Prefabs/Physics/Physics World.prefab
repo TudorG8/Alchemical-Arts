@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionCraft.Core.Physics::PotionCraft.Core.Physics.Authoring.PhysicsWorldSetupAuthoring
   <WorldDefinition>k__BackingField:
     m_Gravity: {x: 0, y: -9.81}
-    m_SimulationMode: 0
+    m_SimulationMode: 2
     m_SimulationSubSteps: 4
     m_SimulationWorkers: 64
     m_TransformWriteMode: 0

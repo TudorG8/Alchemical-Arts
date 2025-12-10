@@ -119,72 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1581481943
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1884425867}
-    m_Modifications:
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4479049106225529769, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: <Cooldown>k__BackingField
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5755358854706736467, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-      propertyPath: m_Name
-      value: LiquidPhysicsBenchmark - Box2D - Spawner
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ac77294716f43854ba25245f422ccf69, type: 3}
---- !u!4 &1581481944 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4294051582914650461, guid: ac77294716f43854ba25245f422ccf69, type: 3}
-  m_PrefabInstance: {fileID: 1581481943}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1884425866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,10 +131,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Manager - Folders
       objectReference: {fileID: 0}
-    - target: {fileID: 919112161670662882, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4471491839745908142, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -241,28 +171,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5151451169552229541, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-      propertyPath: <Limit>k__BackingField
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5151451169552229541, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-      propertyPath: <Cooldown>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 3930026773685029471, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 9064137157301671040, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1581481944}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
---- !u!4 &1884425867 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9064137157301671040, guid: 0fe9db49fbb52174cb54f1959de3d56b, type: 3}
-  m_PrefabInstance: {fileID: 1884425866}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2145881505948914741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -371,14 +284,6 @@ PrefabInstance:
     - target: {fileID: 3740603389638880066, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
       propertyPath: m_Name
       value: Physics World
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474653625569028857, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
-      propertyPath: <WorldDefinition>k__BackingField.m_DrawOptions
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474653625569028857, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
-      propertyPath: <WorldDefinition>k__BackingField.m_SimulationMode
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
