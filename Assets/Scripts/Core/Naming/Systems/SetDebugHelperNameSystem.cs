@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using PotionCraft.Core.Naming.Authoring;
 using Unity.Burst;
 using Unity.Collections;
@@ -35,7 +36,9 @@ namespace PotionCraft.Core.Naming.Systems
 					if (type.GetManagedType().Name == NAME_REFERENCE)
 					{
 						commandBuffer.AddComponent(entity, new _EntityNameData() { Value = "Unity Debug Helper"});
+						continue;
 					}
+					commandBuffer.AddComponent(entity, new _EntityNameData() { Value = state.EntityManager.GetName(entity)});
 				}
 			}
 
@@ -43,3 +46,4 @@ namespace PotionCraft.Core.Naming.Systems
 		}
 	}
 }
+#endif
