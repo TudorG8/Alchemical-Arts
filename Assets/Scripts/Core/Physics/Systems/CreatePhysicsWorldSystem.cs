@@ -24,7 +24,7 @@ namespace PotionCraft.Core.Physics.Systems
 
 			foreach (var (physicsWorldSetup, entity) in SystemAPI.Query<PhysicsWorldSetupComponent>().WithEntityAccess())
 			{
-				var physicsWorld = PhysicsWorld.defaultWorld;// PhysicsWorld.Create(physicsWorldSetup.worldDefinition);
+				var physicsWorld = PhysicsWorld.Create(physicsWorldSetup.worldDefinition);
 				var physicsWorldConfig = new PhysicsWorldConfigComponent() { physicsWorld = physicsWorld };
 				commandBuffer.AddComponent(entity, physicsWorldConfig);
 				commandBuffer.RemoveComponent<PhysicsWorldSetupComponent>(entity);
