@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2887135388066899259}
   - component: {fileID: 3444110554109722287}
   - component: {fileID: 2661011991443115837}
-  m_Layer: 6
+  m_Layer: 4
   m_Name: LiquidPhysicsBenchmark - Box2D - Liquid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,9 +126,9 @@ MonoBehaviour:
         rgba: 0
     contactFilter:
       m_Categories:
-        bitMask: 64
+        bitMask: 16
       m_Contacts:
-        bitMask: 65
+        bitMask: 17
       m_GroupIndex: 0
     m_Density: 1
     m_IsTrigger: 0
