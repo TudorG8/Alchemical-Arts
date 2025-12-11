@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
 [UpdateInGroup(typeof(LiquidPhysicsGroup))]
-[UpdateAfter(typeof(SpatialDataSystem))]
+[UpdateAfter(typeof(ViscositySystem))]
 partial struct WriteLiquidVelocitiesSystem : ISystem
 {
 	private SystemHandle populateLiquidPositionsSystemHandle;
