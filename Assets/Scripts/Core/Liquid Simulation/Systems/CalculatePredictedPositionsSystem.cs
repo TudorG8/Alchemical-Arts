@@ -7,6 +7,7 @@ using Unity.Mathematics;
 
 [UpdateInGroup(typeof(LiquidPhysicsGroup))]
 [UpdateAfter(typeof(ApplyGravitySystem))]
+[UpdateAfter(typeof(InputLiquidForceSystem))]
 partial struct CalculatePredictedPositionsSystem : ISystem
 {
 	public NativeArray<float2> predictedPositionsBuffer;
