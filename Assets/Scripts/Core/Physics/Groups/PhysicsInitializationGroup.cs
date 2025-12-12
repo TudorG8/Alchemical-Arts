@@ -4,5 +4,6 @@ using UnityEngine;
 namespace PotionCraft.Core.Physics.Groups
 {
 	[UpdateInGroup(typeof(InitializationSystemGroup))]
-	public partial class CustomPhysicsInitializationGroup : ComponentSystemGroup { }
+	[UpdateAfter(typeof(WorldUpdateAllocatorResetSystem))]
+	public partial class PhysicsInitializationGroup : ComponentSystemGroup { }
 }

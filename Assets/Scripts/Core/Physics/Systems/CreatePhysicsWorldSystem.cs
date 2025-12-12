@@ -8,7 +8,7 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Systems
 {
-	[UpdateInGroup(typeof(CustomPhysicsInitializationGroup))]
+	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
 	partial struct CreatePhysicsWorldSystem : ISystem
 	{
 		[BurstCompile]
