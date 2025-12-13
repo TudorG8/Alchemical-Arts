@@ -1,16 +1,20 @@
+using PotionCraft.Core.Input.Components;
 using Unity.Entities;
 using UnityEngine;
 
-public class InputDataAuthoring : MonoBehaviour
+namespace PotionCraft.Core.Input.Authoring
 {
-    
-}
-
-public class InputDataAuthoringBaker : Baker<InputDataAuthoring>
-{
-    public override void Bake(InputDataAuthoring authoring)
+    public class InputDataAuthoring : MonoBehaviour
     {
-        var entity = GetEntity(TransformUsageFlags.None);
-        AddComponent<InputDataConfig>(entity);
+        
+    }
+
+    public class InputDataAuthoringBaker : Baker<InputDataAuthoring>
+    {
+        public override void Bake(InputDataAuthoring authoring)
+        {
+            var entity = GetEntity(TransformUsageFlags.None);
+            AddComponent<InputDataConfig>(entity);
+        }
     }
 }
