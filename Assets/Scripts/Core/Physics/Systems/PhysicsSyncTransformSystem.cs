@@ -13,7 +13,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 
 namespace PotionCraft.Core.Physics.Systems
 {
-	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
 	partial struct PhysicsSyncTransformSystem : ISystem
 	{
 		[BurstCompile]

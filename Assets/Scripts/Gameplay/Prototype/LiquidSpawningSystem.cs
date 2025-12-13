@@ -9,8 +9,7 @@ using Unity.Transforms;
 namespace PotionCraft.Gameplay.Systems
 {
 
-	[UpdateInGroup(typeof(SimulationSystemGroup))]
-	[UpdateAfter(typeof(TransformSystemGroup))]
+	[UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
 	partial struct LiquidSpawningSystem : ISystem
 	{
 		private EntityQuery spawnerCountQuery;
