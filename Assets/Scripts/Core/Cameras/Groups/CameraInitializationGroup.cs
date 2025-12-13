@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Camera.Groups
+namespace PotionCraft.Core.Cameras.Groups
 {
 	[UpdateInGroup(typeof(InitializationSystemGroup))]
 	[UpdateAfter(typeof(WorldUpdateAllocatorResetSystem))]
