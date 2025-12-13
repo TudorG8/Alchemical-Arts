@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
 using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Naming.Groups;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace PotionCraft.Core.Naming.Systems
 {
+	[UpdateInGroup(typeof(NamingInitializationGroup), OrderFirst = true)]
 	partial struct SetDebugHelperNameSystem : ISystem
 	{
 		public const string NAME_REFERENCE = "PublicEntityRef";

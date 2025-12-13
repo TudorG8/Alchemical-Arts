@@ -1,9 +1,11 @@
 using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Naming.Groups;
 using Unity.Burst;
 using Unity.Entities;
 
 namespace PotionCraft.Core.Naming.Systems
 {
+	[UpdateInGroup(typeof(NamingInitializationGroup), OrderFirst = true)]
 	partial struct SetEntityNameSystem : ISystem
 	{
 		[BurstCompile]
