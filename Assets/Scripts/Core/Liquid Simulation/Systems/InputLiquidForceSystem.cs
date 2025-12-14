@@ -1,100 +1,98 @@
-using PotionCraft.Gameplay.Authoring;
+using PotionCraft.Core.Input.Components;
+using PotionCraft.Core.LiquidSimulation.Components;
+using PotionCraft.Core.LiquidSimulation.Groups;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
-partial struct InputLiquidForceSystem : ISystem
+namespace PotionCraft.Core.LiquidSimulation.Systems
 {
-	private SystemHandle populateLiquidPositionsSystemHandle;
-
-	private float interactionStrength;
-
-	private float interactionRadius;
-
-
-	[BurstCompile]
-	public void OnCreate(ref SystemState state)
+	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
+	partial struct InputLiquidForceSystem : ISystem
 	{
-		interactionRadius = 3f;
-		interactionStrength = 200f;
-		populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-		state.RequireForUpdate<InputDataConfig>();
-	}
+		private SystemHandle populateLiquidPositionsSystemHandle;
 
-	[BurstCompile]
-	public void OnUpdate(ref SystemState state)
-	{
-		ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
-		var inputData = SystemAPI.GetSingleton<InputDataConfig>();
-		
-		var isPullInteraction = inputData.primaryPressed;
-		var isPushInteraction = inputData.secondaryPressed;
-		var currInteractStrength = 0f;
-		if (isPushInteraction || isPullInteraction)
+		private float interactionStrength;
+
+		private float interactionRadius;
+
+
+		[BurstCompile]
+		public void OnCreate(ref SystemState state)
 		{
-			currInteractStrength = isPushInteraction ? -interactionStrength : interactionStrength;
+			interactionRadius = 3f;
+			interactionStrength = 200f;
+			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
+			state.RequireForUpdate<InputDataConfig>();
 		}
 
-		var applyGravityJob = new ApplyUserInputJob
+		[BurstCompile]
+		public void OnUpdate(ref SystemState state)
 		{
-			velocities = populateLiquidPositionsSystem.velocityBuffer,
-			positions = populateLiquidPositionsSystem.positionBuffer,
-			input = inputData.worldPosition,
-			radius = interactionRadius,
-			strength = currInteractStrength,
-			deltaTime = SystemAPI.Time.DeltaTime,
-		};
-		var applyHandle = applyGravityJob.ScheduleParallel(state.Dependency);
-		applyHandle.Complete();
-	}
-
-	[BurstCompile]
-	public void OnDestroy(ref SystemState state)
-	{
-		
-	}
-
-	[BurstCompile]
-	[WithAll(typeof(_LiquidTag))]
-	public partial struct ApplyUserInputJob : IJobEntity
-	{
-		public NativeArray<float2> velocities;
-
-		[ReadOnly]
-		public NativeArray<float2> positions;
-
-		[ReadOnly]
-		public float2 input;
-
-		[ReadOnly]
-		public float radius;
-		
-		[ReadOnly]
-		public float strength;
-
-		[ReadOnly]
-		public float deltaTime;
-
-
-		void Execute(
-			[EntityIndexInQuery] int index,
-			in _LiquidTag _)
-		{
-			var interactionForce = float2.zero;
-			var offset = input - positions[index];
-			var sqrDst = math.dot(offset, offset);
-			if (sqrDst < radius * radius)
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
+			
+			var isPullInteraction = inputData.primaryPressed;
+			var isPushInteraction = inputData.secondaryPressed;
+			var currInteractStrength = 0f;
+			if (isPushInteraction || isPullInteraction)
 			{
-				var dst = math.sqrt(sqrDst);
-				var dir = dst <= float.Epsilon ? float2.zero : offset / dst;
-				var centreT = 1 - dst/radius;
-				interactionForce += (dir * strength - velocities[index]) * centreT;
+				currInteractStrength = isPushInteraction ? -interactionStrength : interactionStrength;
 			}
 
-			velocities[index] += interactionForce * deltaTime;
+			var applyGravityJob = new ApplyUserInputJob
+			{
+				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				positions = populateLiquidPositionsSystem.positionBuffer,
+				input = inputData.worldPosition,
+				radius = interactionRadius,
+				strength = currInteractStrength,
+				deltaTime = SystemAPI.Time.DeltaTime,
+			};
+			var applyHandle = applyGravityJob.ScheduleParallel(state.Dependency);
+			applyHandle.Complete();
+		}
+
+		[BurstCompile]
+		[WithAll(typeof(LiquidTag))]
+		public partial struct ApplyUserInputJob : IJobEntity
+		{
+			public NativeArray<float2> velocities;
+
+			[ReadOnly]
+			public NativeArray<float2> positions;
+
+			[ReadOnly]
+			public float2 input;
+
+			[ReadOnly]
+			public float radius;
+			
+			[ReadOnly]
+			public float strength;
+
+			[ReadOnly]
+			public float deltaTime;
+
+
+			void Execute(
+				[EntityIndexInQuery] int index)
+			{
+				var interactionForce = float2.zero;
+				var offset = input - positions[index];
+				var sqrDst = math.dot(offset, offset);
+				if (sqrDst < radius * radius)
+				{
+					var dst = math.sqrt(sqrDst);
+					var dir = dst <= float.Epsilon ? float2.zero : offset / dst;
+					var centreT = 1 - dst/radius;
+					interactionForce += (dir * strength - velocities[index]) * centreT;
+				}
+
+				velocities[index] += interactionForce * deltaTime;
+			}
 		}
 	}
 }

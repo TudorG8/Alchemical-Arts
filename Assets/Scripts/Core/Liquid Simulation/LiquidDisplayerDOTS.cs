@@ -1,11 +1,9 @@
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using PotionCraft.Core.LiquidSimulation.Components;
+using PotionCraft.Core.LiquidSimulation.Systems;
 using PotionCraft.Core.Physics.Components;
-using PotionCraft.Gameplay.Authoring;
-using PotionCraft.Shared.Extensions;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -66,7 +64,7 @@ public class LiquidDisplayerDOTS : MonoBehaviour
 		}
 		var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldConfigComponent>().Build(entityManager);
-		var liquidQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidTag>().WithAll<LocalTransform>().WithAll<PhysicsBodyConfigComponent>().Build(entityManager);
+		var liquidQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<LiquidTag>().WithAll<LocalTransform>().WithAll<PhysicsBodyConfigComponent>().Build(entityManager);
 		var numParticles = liquidQuerry.CalculateEntityCount();
 
 		if (worldQuerry.CalculateEntityCount() == 0)

@@ -1,78 +1,82 @@
+using PotionCraft.Core.LiquidSimulation.Components;
+using PotionCraft.Core.LiquidSimulation.Groups;
 using PotionCraft.Core.Physics.Components;
-using PotionCraft.Gameplay.Authoring;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-[UpdateAfter(typeof(ApplyGravitySystem))]
-[UpdateAfter(typeof(InputLiquidForceSystem))]
-partial struct CalculatePredictedPositionsSystem : ISystem
+namespace PotionCraft.Core.LiquidSimulation.Systems
 {
-	public NativeArray<float2> predictedPositionsBuffer;
-
-	private SystemHandle populateLiquidPositionsSystemHandle;
-
-	private float predictionFactor;
-
-
-	[BurstCompile]
-	public void OnCreate(ref SystemState state)
+	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateAfter(typeof(ApplyGravitySystem))]
+	[UpdateAfter(typeof(InputLiquidForceSystem))]
+	partial struct CalculatePredictedPositionsSystem : ISystem
 	{
-		state.RequireForUpdate<PhysicsWorldConfigComponent>();
-		predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
-		populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
+		public NativeArray<float2> predictedPositionsBuffer;
 
-		predictionFactor = 1 / 120f;
-	}
+		private SystemHandle populateLiquidPositionsSystemHandle;
 
-	[BurstCompile]
-	public void OnDestroy()
-	{
-		predictedPositionsBuffer.Dispose();
-	}
+		private float predictionFactor;
 
-	[BurstCompile]
-	public void OnUpdate(ref SystemState state)
-	{
-		ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
 
-		if (populateLiquidPositionsSystem.count == 0)
-			return;
-
-		var readJob = new CalculatePredictedPositionsJob
+		[BurstCompile]
+		public void OnCreate(ref SystemState state)
 		{
-			positions = populateLiquidPositionsSystem.positionBuffer,
-			velocities = populateLiquidPositionsSystem.velocityBuffer,
-			predictedPositions = predictedPositionsBuffer,
-			predictionFactor = predictionFactor
-		};
-		var readHandle = readJob.ScheduleParallel(state.Dependency);
-		readHandle.Complete();
-	}
+			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
+			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
 
-	[BurstCompile]
-	public partial struct CalculatePredictedPositionsJob : IJobEntity
-	{
-		[ReadOnly]
-		public NativeArray<float2> positions;
+			predictionFactor = 1 / 120f;
+		}
 
-		[ReadOnly]
-		public NativeArray<float2> velocities;
-		
-		[ReadOnly]
-		public float predictionFactor;
-		
-		[WriteOnly]
-		public NativeArray<float2> predictedPositions;
-
-
-		void Execute(
-			[EntityIndexInQuery] int index,
-			in _LiquidTag _)
+		[BurstCompile]
+		public void OnDestroy()
 		{
-			predictedPositions[index] = positions[index] + velocities[index] * predictionFactor;
+			predictedPositionsBuffer.Dispose();
+		}
+
+		[BurstCompile]
+		public void OnUpdate(ref SystemState state)
+		{
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+
+			if (populateLiquidPositionsSystem.count == 0)
+				return;
+
+			var readJob = new CalculatePredictedPositionsJob
+			{
+				positions = populateLiquidPositionsSystem.positionBuffer,
+				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				predictedPositions = predictedPositionsBuffer,
+				predictionFactor = predictionFactor
+			};
+			var readHandle = readJob.ScheduleParallel(state.Dependency);
+			readHandle.Complete();
+		}
+
+		[BurstCompile]
+		[WithAll(typeof(LiquidTag))]
+		public partial struct CalculatePredictedPositionsJob : IJobEntity
+		{
+			[ReadOnly]
+			public NativeArray<float2> positions;
+
+			[ReadOnly]
+			public NativeArray<float2> velocities;
+			
+			[ReadOnly]
+			public float predictionFactor;
+			
+			[WriteOnly]
+			public NativeArray<float2> predictedPositions;
+
+
+			void Execute(
+				[EntityIndexInQuery] int index)
+			{
+				predictedPositions[index] = positions[index] + velocities[index] * predictionFactor;
+			}
 		}
 	}
 }
