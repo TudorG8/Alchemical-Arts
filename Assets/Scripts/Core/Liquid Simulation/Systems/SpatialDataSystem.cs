@@ -101,6 +101,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 
 		[BurstCompile]
 		[WithAll(typeof(LiquidTag))]
+		[WithAll(typeof(PhysicsBodyState))]
 		public partial struct PopulateSpatialOutputJob : IJobEntity
 		{
 			[ReadOnly]

@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace PotionCraft.Core.LiquidSimulation.Systems
 {
@@ -63,6 +64,9 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 			ref var calculateDensitySystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<CalculateDensitySystem>(densitySystem);
 			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(positionSystem);
 
+			if (populateLiquidPositionsSystem.count == 0)
+				return;
+
 			var viscosityJob = new ViscosityJob()
 			{
 				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
@@ -87,6 +91,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 
 		[BurstCompile]
 		[WithAll(typeof(LiquidTag))]
+		[WithAll(typeof(PhysicsBodyState))]
 		public partial struct ViscosityJob : IJobEntity
 		{
 			[ReadOnly]

@@ -3,18 +3,27 @@ using UnityEngine;
 
 namespace PotionCraft.Gameplay.Authoring
 {
-	public struct _LiquidSpawner : IComponentData
+	public struct LiquidSpawner : IComponentData
 	{
-		public int Count;
+		public int max;
 
-		public double Timer;
+		public int count;
+
+		public double timer;
+
+		public float delay;
+
+		public Entity liquid;
 	}
 
 
 	public class LiquidSpawnerAuthoring : MonoBehaviour
 	{
-		[field: SerializeField]
-		public WrigglerAuthoring WrigglerAuthoring { get; private set;}
+		public int max;
+
+		public float delay;
+
+		public GameObject liquid;
 
 
 		public class LiquidSpawnerAuthoringBaker : Baker<LiquidSpawnerAuthoring>
@@ -22,7 +31,12 @@ namespace PotionCraft.Gameplay.Authoring
 			public override void Bake(LiquidSpawnerAuthoring authoring)
 			{
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new _LiquidSpawner());
+				AddComponent(entity, new LiquidSpawner()
+				{
+					max = authoring.max,
+					delay = authoring.delay,
+					liquid = GetEntity(authoring.liquid, TransformUsageFlags.Dynamic)
+				});
 			}
 		}
 	}

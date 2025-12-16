@@ -10,14 +10,12 @@ using PotionCraft.Tests.Performance.Utility;
 using Unity.Entities;
 using Unity.Scenes;
 using Unity.Entities.Serialization;
-using PotionCraft.Gameplay.Behaviours;
 using Cysharp.Threading.Tasks;
 using Unity.Collections;
 using PotionCraft.Gameplay.Authoring;
 using System;
 using System.Threading.Tasks;
 using Object = UnityEngine.Object;
-using UnityEditor.SceneManagement;
 
 namespace PotionCraft.Tests.Performance
 {
@@ -42,95 +40,67 @@ namespace PotionCraft.Tests.Performance
 		};
 
 
-		[UnityTest, Performance]
-		public IEnumerator LiquidBouncyness_WithUnity3D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
-		{
-			yield return SceneManager.LoadSceneAsync("LiquidPhysicsBenchmark - Empty Scene");
+		// [UnityTest, Performance]
+		// public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
+		// {
+		// 	static async Awaitable Test()
+		// 	{
+		// 		await using (var loadScene = await SceneLoadingScope.Create("LiquidPhysicsBenchmark - Empty Scene"))
+		// 		await using (var loadSubscene = await EntitySceneLoadingScope.Create("DOTS/LiquidPhysicsBenchmark - DOTS - Subscene Reference"))
+		// 		{
+		// 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+		// 			var wrigglerEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<_WrigglerData>().Build(entityManager).GetSingletonEntity();
+		// 			var spawnerCount = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidSpawner>().Build(entityManager).CalculateEntityCount();
+		// 			var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
+		// 			wrigglerData.LimitPerSpawner = Mathf.CeilToInt(10000f / spawnerCount);
+		// 			wrigglerData.SpawnerDelay = 0f;
+		// 			wrigglerData.MovementSpeed = 0;
+		// 			wrigglerData.RotationSpeed = 0;
+		// 			entityManager.SetComponentData(wrigglerEntity, wrigglerData);
 
-			var prefab = Resources.Load("LiquidPhysicsBenchmark - Unity Wriggler");
-			var wrigglerGO = Object.Instantiate(prefab) as GameObject;
-			var wriggler = wrigglerGO.GetComponentInChildren<WrigglerBehaviour>();
-			var spawnerCount = Object.FindObjectsByType<LiquidSpawnerBehaviour>(FindObjectsSortMode.None).Count();
-			var wrigglerRigidBody = wriggler.GetComponent<Rigidbody>();
-			wrigglerRigidBody.interpolation = testCase.RigidbodyInterpolation;
-			wrigglerRigidBody.collisionDetectionMode = testCase.CollisionDetectionMode;
-			wriggler.LimitPerSpawner = Mathf.CeilToInt(4000f / spawnerCount);
-			wriggler.SpawnerDelay = 0;
-			wriggler.MovementSpeed = 0;
-			wriggler.RotationSpeed = 0;
-			var liquidRigidbody = wriggler.Liquid.GetComponent<Rigidbody>();
-			liquidRigidbody.interpolation = testCase.RigidbodyInterpolation;
-			liquidRigidbody.collisionDetectionMode = testCase.CollisionDetectionMode;
+		// 			await Awaitable.WaitForSecondsAsync(5f);
 
-			yield return new WaitForSecondsRealtime(5f);
+		// 			using (var fps = new FramesPerSecondScope())
+		// 			using (var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder())
+		// 			{
+		// 				await Awaitable.WaitForSecondsAsync(30f);
+		// 			}
+		// 		}
+		// 	}
 
-			using var fps = new FramesPerSecondScope();
-			using var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder();
+		// 	yield return Test();
+		// }
 
-			yield return new WaitForSecondsRealtime(5);
-		}
+		// [UnityTest, Performance]
+		// public IEnumerator LiquidBouncyness_WithBox2D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
+		// {
+		// 	static async Awaitable Test()
+		// 	{
+		// 		await using (var loadScene = await SceneLoadingScope.Create("LiquidPhysicsBenchmark - Empty Scene"))
+		// 		await using (var loadSubscene = await EntitySceneLoadingScope.Create("Box2D/LiquidPhysicsBenchmark - Box2D - Subscene Reference"))
+		// 		{
+		// 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+		// 			var wrigglerEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<_WrigglerData>().Build(entityManager).GetSingletonEntity();
+		// 			var spawnerCount = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidSpawner>().Build(entityManager).CalculateEntityCount();
+		// 			var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
+		// 			wrigglerData.LimitPerSpawner = Mathf.CeilToInt(10000f / spawnerCount);
+		// 			wrigglerData.SpawnerDelay = 0f;
+		// 			wrigglerData.MovementSpeed = 0;
+		// 			wrigglerData.RotationSpeed = 0;
+		// 			entityManager.SetComponentData(wrigglerEntity, wrigglerData);
 
-		[UnityTest, Performance]
-		public IEnumerator LiquidBouncyness_WithDOTS_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
-		{
-			static async Awaitable Test()
-			{
-				await using (var loadScene = await SceneLoadingScope.Create("LiquidPhysicsBenchmark - Empty Scene"))
-				await using (var loadSubscene = await EntitySceneLoadingScope.Create("DOTS/LiquidPhysicsBenchmark - DOTS - Subscene Reference"))
-				{
-					var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-					var wrigglerEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<_WrigglerData>().Build(entityManager).GetSingletonEntity();
-					var spawnerCount = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidSpawner>().Build(entityManager).CalculateEntityCount();
-					var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
-					wrigglerData.LimitPerSpawner = Mathf.CeilToInt(10000f / spawnerCount);
-					wrigglerData.SpawnerDelay = 0f;
-					wrigglerData.MovementSpeed = 0;
-					wrigglerData.RotationSpeed = 0;
-					entityManager.SetComponentData(wrigglerEntity, wrigglerData);
+		// 			await Awaitable.WaitForSecondsAsync(5f);
 
-					await Awaitable.WaitForSecondsAsync(5f);
+		// 			using (var fps = new FramesPerSecondScope())
+		// 			using (var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder())
+		// 			{
+		// 				await Awaitable.WaitForSecondsAsync(30f);
+		// 			}
+		// 		}
+		// 	}
 
-					using (var fps = new FramesPerSecondScope())
-					using (var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder())
-					{
-						await Awaitable.WaitForSecondsAsync(30f);
-					}
-				}
-			}
-
-			yield return Test();
-		}
-
-		[UnityTest, Performance]
-		public IEnumerator LiquidBouncyness_WithBox2D_UsingRigidBodySettings([ValueSource(nameof(TestCases))] UnityTestCase testCase)
-		{
-			static async Awaitable Test()
-			{
-				await using (var loadScene = await SceneLoadingScope.Create("LiquidPhysicsBenchmark - Empty Scene"))
-				await using (var loadSubscene = await EntitySceneLoadingScope.Create("Box2D/LiquidPhysicsBenchmark - Box2D - Subscene Reference"))
-				{
-					var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-					var wrigglerEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<_WrigglerData>().Build(entityManager).GetSingletonEntity();
-					var spawnerCount = new EntityQueryBuilder(Allocator.Temp).WithAll<_LiquidSpawner>().Build(entityManager).CalculateEntityCount();
-					var wrigglerData = entityManager.GetComponentData<_WrigglerData>(wrigglerEntity);
-					wrigglerData.LimitPerSpawner = Mathf.CeilToInt(10000f / spawnerCount);
-					wrigglerData.SpawnerDelay = 0f;
-					wrigglerData.MovementSpeed = 0;
-					wrigglerData.RotationSpeed = 0;
-					entityManager.SetComponentData(wrigglerEntity, wrigglerData);
-
-					await Awaitable.WaitForSecondsAsync(5f);
-
-					using (var fps = new FramesPerSecondScope())
-					using (var frameTime = PerformanceTestUtility.ScopedFrameTimeWithOrder())
-					{
-						await Awaitable.WaitForSecondsAsync(30f);
-					}
-				}
-			}
-
-			yield return Test();
-		}
+		// 	yield return Test();
+		// }
 
 		public class SceneLoadingScope : IAsyncDisposable
 		{

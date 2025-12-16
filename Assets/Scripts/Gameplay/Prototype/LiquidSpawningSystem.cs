@@ -8,49 +8,76 @@ using Unity.Transforms;
 
 namespace PotionCraft.Gameplay.Systems
 {
-	[UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
+	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
 	partial struct LiquidSpawningSystem : ISystem
 	{
-		private EntityQuery spawnerCountQuery;
+		private EntityQuery validLiquidSpawnerQuery;
 
 		private Random random;
 
 
-		// [BurstCompile]
+		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<_WrigglerData>();
-			state.RequireForUpdate<FolderManagerData>();
-			state.RequireForUpdate<_LiquidSpawner>();
-			spawnerCountQuery = new EntityQueryBuilder(Allocator.Temp)
-				.WithAll<_LiquidSpawner>()
-				.Build(ref state);
+			validLiquidSpawnerQuery = SystemAPI.QueryBuilder()
+				.WithAll<LocalToWorld>()
+				.WithAll<LiquidSpawner>()
+				.Build();
 			random = new Random(0x6E624EB7u);
+			
+			state.RequireForUpdate<FolderManagerData>();
+			state.RequireForUpdate(validLiquidSpawnerQuery);
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
-			var commandBuffer = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
+			var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 			var liquidFolder = SystemAPI.GetSingleton<FolderManagerData>().LiquidFolder;
 
-			var wriggler = SystemAPI.GetSingleton<_WrigglerData>();
-			foreach(var (localToWorld, liquidSpawner, e) in SystemAPI.Query<RefRW<LocalToWorld>, RefRW<_LiquidSpawner>>().WithEntityAccess())
+			var spawnLiquidJob = new SpawnLiquidJob
 			{
-				if (liquidSpawner.ValueRO.Timer > elapsedTime) continue;
-				if (liquidSpawner.ValueRO.Count >= wriggler.LimitPerSpawner)
-				{
-					commandBuffer.RemoveComponent<_LiquidSpawner>(e);
-					continue;
-				}
+				ecb = commandBuffer,
+				elapsedTime = elapsedTime,
+				baseSeed = random.NextUInt(),
+				folder = liquidFolder
+			};
+			state.Dependency = spawnLiquidJob.ScheduleParallel(validLiquidSpawnerQuery, state.Dependency);
+		}
 
-				var obj = commandBuffer.Instantiate(wriggler.Liquid);
-				commandBuffer.SetComponent(obj, LocalTransform.FromPosition(localToWorld.ValueRO.Position + new float3(random.NextFloat(-0.01f, 0.01f), 0, 0)));
-				commandBuffer.AddComponent(obj, new Parent() { Value = liquidFolder });
-				liquidSpawner.ValueRW.Count++;
+		[BurstCompile]
+		public partial struct SpawnLiquidJob : IJobEntity
+		{
+			[WriteOnly]
+			public EntityCommandBuffer.ParallelWriter ecb;
 
-				liquidSpawner.ValueRW.Timer = elapsedTime + wriggler.SpawnerDelay;
+			[ReadOnly]
+			public double elapsedTime;
+
+			[ReadOnly]
+			public uint baseSeed;
+
+			[ReadOnly]
+			public Entity folder;
+
+
+			void Execute(
+				[EntityIndexInQuery] int index,
+				ref LiquidSpawner liquidSpawner,
+				in LocalToWorld localToWorld)
+			{
+				if (liquidSpawner.timer > elapsedTime) return;
+				if (liquidSpawner.count > liquidSpawner.max) return; 
+
+				var random = new Random(baseSeed + (uint)index);
+
+				var obj = ecb.Instantiate(index, liquidSpawner.liquid);
+				ecb.SetComponent(index, obj, LocalTransform.FromPosition(localToWorld.Position + new float3(random.NextFloat(-0.1f, 0.1f), random.NextFloat(-0.1f, 0.1f), 0)));
+				ecb.AddComponent(index, obj, new Parent() { Value = folder });
+				
+				liquidSpawner.count++;
+				liquidSpawner.timer = elapsedTime + liquidSpawner.delay;
 			}
 		}
 	}

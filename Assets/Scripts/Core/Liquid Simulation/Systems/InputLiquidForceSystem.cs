@@ -1,6 +1,7 @@
 using PotionCraft.Core.Input.Components;
 using PotionCraft.Core.LiquidSimulation.Components;
 using PotionCraft.Core.LiquidSimulation.Groups;
+using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -32,6 +33,8 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		public void OnUpdate(ref SystemState state)
 		{
 			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			if (populateLiquidPositionsSystem.count == 0)
+				return;
 			var inputData = SystemAPI.GetSingleton<InputDataState>();
 			
 			var isPullInteraction = inputData.primaryPressed;
@@ -57,6 +60,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 
 		[BurstCompile]
 		[WithAll(typeof(LiquidTag))]
+		[WithAll(typeof(PhysicsBodyState))]
 		public partial struct ApplyUserInputJob : IJobEntity
 		{
 			public NativeArray<float2> velocities;
