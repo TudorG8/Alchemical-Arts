@@ -13,7 +13,7 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsCircleSetupComponent>();
+			state.RequireForUpdate<PhysicsCircleSetup>();
 		}
 
 		[BurstCompile]
@@ -21,13 +21,13 @@ namespace PotionCraft.Core.Physics.Systems
 		{
 			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-			foreach (var (circleSetup, entity) in SystemAPI.Query<PhysicsCircleSetupComponent>().WithEntityAccess())
+			foreach (var (circleSetup, entity) in SystemAPI.Query<PhysicsCircleSetup>().WithEntityAccess())
 			{
-				var parent = SystemAPI.GetComponent<PhysicsBodyConfigComponent>(circleSetup.bodyEntity);
+				var parent = SystemAPI.GetComponent<PhysicsBodyState>(circleSetup.bodyEntity);
 
 				var physicsShape = parent.physicsBody.CreateShape(circleSetup.circleGeometry, circleSetup.shapeDefinition);
-				commandBuffer.AddComponent(entity, new PhysicsShapeConfigComponent() { physicsShape = physicsShape });
-				commandBuffer.RemoveComponent<PhysicsCircleSetupComponent>(entity);
+				commandBuffer.AddComponent(entity, new PhysicsShapeState() { physicsShape = physicsShape });
+				commandBuffer.RemoveComponent<PhysicsCircleSetup>(entity);
 			}
 
 			commandBuffer.Playback(state.EntityManager);

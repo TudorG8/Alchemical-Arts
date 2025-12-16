@@ -23,7 +23,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsWorldState>();
 			predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
 			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
 

@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using PotionCraft.Core.Physics.Components;
 using PotionCraft.Core.Physics.Extensions;
 using PotionCraft.Shared.Extensions;
@@ -6,9 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine.LowLevelPhysics2D;
 using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 
 namespace PotionCraft.Core.Physics.Systems
@@ -19,14 +16,14 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsBodyConfigComponent>();
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsBodyState>();
+			state.RequireForUpdate<PhysicsWorldState>();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			var physicsWorldConfig = SystemAPI.GetSingleton<PhysicsWorldConfigComponent>();
+			var physicsWorldConfig = SystemAPI.GetSingleton<PhysicsWorldState>();
 			
 			var bodyUpdatesLength = physicsWorldConfig.physicsWorld.bodyUpdateEvents.Length;
 			NativeArray<BodyUpdateEvent> bodyUpdates = new(
@@ -52,7 +49,7 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public partial struct PhysicsTransformWriteJob : IJobParallelFor
 		{
-			[Unity.Collections.ReadOnly]
+			[ReadOnly]
 			[DeallocateOnJobCompletion]
 			public NativeArray<BodyUpdateEvent> BodyUpdateEvents;
 			

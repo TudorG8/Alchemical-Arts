@@ -13,15 +13,15 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsWorldState>();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldConfigComponent>().Build(state.EntityManager);
+			var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldState>().Build(state.EntityManager);
 			var world = worldQuerry.GetSingletonEntity();
-			var worldScript = state.EntityManager.GetComponentData<PhysicsWorldConfigComponent>(world);
+			var worldScript = state.EntityManager.GetComponentData<PhysicsWorldState>(world);
 			worldScript.physicsWorld.Simulate(SystemAPI.Time.DeltaTime);
 		}
 	}

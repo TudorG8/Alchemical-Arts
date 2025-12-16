@@ -1,10 +1,7 @@
-using System;
 using System.Linq;
-using PotionCraft.Core.Naming.Authoring;
 using PotionCraft.Core.Physics.Components;
 using PotionCraft.Core.Physics.Extensions;
 using PotionCraft.Shared.Extensions;
-using PotionCraft.Shared.Scopes;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
@@ -51,13 +48,13 @@ namespace PotionCraft.Core.Physics.Authoring
 			var geometry = authoring.ToGeometry(authoring.PhysicsBodyAuthoring.transform.ToPhysicsTransform());
 
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			var buffer = AddBuffer<PolygonGeometryBufferData>(entity);
-			AddComponent(entity, new PhysicsBoxSetupComponent()
+			var buffer = AddBuffer<PolygonGeometryData>(entity);
+			AddComponent(entity, new PhysicsBoxSetup()
 			{
 				shapeDefinition = authoring.ShapeDefinition,
 				bodyEntity = physicsBody
 			});
-			buffer.Add(new PolygonGeometryBufferData() { geometry = geometry });
+			buffer.Add(new PolygonGeometryData() { geometry = geometry });
 		}
 	}
 }

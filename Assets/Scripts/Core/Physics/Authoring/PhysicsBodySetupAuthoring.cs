@@ -1,4 +1,3 @@
-using PotionCraft.Core.Naming.Authoring;
 using PotionCraft.Core.Physics.Components;
 using PotionCraft.Shared.Extensions;
 using Unity.Entities;
@@ -30,7 +29,7 @@ namespace PotionCraft.Core.Physics.Authoring
 			var bodyDefinition = authoring.ToBody();
 
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new PhysicsBodySetupComponent() { bodyDefinition = bodyDefinition });
+			AddComponent(entity, new PhysicsBodySetup() { bodyDefinition = bodyDefinition });
 		}
 	}
 }

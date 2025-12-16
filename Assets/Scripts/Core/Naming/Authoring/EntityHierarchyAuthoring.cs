@@ -1,25 +1,10 @@
+using PotionCraft.Core.Naming.BakingComponents;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
 namespace PotionCraft.Core.Naming.Authoring
 {
-	[BakingType]
-	public struct _TransformLinkData : IBufferElementData
-	{
-		public Entity Parent;
-
-		public Entity Child;
-
-		public FixedString64Bytes Name;
-	}
-
-	public struct _EntityNameData : IComponentData, IEnableableComponent
-	{
-		public FixedString64Bytes Value;
-	}
-
-
 	public class EntityHierarchyAuthoring : MonoBehaviour 
 	{
 		[field:SerializeField]
@@ -31,7 +16,7 @@ namespace PotionCraft.Core.Naming.Authoring
 			public override void Bake(EntityHierarchyAuthoring authoring)
 			{
 				var entity = GetEntity(authoring.transform, TransformUsageFlags.Dynamic);
-				var buffer = AddBuffer<_TransformLinkData>(entity);
+				var buffer = AddBuffer<TransformLinkBakingData>(entity);
 
 				if (authoring.IncludeChildren)
 				{
@@ -43,7 +28,7 @@ namespace PotionCraft.Core.Naming.Authoring
 				}
 			}
 
-			private void ApplyHirarchyRecursively(DynamicBuffer<_TransformLinkData> buffer, Transform transform)
+			private void ApplyHirarchyRecursively(DynamicBuffer<TransformLinkBakingData> buffer, Transform transform)
 			{
 				ApplyHierarchy(buffer, transform);
 				foreach(Transform child in transform)
@@ -54,7 +39,7 @@ namespace PotionCraft.Core.Naming.Authoring
 				}
 			}
 
-			private void ApplyHierarchy(DynamicBuffer<_TransformLinkData> buffer, Transform transform)
+			private void ApplyHierarchy(DynamicBuffer<TransformLinkBakingData> buffer, Transform transform)
 			{
 				var entity = GetEntity(transform, TransformUsageFlags.Dynamic);
 
@@ -62,7 +47,7 @@ namespace PotionCraft.Core.Naming.Authoring
 					? Entity.Null
 					: GetEntity(transform.parent, TransformUsageFlags.Dynamic);
 
-				buffer.Add(new _TransformLinkData
+				buffer.Add(new TransformLinkBakingData
 				{
 					Parent = parentEntity,
 					Child = entity,

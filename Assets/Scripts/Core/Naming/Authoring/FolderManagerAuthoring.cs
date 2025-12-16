@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Naming.Authoring
 {
-	public struct _FolderManagerData : IComponentData
+	public struct FolderManagerData : IComponentData
 	{
 		public Entity LiquidFolder;
 
@@ -24,7 +24,7 @@ namespace PotionCraft.Core.Naming.Authoring
 			public override void Bake(FolderManagerAuthoring authoring)
 			{
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new _FolderManagerData()
+				AddComponent(entity, new FolderManagerData()
 				{
 					LiquidFolder = GetEntity(authoring.LiquidFolder, TransformUsageFlags.Dynamic),
 					BuildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),

@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Naming.Components;
 using PotionCraft.Core.Naming.Groups;
 using Unity.Burst;
 using Unity.Collections;
@@ -7,12 +7,14 @@ using Unity.Entities;
 
 namespace PotionCraft.Core.Naming.Systems
 {
-	[UpdateInGroup(typeof(NamingInitializationGroup), OrderFirst = true)]
+	[UpdateInGroup(typeof(NamingInitializationGroup))]
 	partial struct SetDebugHelperNameSystem : ISystem
 	{
 		public const string NAME_REFERENCE = "PublicEntityRef";
 
 		private EntityQuery entitiesWithoutNameQuery;
+
+		private FixedString64Bytes stringBuffer;
 
 
 		[BurstCompile]
@@ -20,31 +22,36 @@ namespace PotionCraft.Core.Naming.Systems
 		{
 			entitiesWithoutNameQuery = new EntityQueryBuilder(Allocator.Temp)
 				.WithAll<SceneSection, SceneTag>()
-				.WithAbsent<_EntityNameData>()
+				.WithAbsent<EntityNameConfig>()
 				.Build(ref state);
 			state.RequireForUpdate(entitiesWithoutNameQuery);
 		}
 
 		public void OnUpdate(ref SystemState state)
 		{
-			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 				
 			var noNameEntities = entitiesWithoutNameQuery.ToEntityArray(Allocator.Temp);
 			foreach (var entity in noNameEntities)
 			{
+				stringBuffer.Clear();
 				var componentTypes = state.EntityManager.GetComponentTypes(entity, Allocator.Temp);
 				foreach(var type in componentTypes)
 				{
 					if (type.GetManagedType().Name == NAME_REFERENCE)
 					{
-						commandBuffer.AddComponent(entity, new _EntityNameData() { Value = "Unity Debug Helper"});
-						continue;
+						stringBuffer.Append("Unity Debug Helper");
+						break;
 					}
-					commandBuffer.AddComponent(entity, new _EntityNameData() { Value = state.EntityManager.GetName(entity)});
 				}
-			}
 
-			commandBuffer.Playback(state.EntityManager);
+				if (stringBuffer.Length == 0)
+				{
+					stringBuffer.Append($"MISSING NAME: Entity({entity.Version}:{entity.Index})");
+				}
+
+				commandBuffer.AddComponent(entity, new EntityNameConfig() { Value = stringBuffer });
+			}
 		}
 	}
 }

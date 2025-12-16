@@ -24,11 +24,11 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsWorldState>();
 			positionBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
 			velocityBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
 			liquidQuery = SystemAPI.QueryBuilder()
-				.WithAll<LiquidTag>().WithAll<PhysicsBodyConfigComponent>().WithAll<LocalTransform>()
+				.WithAll<LiquidTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
 		}
 
@@ -70,7 +70,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 
 			void Execute(
 				[EntityIndexInQuery] int index,
-				in PhysicsBodyConfigComponent body,
+				in PhysicsBodyState body,
 				in LocalTransform localTransform)
 			{
 				positions[index] = localTransform.Position.xy;

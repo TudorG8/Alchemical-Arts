@@ -1,12 +1,13 @@
-using Unity.Collections;
 using Unity.Entities;
 using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Components
 {
-	public struct PhysicsBoxSetupComponent : IComponentData
+	public struct PhysicsCircleSetup : IComponentData
 	{
 		public PhysicsShapeDefinition shapeDefinition;
+
+		public CircleGeometry circleGeometry;
 
 		public Entity bodyEntity;
 	}

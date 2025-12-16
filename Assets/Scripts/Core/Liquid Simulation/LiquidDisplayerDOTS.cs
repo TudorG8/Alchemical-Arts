@@ -63,8 +63,8 @@ public class LiquidDisplayerDOTS : MonoBehaviour
 			argsBuffer.Release();
 		}
 		var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-		var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldConfigComponent>().Build(entityManager);
-		var liquidQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<LiquidTag>().WithAll<LocalTransform>().WithAll<PhysicsBodyConfigComponent>().Build(entityManager);
+		var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldState>().Build(entityManager);
+		var liquidQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<LiquidTag>().WithAll<LocalTransform>().WithAll<PhysicsBodyState>().Build(entityManager);
 		var numParticles = liquidQuerry.CalculateEntityCount();
 
 		if (worldQuerry.CalculateEntityCount() == 0)

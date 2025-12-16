@@ -38,7 +38,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsWorldState>();
 
 			spatialDataSystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<SpatialDataSystem>();
 			predictedPositionsSystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<CalculatePredictedPositionsSystem>();

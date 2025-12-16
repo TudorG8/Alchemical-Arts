@@ -1,4 +1,5 @@
-using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Naming.BakingComponents;
+using PotionCraft.Core.Naming.Components;
 using PotionCraft.Shared.Utility;
 using Unity.Burst;
 using Unity.Collections;
@@ -14,19 +15,19 @@ namespace PotionCraft.Core.Naming.BakingSystems
 		{
 			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-			foreach (var (transformLinkBuffer, entity) in SystemAPI.Query<DynamicBuffer<_TransformLinkData>>()
+			foreach (var (transformLinkBuffer, entity) in SystemAPI.Query<DynamicBuffer<TransformLinkBakingData>>()
 				.WithOptions(EntityQueryOptions.IncludePrefab)
 				.WithEntityAccess())
 			{
 				foreach(var transformLink in transformLinkBuffer)
 				{
-					commandBuffer.AddComponent(transformLink.Child, new _EntityNameData { Value = transformLink.Name });
+					commandBuffer.AddComponent(transformLink.Child, new EntityNameConfig { Value = transformLink.Name });
 					if (transformLink.Parent != Entity.Null)
 					{
 						ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);
 					}
 				}
-				commandBuffer.RemoveComponent<_TransformLinkData>(entity);
+				commandBuffer.RemoveComponent<TransformLinkBakingData>(entity);
 			}
 			
 			commandBuffer.Playback(state.EntityManager);

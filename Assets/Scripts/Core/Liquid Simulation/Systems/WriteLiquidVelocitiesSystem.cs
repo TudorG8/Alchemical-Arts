@@ -23,7 +23,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldConfigComponent>();
+			state.RequireForUpdate<PhysicsWorldState>();
 			batchVelocityBuffer = new NativeArray<BatchVelocity>(10000, Allocator.Persistent);
 			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
 		}
@@ -70,7 +70,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 
 			void Execute(
 				[EntityIndexInQuery] int index,
-				ref PhysicsBodyConfigComponent body)
+				ref PhysicsBodyState body)
 			{
 				batchVelocityBuffer[index] = new BatchVelocity
 				{

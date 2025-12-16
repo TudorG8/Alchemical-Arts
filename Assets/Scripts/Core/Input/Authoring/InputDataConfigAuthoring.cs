@@ -14,7 +14,7 @@ namespace PotionCraft.Core.Input.Authoring
         public override void Bake(InputDataAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.None);
-            AddComponent<InputDataConfig>(entity);
+            AddComponent<InputDataState>(entity);
         }
     }
 }

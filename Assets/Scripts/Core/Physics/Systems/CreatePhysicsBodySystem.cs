@@ -17,25 +17,25 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsBodySetupComponent>();
+			state.RequireForUpdate<PhysicsBodySetup>();
 		}
 		
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			var physicsWorldConfig = SystemAPI.GetSingleton<PhysicsWorldConfigComponent>();
+			var physicsWorldConfig = SystemAPI.GetSingleton<PhysicsWorldState>();
 			
 			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-			foreach (var (physicsBodySetup, localTransform, entity) in SystemAPI.Query<PhysicsBodySetupComponent, LocalTransform>().WithEntityAccess())
+			foreach (var (physicsBodySetup, localTransform, entity) in SystemAPI.Query<PhysicsBodySetup, LocalTransform>().WithEntityAccess())
 			{
 				var definition = physicsBodySetup.bodyDefinition;
 				definition.position = localTransform.Position.To2D();
 				var physicsBody = physicsWorldConfig.physicsWorld.CreateBody(definition);
 
 				SetEntity(physicsBody, entity);
-				commandBuffer.AddComponent(entity, new PhysicsBodyConfigComponent() { physicsBody = physicsBody });
-				commandBuffer.RemoveComponent<PhysicsBodySetupComponent>(entity);
+				commandBuffer.AddComponent(entity, new PhysicsBodyState() { physicsBody = physicsBody });
+				commandBuffer.RemoveComponent<PhysicsBodySetup>(entity);
 			}
 
 			commandBuffer.Playback(state.EntityManager);

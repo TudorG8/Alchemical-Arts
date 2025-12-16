@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using PotionCraft.Core.Physics.Components;
 using PotionCraft.Core.Physics.Groups;
 using Unity.Burst;
@@ -14,7 +13,7 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldSetupComponent>();
+			state.RequireForUpdate<PhysicsWorldSetup>();
 		}
 
 		[BurstCompile]
@@ -22,12 +21,12 @@ namespace PotionCraft.Core.Physics.Systems
 		{
 			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-			foreach (var (physicsWorldSetup, entity) in SystemAPI.Query<PhysicsWorldSetupComponent>().WithEntityAccess())
+			foreach (var (physicsWorldSetup, entity) in SystemAPI.Query<PhysicsWorldSetup>().WithEntityAccess())
 			{
 				var physicsWorld = PhysicsWorld.Create(physicsWorldSetup.worldDefinition);
-				var physicsWorldConfig = new PhysicsWorldConfigComponent() { physicsWorld = physicsWorld };
+				var physicsWorldConfig = new PhysicsWorldState() { physicsWorld = physicsWorld };
 				commandBuffer.AddComponent(entity, physicsWorldConfig);
-				commandBuffer.RemoveComponent<PhysicsWorldSetupComponent>(entity);
+				commandBuffer.RemoveComponent<PhysicsWorldSetup>(entity);
 			}
 			
 			commandBuffer.Playback(state.EntityManager);

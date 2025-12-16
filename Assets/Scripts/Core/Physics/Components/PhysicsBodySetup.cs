@@ -3,8 +3,8 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Components
 {
-	public struct PolygonGeometryBufferData : IBufferElementData
+	public struct PhysicsBodySetup : IComponentData
 	{
-		public PolygonGeometry geometry;
+		public PhysicsBodyDefinition bodyDefinition;
 	}
 }

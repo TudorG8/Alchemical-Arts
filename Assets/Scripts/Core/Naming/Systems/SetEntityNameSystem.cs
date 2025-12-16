@@ -1,21 +1,53 @@
-using PotionCraft.Core.Naming.Authoring;
+using PotionCraft.Core.Naming.Components;
 using PotionCraft.Core.Naming.Groups;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace PotionCraft.Core.Naming.Systems
 {
-	[UpdateInGroup(typeof(NamingInitializationGroup), OrderFirst = true)]
+	[UpdateInGroup(typeof(NamingInitializationGroup))]
 	partial struct SetEntityNameSystem : ISystem
 	{
+		private EntityQuery entitiesWithNameDataQuery;
+
+
+		[BurstCompile]
+		public void OnCreate(ref SystemState state)
+		{
+			entitiesWithNameDataQuery = SystemAPI.QueryBuilder().WithAll<EntityNameConfig>().WithOptions(EntityQueryOptions.IncludePrefab).Build();
+		}
+
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			foreach(var (entityName, entity) in SystemAPI.Query<_EntityNameData>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludePrefab))
+			if (entitiesWithNameDataQuery.CalculateEntityCount() == 0)
+				return;
+
+			var ecbSingleton = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>();
+			var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+
+			var writeParticlesJob = new SetNameJob
 			{
-				state.EntityManager.SetName(entity, entityName.Value);
-				state.EntityManager.SetComponentEnabled<_EntityNameData>(entity, false);
-			}
+				ecb = commandBuffer,
+			};
+			state.Dependency = writeParticlesJob.ScheduleParallel(entitiesWithNameDataQuery, state.Dependency);
+		}
+	}
+
+	[BurstCompile]
+	public partial struct SetNameJob : IJobEntity
+	{
+		[WriteOnly]
+		public EntityCommandBuffer.ParallelWriter ecb;
+
+		void Execute(
+			[EntityIndexInQuery] int index,
+			Entity entity,
+			ref EntityNameConfig name)
+		{
+			ecb.SetName(index, entity, name.Value);
+			ecb.SetComponentEnabled<EntityNameConfig>(index, entity, false);
 		}
 	}
 }

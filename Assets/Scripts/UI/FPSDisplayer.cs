@@ -1,25 +1,26 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using Unity.Entities;
 using TMPro;
 
-public class FPSDisplayer : MonoBehaviour
+namespace PotionCraft.UI
 {
-	public TextMeshProUGUI FPSAmount;
-
-	private void Start()
+	public class FPSDisplayer : MonoBehaviour
 	{
-		FPSLoop();
-	}
+		public TextMeshProUGUI FPSAmount;
 
-	private async void FPSLoop()
-	{
-		while (true)
+
+		private void Start()
 		{
-			FPSAmount.text = $"{Mathf.FloorToInt(1f / Time.unscaledDeltaTime)}";
+			FPSLoop();
+		}
 
-			await Awaitable.WaitForSecondsAsync(0.05f);
+		private async void FPSLoop()
+		{
+			while (true)
+			{
+				FPSAmount.text = $"{Mathf.FloorToInt(1f / Time.unscaledDeltaTime)}";
+
+				await Awaitable.WaitForSecondsAsync(0.05f);
+			}
 		}
 	}
 }

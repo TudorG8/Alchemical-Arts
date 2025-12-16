@@ -2,15 +2,9 @@ using PotionCraft.Core.Naming.Authoring;
 using PotionCraft.Core.Physics.Components;
 using PotionCraft.Core.Physics.Extensions;
 using PotionCraft.Shared.Extensions;
-using PotionCraft.Shared.Scopes;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
-
-public interface IDrawableShape
-{
-
-}
 
 namespace PotionCraft.Core.Physics.Authoring
 {
@@ -60,7 +54,7 @@ namespace PotionCraft.Core.Physics.Authoring
 			var physicsBody = GetEntity(authoring.PhysicsBodyAuthoring, TransformUsageFlags.Dynamic);
 			var circleGeometry = authoring.ToCircleGeometry(authoring.PhysicsBodyAuthoring.transform.ToPhysicsTransform());
 
-			AddComponent(entity, new PhysicsCircleSetupComponent()
+			AddComponent(entity, new PhysicsCircleSetup()
 			{
 				shapeDefinition = authoring.ShapeDefinition,
 				circleGeometry = circleGeometry,

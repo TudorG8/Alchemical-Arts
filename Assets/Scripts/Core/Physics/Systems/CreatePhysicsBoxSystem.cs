@@ -3,7 +3,6 @@ using PotionCraft.Core.Physics.Groups;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Systems
 {
@@ -16,17 +15,16 @@ namespace PotionCraft.Core.Physics.Systems
 		{
 			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
-			foreach (var (physicsShapeSetup, entity) in SystemAPI.Query<PhysicsBoxSetupComponent>().WithEntityAccess())
+			foreach (var (physicsShapeSetup, entity) in SystemAPI.Query<PhysicsBoxSetup>().WithEntityAccess())
 			{
-				var parent = SystemAPI.GetComponent<PhysicsBodyConfigComponent>(physicsShapeSetup.bodyEntity);
-				var buffer = SystemAPI.GetBuffer<PolygonGeometryBufferData>(entity);
+				var parent = SystemAPI.GetComponent<PhysicsBodyState>(physicsShapeSetup.bodyEntity);
+				var buffer = SystemAPI.GetBuffer<PolygonGeometryData>(entity);
 
 				foreach(var geometry in buffer)
 				{
-					var physicsShape = parent.physicsBody.CreateShape(geometry.geometry, physicsShapeSetup.shapeDefinition);
+					parent.physicsBody.CreateShape(geometry.geometry, physicsShapeSetup.shapeDefinition);
 				}
-				// commandBuffer.AddComponent(entity, new PhysicsBoxConfigComponent() { physicsShape = physicsShape });
-				commandBuffer.RemoveComponent<PhysicsBoxSetupComponent>(entity);
+				commandBuffer.RemoveComponent<PhysicsBoxSetup>(entity);
 			}
 
 			commandBuffer.Playback(state.EntityManager);

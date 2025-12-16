@@ -18,7 +18,7 @@ namespace PotionCraft.Core.Physics.Authoring
 		public override void Bake(PhysicsWorldSetupAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new PhysicsWorldSetupComponent() { worldDefinition = authoring.WorldDefinition });
+			AddComponent(entity, new PhysicsWorldSetup() { worldDefinition = authoring.WorldDefinition });
 		}
 	}
 }

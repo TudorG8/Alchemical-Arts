@@ -25,14 +25,14 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 			interactionRadius = 3f;
 			interactionStrength = 200f;
 			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-			state.RequireForUpdate<InputDataConfig>();
+			state.RequireForUpdate<InputDataState>();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
 			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
-			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
+			var inputData = SystemAPI.GetSingleton<InputDataState>();
 			
 			var isPullInteraction = inputData.primaryPressed;
 			var isPushInteraction = inputData.secondaryPressed;

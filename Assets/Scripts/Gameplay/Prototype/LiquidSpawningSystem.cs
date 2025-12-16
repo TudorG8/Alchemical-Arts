@@ -8,7 +8,6 @@ using Unity.Transforms;
 
 namespace PotionCraft.Gameplay.Systems
 {
-
 	[UpdateInGroup(typeof(VariableRateSimulationSystemGroup))]
 	partial struct LiquidSpawningSystem : ISystem
 	{
@@ -21,7 +20,7 @@ namespace PotionCraft.Gameplay.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<_WrigglerData>();
-			state.RequireForUpdate<_FolderManagerData>();
+			state.RequireForUpdate<FolderManagerData>();
 			state.RequireForUpdate<_LiquidSpawner>();
 			spawnerCountQuery = new EntityQueryBuilder(Allocator.Temp)
 				.WithAll<_LiquidSpawner>()
@@ -34,7 +33,7 @@ namespace PotionCraft.Gameplay.Systems
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
 			var commandBuffer = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-			var liquidFolder = SystemAPI.GetSingleton<_FolderManagerData>().LiquidFolder;
+			var liquidFolder = SystemAPI.GetSingleton<FolderManagerData>().LiquidFolder;
 
 			var wriggler = SystemAPI.GetSingleton<_WrigglerData>();
 			foreach(var (localToWorld, liquidSpawner, e) in SystemAPI.Query<RefRW<LocalToWorld>, RefRW<_LiquidSpawner>>().WithEntityAccess())

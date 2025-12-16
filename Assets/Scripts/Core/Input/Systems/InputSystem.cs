@@ -23,7 +23,7 @@ namespace PotionCraft.Core.Input.Systems
 			gameInput.Enable();
 
 			cameraQuery = SystemAPI.QueryBuilder().WithAll<MainCameraTag>().WithAll<CameraReference>().Build();
-			gameInputQuery = SystemAPI.QueryBuilder().WithAll<InputDataConfig>().Build();
+			gameInputQuery = SystemAPI.QueryBuilder().WithAll<InputDataState>().Build();
 			
 			RequireForUpdate(cameraQuery);
 			RequireForUpdate(gameInputQuery);
@@ -31,7 +31,7 @@ namespace PotionCraft.Core.Input.Systems
 
 		protected override void OnUpdate()
 		{
-			var inputData = gameInputQuery.GetSingleton<InputDataConfig>();
+			var inputData = gameInputQuery.GetSingleton<InputDataState>();
 			
 			inputData.primaryPressed = gameInput.Player.Primary.IsPressed();
 			inputData.secondaryPressed = gameInput.Player.Secondary.IsPressed();

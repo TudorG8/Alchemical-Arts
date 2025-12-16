@@ -3,8 +3,8 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Components
 {
-	public struct PhysicsBodySetupComponent : IComponentData
+	public struct PhysicsWorldState : IComponentData
 	{
-		public PhysicsBodyDefinition bodyDefinition;
+		public PhysicsWorld physicsWorld;
 	}
 }
