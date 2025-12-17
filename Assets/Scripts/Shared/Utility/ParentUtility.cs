@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PotionCraft.Shared.Utility
 {
-	public class ParentUtility : MonoBehaviour
+	public static class ParentUtility
 	{
 		public static void ReparentLocalPosition(ref SystemState state, EntityCommandBuffer commandBuffer, Entity child, Entity parent)
 		{

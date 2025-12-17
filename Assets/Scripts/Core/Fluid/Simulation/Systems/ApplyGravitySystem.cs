@@ -1,12 +1,12 @@
-using PotionCraft.Core.LiquidSimulation.Components;
-using PotionCraft.Core.LiquidSimulation.Groups;
+using PotionCraft.Core.Fluid.Simulation.Components;
+using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.LiquidSimulation.Systems
+namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
 	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]

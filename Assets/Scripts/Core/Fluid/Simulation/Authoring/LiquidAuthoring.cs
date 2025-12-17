@@ -1,8 +1,8 @@
-using PotionCraft.Core.LiquidSimulation.Components;
+using PotionCraft.Core.Fluid.Simulation.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.LiquidSimulation.Authoring
+namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
 	public class LiquidAuthoring : MonoBehaviour
 	{
