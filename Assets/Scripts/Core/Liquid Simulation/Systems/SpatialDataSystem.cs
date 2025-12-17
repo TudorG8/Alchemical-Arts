@@ -125,7 +125,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 			{
 				var cell = GetCell2D(predictedPositions[index], smoothingRadius);
 				var hash = HashCell2D(cell);
-				var cellKey = KeyFromHash(hash, count);
+				var cellKey = KeyFromHash(hash, 10000);
 				
 				spatialOutput[index] = new SpatialEntry() { index = index, key = (int)cellKey };
 				spatialOffsetOutput[index] = int.MaxValue;

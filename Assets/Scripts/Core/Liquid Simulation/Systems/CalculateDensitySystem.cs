@@ -142,7 +142,7 @@ namespace PotionCraft.Core.LiquidSimulation.Systems
 				for(int i = 0; i < 9; i++)
 				{
 					var hash = HashCell2D(originCell + offsets2D[i]);
-					var key = (int)KeyFromHash(hash, numParticles);
+					var key = (int)KeyFromHash(hash, 10000);
 					var currIndex = spatialOffsets[key];
 
 					while (currIndex < numParticles)
