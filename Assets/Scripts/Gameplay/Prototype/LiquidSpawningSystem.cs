@@ -67,14 +67,20 @@ namespace PotionCraft.Gameplay.Systems
 				ref LiquidSpawner liquidSpawner,
 				in LocalToWorld localToWorld)
 			{
+				if (liquidSpawner.timer == 0) 
+				{
+					liquidSpawner.timer = elapsedTime + liquidSpawner.delay; return;
+				}
+				
 				if (liquidSpawner.timer > elapsedTime) return;
-				if (liquidSpawner.count > liquidSpawner.max) return; 
+				if (liquidSpawner.count >= liquidSpawner.max) return; 
 
 				var random = new Random(baseSeed + (uint)index);
 
 				var obj = ecb.Instantiate(index, liquidSpawner.liquid);
 				ecb.SetComponent(index, obj, LocalTransform.FromPosition(localToWorld.Position + new float3(random.NextFloat(-0.1f, 0.1f), random.NextFloat(-0.1f, 0.1f), 0)));
 				ecb.AddComponent(index, obj, new Parent() { Value = folder });
+				ecb.AddComponent(index, obj, new PreviousParent() { Value = folder });
 				
 				liquidSpawner.count++;
 				liquidSpawner.timer = elapsedTime + liquidSpawner.delay;
