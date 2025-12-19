@@ -36,6 +36,13 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 			RequireForUpdate(simulationStateQuery);
 		}
 
+		protected override void OnDestroy()
+		{
+			argsBuffer.Release();
+			positionsBuffer.Release();
+			velocitiesBuffer.Release();
+		}
+
 		protected override void OnStartRunning()
 		{
 			var liquidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();

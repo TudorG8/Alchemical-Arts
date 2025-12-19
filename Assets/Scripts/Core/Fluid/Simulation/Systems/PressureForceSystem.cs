@@ -65,7 +65,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		}
 
 		[BurstCompile]
-		public void OnDestroy()
+		public void OnDestroy(ref SystemState state)
 		{
 			offsets2D.Dispose();
 		}
