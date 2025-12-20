@@ -60,6 +60,8 @@ namespace PotionCraft.Core.Physics.Authoring
 				circleGeometry = circleGeometry,
 				bodyEntity = physicsBody
 			});
+			AddComponent(entity, new PhysicsShapeState());
+			SetComponentEnabled<PhysicsShapeState>(entity, false);
 		}
 	}
 }

@@ -9,5 +9,10 @@ namespace PotionCraft.Shared.Extensions
 		{
 			return new Vector2(input.x, input.y);
 		}
+
+		public static float2 ToFloat2(this float3 input)
+		{
+			return new float2(input.x, input.y);
+		}
 	}
 }

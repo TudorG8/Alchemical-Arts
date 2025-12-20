@@ -4,7 +4,7 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Components
 {
-	public struct PhysicsShapeState : IComponentData
+	public struct PhysicsShapeState : IComponentData, IEnableableComponent
 	{
 		public PhysicsShape physicsShape;
 	}

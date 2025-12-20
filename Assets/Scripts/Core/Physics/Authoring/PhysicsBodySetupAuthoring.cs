@@ -30,6 +30,8 @@ namespace PotionCraft.Core.Physics.Authoring
 
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			AddComponent(entity, new PhysicsBodySetup() { bodyDefinition = bodyDefinition });
+			AddComponent(entity, new PhysicsBodyState());
+			SetComponentEnabled<PhysicsBodyState>(entity, false);
 		}
 	}
 }

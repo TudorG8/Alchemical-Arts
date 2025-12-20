@@ -73,6 +73,8 @@ namespace PotionCraft.Gameplay.Systems
 				}
 				
 				if (liquidSpawner.timer > elapsedTime) return;
+
+
 				if (liquidSpawner.count >= liquidSpawner.max) return; 
 
 				var random = new Random(baseSeed + (uint)index);

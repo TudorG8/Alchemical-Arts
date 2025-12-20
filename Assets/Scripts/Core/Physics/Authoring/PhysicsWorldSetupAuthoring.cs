@@ -19,6 +19,7 @@ namespace PotionCraft.Core.Physics.Authoring
 		{
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			AddComponent(entity, new PhysicsWorldSetup() { worldDefinition = authoring.WorldDefinition });
+			AddComponent(entity, new PhysicsWorldState());
 		}
 	}
 }

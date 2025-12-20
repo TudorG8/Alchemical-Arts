@@ -1,6 +1,5 @@
 using Unity.Entities;
 using Unity.Scenes;
-using UnityEngine;
 
 namespace PotionCraft.Core.Physics.Groups
 {

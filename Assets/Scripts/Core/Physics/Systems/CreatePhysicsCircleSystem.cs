@@ -19,18 +19,18 @@ namespace PotionCraft.Core.Physics.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			using var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+			var commandBuffer = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
 			foreach (var (circleSetup, entity) in SystemAPI.Query<PhysicsCircleSetup>().WithEntityAccess())
 			{
 				var parent = SystemAPI.GetComponent<PhysicsBodyState>(circleSetup.bodyEntity);
-
 				var physicsShape = parent.physicsBody.CreateShape(circleSetup.circleGeometry, circleSetup.shapeDefinition);
-				commandBuffer.AddComponent(entity, new PhysicsShapeState() { physicsShape = physicsShape });
+				
+				state.EntityManager.SetComponentData(entity,  new PhysicsShapeState() { physicsShape = physicsShape });
+				state.EntityManager.SetComponentEnabled<PhysicsShapeState>(entity, true);
+				
 				commandBuffer.RemoveComponent<PhysicsCircleSetup>(entity);
 			}
-
-			commandBuffer.Playback(state.EntityManager);
 		}
 	}
 }
