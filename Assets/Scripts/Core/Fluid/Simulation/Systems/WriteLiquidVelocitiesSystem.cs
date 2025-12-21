@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
@@ -15,7 +16,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateAfter(typeof(ViscositySystem))]
 	partial struct WriteLiquidVelocitiesSystem : ISystem
 	{
-		private SystemHandle populateLiquidPositionsSystemHandle;
+		public JobHandle handle;
+
 
 		private NativeArray<BatchVelocity> batchVelocityBuffer;
 
@@ -25,7 +27,6 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
 			batchVelocityBuffer = new NativeArray<BatchVelocity>(10000, Allocator.Persistent);
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
 		}
 
 		[BurstCompile]
@@ -37,29 +38,50 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state) 
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var viscositySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ViscositySystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
-			var writeParticlesJob = new WriteParticlesJob
+			var createBatchVelocityJob = new CreateBatchVelocityJob
 			{
 				batchVelocityBuffer = batchVelocityBuffer,
 				velocityBuffer = populateLiquidPositionsSystem.velocityBuffer,
 			};
-			var writeParticlesHandle = writeParticlesJob.ScheduleParallel(state.Dependency);
-			writeParticlesHandle.Complete();
-			unsafe
+			state.Dependency = createBatchVelocityJob.ScheduleParallel(viscositySystem.handle);
+
+			var setBatchVelocityJob = new SetBatchVelocityJob()
 			{
-				var batchVelocityPointer = (BatchVelocity*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(batchVelocityBuffer);
-				var span = new ReadOnlySpan<BatchVelocity>(batchVelocityPointer, populateLiquidPositionsSystem.count);
-				SetBatchVelocity(span);
+				batchVelocity = batchVelocityBuffer,
+				count = populateLiquidPositionsSystem.count
+			};
+			handle = setBatchVelocityJob.Schedule(state.Dependency);
+		}
+
+		[BurstCompile]
+		public partial struct SetBatchVelocityJob : IJob
+		{
+			[ReadOnly]
+			public NativeArray<BatchVelocity> batchVelocity;
+
+			[ReadOnly]
+			public int count;
+
+			public void Execute()
+			{
+				unsafe
+				{
+					var batchVelocityPointer = (BatchVelocity*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(batchVelocity);
+					var span = new ReadOnlySpan<BatchVelocity>(batchVelocityPointer, count);
+					SetBatchVelocity(span);
+				}
 			}
 		}
 
 		[BurstCompile]
 		[WithAll(typeof(LiquidTag))]
-		public partial struct WriteParticlesJob : IJobEntity
+		public partial struct CreateBatchVelocityJob : IJobEntity
 		{
 			[ReadOnly]
 			public NativeArray<float2> velocityBuffer;

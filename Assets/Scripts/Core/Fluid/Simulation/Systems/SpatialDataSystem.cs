@@ -7,9 +7,17 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using static Unity.Collections.NativeSortExtension;
+
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
+	public struct SpatialEntryKeyComparer : IComparer<SpatialEntry>
+	{
+		public readonly int Compare(SpatialEntry a, SpatialEntry b)
+			=> a.key.CompareTo(b.key);
+	}
+
 	public struct SpatialEntry
 	{
 		public int index;
@@ -17,41 +25,24 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public int key;
 	}
 
-	public struct SpatialEntryKeyComparer : IComparer<SpatialEntry>
-	{
-		public readonly int Compare(SpatialEntry a, SpatialEntry b)
-		{
-			if (a.key < b.key) return -1;
-			if (a.key > b.key) return 1;
-			return 0;
-		}
-	}
-
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
 	[UpdateAfter(typeof(CalculatePredictedPositionsSystem))]
 	partial struct SpatialDataSystem : ISystem
 	{
+		public JobHandle handle;
+
 		public NativeArray<SpatialEntry> Spatial;
 		
 		public NativeArray<int> SpatialOffsets;
-
-		private SystemHandle calculatePredictedPositionsSystemHandle;
-
-		private SystemHandle populateLiquidPositionsSystemHandle;
-
-		private float smoothingRadius;
 
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SimulationConfig>();
 			Spatial = new NativeArray<SpatialEntry>(10000, Allocator.Persistent);
 			SpatialOffsets = new NativeArray<int>(10000, Allocator.Persistent);
-			calculatePredictedPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<CalculatePredictedPositionsSystem>();
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-
-			smoothingRadius = 0.35f;
 		}
 
 		[BurstCompile]
@@ -64,39 +55,38 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<CalculatePredictedPositionsSystem>(calculatePredictedPositionsSystemHandle);
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<CalculatePredictedPositionsSystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
-			var populateJob = new PopulateSpatialOutputJob
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+
+			var populateSpatialOutputJob = new PopulateSpatialOutputJob
 			{
 				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
-				smoothingRadius = smoothingRadius,
+				radius = simulationConfig.radius,
 				count = populateLiquidPositionsSystem.count,
 				spatialOutput = Spatial,
 				spatialOffsetOutput = SpatialOffsets
 
 			};
-			var populateHandle = populateJob.ScheduleParallel(state.Dependency);
-			populateHandle.Complete();
+			state.Dependency = populateSpatialOutputJob.ScheduleParallel(calculatePredictedPositionsSystem.handle);
 
-			var sortJob = new SortSpatialJob
+			var sortSpatialJob = new SortSpatialJob
 			{
 				Spatial = Spatial,
 				count = populateLiquidPositionsSystem.count
 			};
-			var sortHandle = sortJob.Schedule(state.Dependency);
-			sortHandle.Complete();
+			state.Dependency = sortSpatialJob.Schedule(state.Dependency);
 
-			var reorderIndices = new ReorderIndicesJob()
+			var reorderIndicesJob = new ReorderIndicesJob()
 			{
 				spatial = Spatial,
 				spatialOffsets = SpatialOffsets
 			};
-			var reorderHandle = reorderIndices.ScheduleParallel(state.Dependency);
-			reorderHandle.Complete();
+			handle = state.Dependency = reorderIndicesJob.ScheduleParallel(state.Dependency);
 		}
 
 		[BurstCompile]
@@ -108,13 +98,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			public NativeArray<float2> predictedPositions;
 			
 			[ReadOnly]
-			public float smoothingRadius;
+			public float radius;
 
 			[ReadOnly]
 			public int count;
 
 			[WriteOnly]
-			public NativeArray<SpatialEntry> spatialOutput;
+
+			public NativeSlice<SpatialEntry> spatialOutput;
 
 			[WriteOnly]
 			public NativeArray<int> spatialOffsetOutput;
@@ -123,7 +114,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			void Execute(
 				[EntityIndexInQuery] int index)
 			{
-				var cell = GetCell2D(predictedPositions[index], smoothingRadius);
+				var cell = GetCell2D(predictedPositions[index], radius);
 				var hash = HashCell2D(cell);
 				var cellKey = KeyFromHash(hash, 10000);
 				

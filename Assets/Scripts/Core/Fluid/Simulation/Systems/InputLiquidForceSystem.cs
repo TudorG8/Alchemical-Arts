@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Jobs;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
@@ -13,7 +14,11 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
 	partial struct InputLiquidForceSystem : ISystem
 	{
+		public JobHandle handle;
+
 		private SystemHandle populateLiquidPositionsSystemHandle;
+
+		private SystemHandle grav;
 
 		private float interactionStrength;
 
@@ -26,6 +31,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			interactionRadius = 3f;
 			interactionStrength = 200f;
 			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
+			grav = state.WorldUnmanaged.GetExistingUnmanagedSystem<ApplyGravitySystem>();
 			state.RequireForUpdate<InputDataState>();
 		}
 
@@ -33,8 +39,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnUpdate(ref SystemState state)
 		{
 			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			ref var grav2 = ref state.WorldUnmanaged.GetUnsafeSystemRef<ApplyGravitySystem>(grav);
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
+			
 			var inputData = SystemAPI.GetSingleton<InputDataState>();
 			
 			var isPullInteraction = inputData.primaryPressed;
@@ -54,8 +62,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				strength = currInteractStrength,
 				deltaTime = SystemAPI.Time.DeltaTime,
 			};
-			var applyHandle = applyGravityJob.ScheduleParallel(state.Dependency);
-			applyHandle.Complete();
+			handle = applyGravityJob.ScheduleParallel(grav2.handle);
 		}
 
 		[BurstCompile]

@@ -29,6 +29,12 @@ namespace PotionCraft.Core.Input.Systems
 			RequireForUpdate(gameInputQuery);
 		}
 
+		protected override void OnDestroy()
+		{
+			gameInput.Disable();
+			gameInput.Dispose();
+		}
+
 		protected override void OnUpdate()
 		{
 			var inputData = gameInputQuery.GetSingleton<InputDataState>();

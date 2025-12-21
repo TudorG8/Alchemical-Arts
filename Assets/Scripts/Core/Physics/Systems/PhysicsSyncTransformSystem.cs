@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 using Unity.Transforms;
 using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 
@@ -13,11 +14,16 @@ namespace PotionCraft.Core.Physics.Systems
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
 	partial struct PhysicsSyncTransformSystem : ISystem
 	{
+		private ComponentLookup<LocalTransform> localTransformLookup;
+
+
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsBodyState>();
 			state.RequireForUpdate<PhysicsWorldState>();
+
+			localTransformLookup = state.GetComponentLookup<LocalTransform>(isReadOnly:false);
 		}
 
 		[BurstCompile]
@@ -26,24 +32,21 @@ namespace PotionCraft.Core.Physics.Systems
 			var physicsWorldConfig = SystemAPI.GetSingleton<PhysicsWorldState>();
 			
 			var bodyUpdatesLength = physicsWorldConfig.physicsWorld.bodyUpdateEvents.Length;
-			NativeArray<BodyUpdateEvent> bodyUpdates = new(
+			var bodyUpdates = new NativeArray<BodyUpdateEvent>(
 				bodyUpdatesLength,
 				Allocator.TempJob,
 				NativeArrayOptions.UninitializedMemory
 			);
 			physicsWorldConfig.physicsWorld.bodyUpdateEvents.CopyTo(bodyUpdates.AsSpan());
 			
+			localTransformLookup.Update(ref state);
 			var physicsTransformWriteJob = new PhysicsTransformWriteJob
 			{
-				BodyUpdateEvents = bodyUpdates,
-				TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>()
+				bodyUpdateEvents = bodyUpdates,
+				localTransformLookup = localTransformLookup
 			};
 
-			const int batchCount = 8;
-			state.Dependency = physicsTransformWriteJob.Schedule(
-				bodyUpdatesLength,
-				bodyUpdatesLength / batchCount,
-				state.Dependency);
+			state.Dependency = physicsTransformWriteJob.Schedule(bodyUpdatesLength, bodyUpdatesLength / JobsUtility.JobWorkerCount, state.Dependency);
 		}
 
 		[BurstCompile]
@@ -51,23 +54,23 @@ namespace PotionCraft.Core.Physics.Systems
 		{
 			[ReadOnly]
 			[DeallocateOnJobCompletion]
-			public NativeArray<BodyUpdateEvent> BodyUpdateEvents;
+			public NativeArray<BodyUpdateEvent> bodyUpdateEvents;
 			
 			[NativeDisableParallelForRestriction]
-			public ComponentLookup<LocalTransform> TransformLookup;
+			public ComponentLookup<LocalTransform> localTransformLookup;
 
 			public void Execute(int index)
 			{
-				var bodyUpdate = BodyUpdateEvents[index];
+				var bodyUpdate = bodyUpdateEvents[index];
 				var entity = bodyUpdate.body.userData.physicsMaskValue.DecodeFromPhysicsMask();
-				var transform = TransformLookup[entity];
+				var transform = localTransformLookup[entity];
 
 				var position = bodyUpdate.transform.position.ToFloat3();
 				var rotation = bodyUpdate.transform.rotation.ToECSQuaternion();
 				transform.Position = position;
 				transform.Rotation = rotation;
 
-				TransformLookup[entity] = transform;
+				localTransformLookup[entity] = transform;
 			}
 		}
 	}

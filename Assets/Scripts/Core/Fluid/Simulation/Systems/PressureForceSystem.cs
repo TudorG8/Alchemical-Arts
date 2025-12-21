@@ -4,6 +4,7 @@ using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
@@ -12,23 +13,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateAfter(typeof(CalculateDensitySystem))]
 	partial struct PressureForceSystem : ISystem
 	{
+		public JobHandle handle;
+
+
 		private NativeArray<int2> offsets2D;
-
-		private SystemHandle spatialDataSystem;
-		
-		private SystemHandle positionSystem;
-
-		private SystemHandle predictedPositionsSystem;
-
-		private SystemHandle densitySystem;
-
-		private float smoothingRadius;
-
-		private float targetDensity;
-
-		private float pressureMultiplier;
-
-		private float nearPressureMultiplier;
 
 		private float spikyPow2DerivativeScalingFactor;
 
@@ -39,11 +27,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-
-			spatialDataSystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<SpatialDataSystem>();
-			predictedPositionsSystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<CalculatePredictedPositionsSystem>();
-			densitySystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<CalculateDensitySystem>();
-			positionSystem = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
+			state.RequireForUpdate<SimulationConfig>();
 
 			offsets2D = new NativeArray<int2>(9, Allocator.Persistent);
 			offsets2D[0] = new int2(-1, 1);
@@ -56,12 +40,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			offsets2D[7] = new int2(0, -1);
 			offsets2D[8] = new int2(1, -1);
 
-			smoothingRadius = 0.35f;
-			targetDensity = 55f;
-			pressureMultiplier = 500f;
-			nearPressureMultiplier = 4f;
-			spikyPow2DerivativeScalingFactor = 12 / (math.pow(smoothingRadius, 4) * math.PI);
-			spikyPow3DerivativeScalingFactor = 30 / (math.pow(smoothingRadius, 5) * math.PI);
+			spikyPow2DerivativeScalingFactor = 12 / (math.pow(0.35f, 4) * math.PI);
+			spikyPow3DerivativeScalingFactor = 30 / (math.pow(0.35f, 5) * math.PI);
 		}
 
 		[BurstCompile]
@@ -73,13 +53,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<SpatialDataSystem>(this.spatialDataSystem);
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<CalculatePredictedPositionsSystem>(predictedPositionsSystem);
-			ref var calculateDensitySystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<CalculateDensitySystem>(densitySystem);
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(positionSystem);
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<CalculatePredictedPositionsSystem>();
+			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialDataSystem>();
+			ref var calculateDensitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<CalculateDensitySystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
+
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyPressureForceJob = new ApplyPressureForceJob()
 			{
@@ -88,19 +70,18 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
 				spatialOffsets = spatialDataSystem.SpatialOffsets,
 				spatial = spatialDataSystem.Spatial,
-				smoothingRadius = smoothingRadius,
+				smoothingRadius = simulationConfig.radius,
 				offsets2D = offsets2D,
 				numParticles = populateLiquidPositionsSystem.count,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				targetDensity = targetDensity,
-				pressureMultiplier = pressureMultiplier,
-				nearPressureMultiplier = nearPressureMultiplier,
+				targetDensity = simulationConfig.targetDensity,
+				pressureMultiplier = simulationConfig.pressureMultiplier,
+				nearPressureMultiplier = simulationConfig.nearPressureMultiplier,
 				spikyPow2DerivativeScalingFactor = spikyPow2DerivativeScalingFactor,
 				spikyPow3DerivativeScalingFactor = spikyPow3DerivativeScalingFactor,
 				velocities = populateLiquidPositionsSystem.velocityBuffer
 			};
-			var applyPressureHandle = applyPressureForceJob.ScheduleParallel(state.Dependency);
-			applyPressureHandle.Complete();
+			handle = applyPressureForceJob.ScheduleParallel(calculateDensitySystem.handle);
 		}
 
 		[BurstCompile]

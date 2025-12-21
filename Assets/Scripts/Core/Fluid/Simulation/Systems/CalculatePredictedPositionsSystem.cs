@@ -4,30 +4,26 @@ using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(ApplyGravitySystem))]
 	[UpdateAfter(typeof(InputLiquidForceSystem))]
 	partial struct CalculatePredictedPositionsSystem : ISystem
 	{
+		public JobHandle handle;
+
 		public NativeArray<float2> predictedPositionsBuffer;
-
-		private SystemHandle populateLiquidPositionsSystemHandle;
-
-		private float predictionFactor;
 
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SimulationConfig>();
 			predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-
-			predictionFactor = 1 / 120f;
 		}
 
 		[BurstCompile]
@@ -39,20 +35,22 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var inputLiquidForcesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<InputLiquidForceSystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
-			var readJob = new CalculatePredictedPositionsJob
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+
+			var calculatePredictedPositionsJob = new CalculatePredictedPositionsJob
 			{
 				positions = populateLiquidPositionsSystem.positionBuffer,
 				velocities = populateLiquidPositionsSystem.velocityBuffer,
 				predictedPositions = predictedPositionsBuffer,
-				predictionFactor = predictionFactor
+				predictionFactor = 1f / simulationConfig.predictionFrames,
 			};
-			var readHandle = readJob.ScheduleParallel(state.Dependency);
-			readHandle.Complete();
+			handle = calculatePredictedPositionsJob.ScheduleParallel(inputLiquidForcesSystem.handle);
 		}
 
 		[BurstCompile]
@@ -60,6 +58,9 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[WithAll(typeof(PhysicsBodyState))]
 		public partial struct CalculatePredictedPositionsJob : IJobEntity
 		{
+			[WriteOnly]
+			public NativeArray<float2> predictedPositions;
+
 			[ReadOnly]
 			public NativeArray<float2> positions;
 
@@ -69,9 +70,6 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			[ReadOnly]
 			public float predictionFactor;
 			
-			[WriteOnly]
-			public NativeArray<float2> predictedPositions;
-
 
 			void Execute(
 				[EntityIndexInQuery] int index)

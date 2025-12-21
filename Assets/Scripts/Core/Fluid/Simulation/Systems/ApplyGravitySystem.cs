@@ -4,6 +4,7 @@ using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
@@ -12,36 +13,32 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
 	partial struct ApplyGravitySystem : ISystem
 	{
-		private SystemHandle populateLiquidPositionsSystemHandle;
-
-		private float gravity;
+		public JobHandle handle;
 
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-
-			gravity = -10f;
+			state.RequireForUpdate<SimulationConfig>();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
-
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
+
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyGravityJob = new ApplyGravityJob
 			{
 				velocities = populateLiquidPositionsSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				gravity = gravity
+				gravity = simulationConfig.gravity
 			};
-			var applyHandle = applyGravityJob.ScheduleParallel(state.Dependency);
-			applyHandle.Complete();
+			handle = applyGravityJob.ScheduleParallel(populateLiquidPositionsSystem.handle);
 		}
 	}
 
@@ -62,7 +59,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		void Execute(
 			[EntityIndexInQuery] int index)
 		{
-			velocities[index] += new float2(0, gravity) * deltaTime;
+			velocities[index] -= new float2(0, gravity) * deltaTime;
 		}
 	}
 }

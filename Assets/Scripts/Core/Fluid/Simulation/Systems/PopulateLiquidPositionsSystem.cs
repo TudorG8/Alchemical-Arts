@@ -4,6 +4,7 @@ using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -12,11 +13,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
 	public partial struct PopulateLiquidPositionsSystem : ISystem
 	{
+		public JobHandle handle;
+
 		public NativeArray<float2> positionBuffer;
 		
 		public NativeArray<float2> velocityBuffer;
 
 		public int count;
+
 
 		private EntityQuery liquidQuery;
 
@@ -48,13 +52,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (count == 0)
 				return;
 
-			var readJob = new ReadDataJob
+			var readDataJob = new ReadDataJob
 			{
 				positions = positionBuffer,
 				velocities = velocityBuffer,
 			};
-			var readHandle = readJob.ScheduleParallel(liquidQuery, state.Dependency);
-			readHandle.Complete();
+			handle = readDataJob.ScheduleParallel(liquidQuery, state.Dependency);
 		}
 
 		[BurstCompile]

@@ -33,7 +33,7 @@ namespace PotionCraft.Gameplay.Systems
 		public void OnUpdate(ref SystemState state)
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
-			var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 			var liquidFolder = SystemAPI.GetSingleton<FolderManagerData>().LiquidFolder;
 
 			var spawnLiquidJob = new SpawnLiquidJob

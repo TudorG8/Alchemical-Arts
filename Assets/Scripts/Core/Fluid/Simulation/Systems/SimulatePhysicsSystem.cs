@@ -19,9 +19,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
+			ref var writeLiquidVelocitiesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<WriteLiquidVelocitiesSystem>();
+
 			var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldState>().Build(state.EntityManager);
 			var world = worldQuerry.GetSingletonEntity();
 			var worldScript = state.EntityManager.GetComponentData<PhysicsWorldState>(world);
+			
+			writeLiquidVelocitiesSystem.handle.Complete();
+			
 			worldScript.physicsWorld.Simulate(SystemAPI.Time.DeltaTime);
 		}
 	}

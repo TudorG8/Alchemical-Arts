@@ -4,6 +4,7 @@ using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
@@ -12,19 +13,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	[UpdateAfter(typeof(SpatialDataSystem))]
 	partial struct CalculateDensitySystem : ISystem
 	{
+		public JobHandle handle;
+
 		public NativeArray<float> densities;
 
 		public NativeArray<float> nearDensity;
 
-		private SystemHandle spatialDataSystemHandle;
-
-		private SystemHandle calculatePredictedPositionsSystemHandle;
-
-		private SystemHandle populateLiquidPositionsSystemHandle;
 
 		private NativeArray<int2> offsets2D;
-
-		private float smoothingRadius;
 
 		private float spikyPow3ScalingFactor;
 
@@ -35,11 +31,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SimulationConfig>();
+
 			densities = new NativeArray<float>(10000, Allocator.Persistent);
 			nearDensity = new NativeArray<float>(10000, Allocator.Persistent);
-			spatialDataSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<SpatialDataSystem>();
-			calculatePredictedPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<CalculatePredictedPositionsSystem>();
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
 
 			offsets2D = new NativeArray<int2>(9, Allocator.Persistent);
 			offsets2D[0] = new int2(-1, 1);
@@ -52,10 +47,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			offsets2D[7] = new int2(0, -1);
 			offsets2D[8] = new int2(1, -1);
 
-			smoothingRadius = 0.35f;
-
-			spikyPow3ScalingFactor = 10 / (math.PI * math.pow(smoothingRadius, 5));
-			spikyPow2ScalingFactor = 6 / (math.PI * math.pow(smoothingRadius, 4));
+			spikyPow3ScalingFactor = 10 / (math.PI * math.pow(0.35f, 5));
+			spikyPow2ScalingFactor = 6 / (math.PI * math.pow(0.35f, 4));
 		}
 
 		[BurstCompile]
@@ -69,16 +62,18 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<SpatialDataSystem>(spatialDataSystemHandle);
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<CalculatePredictedPositionsSystem>(calculatePredictedPositionsSystemHandle);
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialDataSystem>();
+			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<CalculatePredictedPositionsSystem>();
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+
 			var calculateDensitiesJob = new CalculateDensitiesJob()
 			{
-				smoothingRadius = smoothingRadius,
+				smoothingRadius = simulationConfig.radius,
 				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
 				spatial = spatialDataSystem.Spatial,
 				spatialOffsets = spatialDataSystem.SpatialOffsets,
@@ -90,8 +85,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				nearDensities = nearDensity
 
 			};
-			var calculateDensitiesHandle = calculateDensitiesJob.ScheduleParallel(state.Dependency);
-			calculateDensitiesHandle.Complete();
+			handle = calculateDensitiesJob.ScheduleParallel(spatialDataSystem.handle);
 		}
 
 		[BurstCompile]
