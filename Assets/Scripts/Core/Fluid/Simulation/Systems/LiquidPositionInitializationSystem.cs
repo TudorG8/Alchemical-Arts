@@ -1,5 +1,6 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
+using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,7 +12,7 @@ using Unity.Transforms;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	public partial struct PopulateLiquidPositionsSystem : ISystem
+	public partial struct LiquidPositionInitializationSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -52,33 +53,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (count == 0)
 				return;
 
-			var readDataJob = new ReadDataJob
+			var readInitialDataJob = new ReadInitialDataJob
 			{
 				positions = positionBuffer,
 				velocities = velocityBuffer,
 			};
-			handle = readDataJob.ScheduleParallel(liquidQuery, state.Dependency);
-		}
-
-		[BurstCompile]
-		[WithAll(typeof(LiquidTag))]
-		public partial struct ReadDataJob : IJobEntity
-		{
-			[WriteOnly]
-			public NativeArray<float2> positions;
-
-			[WriteOnly]
-			public NativeArray<float2> velocities;
-
-
-			void Execute(
-				[EntityIndexInQuery] int index,
-				in PhysicsBodyState body,
-				in LocalTransform localTransform)
-			{
-				positions[index] = localTransform.Position.xy;
-				velocities[index] = body.physicsBody.linearVelocity;
-			}
+			handle = readInitialDataJob.ScheduleParallel(liquidQuery, state.Dependency);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
+using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
@@ -10,8 +11,8 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
-	partial struct ApplyGravitySystem : ISystem
+	[UpdateAfter(typeof(LiquidPositionInitializationSystem))]
+	partial struct GravitySystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -26,40 +27,19 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
-			var applyGravityJob = new ApplyGravityJob
+			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
 				velocities = populateLiquidPositionsSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = simulationConfig.gravity
 			};
-			handle = applyGravityJob.ScheduleParallel(populateLiquidPositionsSystem.handle);
-		}
-	}
-
-	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
-	public partial struct ApplyGravityJob : IJobEntity
-	{
-		public NativeArray<float2> velocities;
-		
-		[ReadOnly]
-		public float deltaTime;
-
-		[ReadOnly]
-		public float gravity;
-
-
-		void Execute(
-			[EntityIndexInQuery] int index)
-		{
-			velocities[index] -= new float2(0, gravity) * deltaTime;
+			handle = applyGravityForcesJob.ScheduleParallel(populateLiquidPositionsSystem.handle);
 		}
 	}
 }

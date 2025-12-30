@@ -29,7 +29,7 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnCreate()
 		{
-			populateLiquidPositionsSystemHandle = World.Unmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
+			populateLiquidPositionsSystemHandle = World.Unmanaged.GetExistingUnmanagedSystem<LiquidPositionInitializationSystem>();
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<LiquidSimulationConfig>().Build(entityManager);
 			RequireForUpdate<PhysicsWorldState>();
@@ -63,7 +63,7 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnUpdate()
 		{
-			ref var populateLiquidPositionsSystem = ref World.Unmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
+			ref var populateLiquidPositionsSystem = ref World.Unmanaged.GetUnsafeSystemRef<LiquidPositionInitializationSystem>(populateLiquidPositionsSystemHandle);
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			var liquidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();
 			var liquidSimulation = entityManager.GetComponentData<LiquidSimulationConfig>(liquidSimulationStateEntity);

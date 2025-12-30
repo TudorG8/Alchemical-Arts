@@ -1,5 +1,6 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
+using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
@@ -10,8 +11,8 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(InputLiquidForceSystem))]
-	partial struct CalculatePredictedPositionsSystem : ISystem
+	[UpdateAfter(typeof(LiquidInwardsInputSystem))]
+	partial struct PositionPredictionSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -35,47 +36,22 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
-			ref var inputLiquidForcesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<InputLiquidForceSystem>();
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
+			ref var inputLiquidForcesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidInwardsInputSystem>();
 
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
-			var calculatePredictedPositionsJob = new CalculatePredictedPositionsJob
+			var predictPositionsJob = new PredictPositionsJob
 			{
 				positions = populateLiquidPositionsSystem.positionBuffer,
 				velocities = populateLiquidPositionsSystem.velocityBuffer,
 				predictedPositions = predictedPositionsBuffer,
 				predictionFactor = 1f / simulationConfig.predictionFrames,
 			};
-			handle = calculatePredictedPositionsJob.ScheduleParallel(inputLiquidForcesSystem.handle);
-		}
-
-		[BurstCompile]
-		[WithAll(typeof(LiquidTag))]
-		[WithAll(typeof(PhysicsBodyState))]
-		public partial struct CalculatePredictedPositionsJob : IJobEntity
-		{
-			[WriteOnly]
-			public NativeArray<float2> predictedPositions;
-
-			[ReadOnly]
-			public NativeArray<float2> positions;
-
-			[ReadOnly]
-			public NativeArray<float2> velocities;
-			
-			[ReadOnly]
-			public float predictionFactor;
-			
-
-			void Execute(
-				[EntityIndexInQuery] int index)
-			{
-				predictedPositions[index] = positions[index] + velocities[index] * predictionFactor;
-			}
+			handle = predictPositionsJob.ScheduleParallel(inputLiquidForcesSystem.handle);
 		}
 	}
 }
