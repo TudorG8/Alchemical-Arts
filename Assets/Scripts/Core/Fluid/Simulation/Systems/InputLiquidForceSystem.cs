@@ -1,7 +1,6 @@
 using PotionCraft.Core.Input.Components;
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
-using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -11,98 +10,132 @@ using Unity.Jobs;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(PopulateLiquidPositionsSystem))]
+	[UpdateAfter(typeof(ApplyGravitySystem))]
 	partial struct InputLiquidForceSystem : ISystem
 	{
 		public JobHandle handle;
 
-		private SystemHandle populateLiquidPositionsSystemHandle;
-
-		private SystemHandle grav;
-
-		private float interactionStrength;
-
-		private float interactionRadius;
+		NativeList<int> output;
 
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			interactionRadius = 3f;
-			interactionStrength = 200f;
-			populateLiquidPositionsSystemHandle = state.WorldUnmanaged.GetExistingUnmanagedSystem<PopulateLiquidPositionsSystem>();
-			grav = state.WorldUnmanaged.GetExistingUnmanagedSystem<ApplyGravitySystem>();
+			output = new NativeList<int>(10000, Allocator.Persistent);
 			state.RequireForUpdate<InputDataState>();
 		}
 
 		[BurstCompile]
+		public void OnDestroy(ref SystemState state)
+		{
+			output.Dispose();
+		}
+
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnsafeSystemRef<PopulateLiquidPositionsSystem>(populateLiquidPositionsSystemHandle);
-			ref var grav2 = ref state.WorldUnmanaged.GetUnsafeSystemRef<ApplyGravitySystem>(grav);
+			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PopulateLiquidPositionsSystem>();
+			ref var applyGravitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ApplyGravitySystem>();
 			if (populateLiquidPositionsSystem.count == 0)
 				return;
 			
-			var inputData = SystemAPI.GetSingleton<InputDataState>();
-			
-			var isPullInteraction = inputData.primaryPressed;
-			var isPushInteraction = inputData.secondaryPressed;
-			var currInteractStrength = 0f;
-			if (isPushInteraction || isPullInteraction)
-			{
-				currInteractStrength = isPushInteraction ? -interactionStrength : interactionStrength;
-			}
+			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
+			var draggingParticlesModeState = SystemAPI.GetComponentRO<DraggingParticlesModeState>(draggingModeEntity);
+			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingModeEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
 
-			var applyGravityJob = new ApplyUserInputJob
+			handle = applyGravitySystem.handle;
+			switch(draggingParticlesModeState.ValueRO.mode)
 			{
-				velocities = populateLiquidPositionsSystem.velocityBuffer,
-				positions = populateLiquidPositionsSystem.positionBuffer,
-				input = inputData.worldPosition,
-				radius = interactionRadius,
-				strength = currInteractStrength,
-				deltaTime = SystemAPI.Time.DeltaTime,
-			};
-			handle = applyGravityJob.ScheduleParallel(grav2.handle);
+				case DraggingParticlesMode.Idle:
+					output.Clear();
+					break;
+				case DraggingParticlesMode.Inwards:
+					if (output.Length == 0)
+					{
+						var collectMatchingIndicesJob = new CollectFluidInAreaJob
+						{
+							output = output.AsParallelWriter(),
+							positions = populateLiquidPositionsSystem.positionBuffer,
+							fluidInputConfig = fluidInputConfig.ValueRO,
+						};
+						handle = collectMatchingIndicesJob.ScheduleParallel(handle);
+						break;
+					}
+					
+					var applyInputToCache = new ApplyInputToCache
+					{
+						velocities = populateLiquidPositionsSystem.velocityBuffer,
+						positions = populateLiquidPositionsSystem.positionBuffer,
+						fluidInputConfig = fluidInputConfig.ValueRO,
+						fluidInputState = fluidInputState.ValueRO,
+						deltaTime = SystemAPI.Time.DeltaTime,
+						indexes = output,
+					};
+					handle = applyInputToCache.Schedule(output.Length, 64, handle);
+					break;
+			}
 		}
 
 		[BurstCompile]
 		[WithAll(typeof(LiquidTag))]
-		[WithAll(typeof(PhysicsBodyState))]
-		public partial struct ApplyUserInputJob : IJobEntity
+		public partial struct CollectFluidInAreaJob : IJobEntity
 		{
+			[ReadOnly]
+			public NativeArray<float2> positions;
+
+			[ReadOnly]
+			public FluidInputConfig fluidInputConfig;
+			
+			[WriteOnly]
+			public NativeList<int>.ParallelWriter output;
+
+
+			public void Execute([EntityIndexInQuery] int index)
+			{
+				var offset = fluidInputConfig.position - positions[index];
+				var sqrDst = math.dot(offset, offset);
+				if (sqrDst < fluidInputConfig.interactionRadius * fluidInputConfig.interactionRadius)
+				{
+					output.AddNoResize(index);
+				}
+			}
+		}
+
+		[BurstCompile]
+		public partial struct ApplyInputToCache : IJobParallelFor
+		{
+			[NativeDisableParallelForRestriction]
 			public NativeArray<float2> velocities;
 
 			[ReadOnly]
 			public NativeArray<float2> positions;
 
 			[ReadOnly]
-			public float2 input;
+			public NativeList<int> indexes;
 
 			[ReadOnly]
-			public float radius;
-			
+			public FluidInputConfig fluidInputConfig;
+
 			[ReadOnly]
-			public float strength;
+			public FluidInputState fluidInputState;
 
 			[ReadOnly]
 			public float deltaTime;
 
 
-			void Execute(
-				[EntityIndexInQuery] int index)
+			public void Execute(int index)
 			{
-				var interactionForce = float2.zero;
-				var offset = input - positions[index];
-				var sqrDst = math.dot(offset, offset);
-				if (sqrDst < radius * radius)
-				{
-					var dst = math.sqrt(sqrDst);
-					var dir = dst <= float.Epsilon ? float2.zero : offset / dst;
-					var centreT = 1 - dst/radius;
-					interactionForce += (dir * strength - velocities[index]) * centreT;
-				}
+				var actualIndex = indexes[index];
 
-				velocities[index] += interactionForce * deltaTime;
+				var offset = fluidInputConfig.position - positions[actualIndex];
+				var distance = math.length(offset);
+				var direction = distance <= float.Epsilon ? float2.zero : offset / distance;
+				var smoothingToCenter = math.clamp(distance / fluidInputConfig.interactionRadius, 0, 1);
+
+				var springForce = smoothingToCenter * fluidInputState.interactionStrength * direction;
+				var dampingForce = smoothingToCenter * fluidInputState.damping * -velocities[actualIndex];
+
+				velocities[actualIndex] += (springForce + dampingForce) * deltaTime;
 			}
 		}
 	}
