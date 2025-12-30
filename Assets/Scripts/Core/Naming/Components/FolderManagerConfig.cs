@@ -4,7 +4,7 @@ namespace PotionCraft.Core.Naming.Components
 {
 	public struct FolderManagerConfig : IComponentData
 	{
-		public Entity LiquidFolder;
+		public Entity FluidFolder;
 
 		public Entity BuildingFolder;
 	}

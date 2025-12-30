@@ -10,8 +10,8 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(LiquidInwardsInputSystem))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
+	[UpdateAfter(typeof(FluidInwardsInputSystem))]
 	partial struct PositionPredictionSystem : ISystem
 	{
 		public JobHandle handle;
@@ -36,22 +36,21 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var inputLiquidForcesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidInwardsInputSystem>();
-
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var fluidInwardsInputSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidInwardsInputSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var predictPositionsJob = new PredictPositionsJob
 			{
-				positions = populateLiquidPositionsSystem.positionBuffer,
-				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				positions = fluidPositionInitializationSystem.positionBuffer,
+				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				predictedPositions = predictedPositionsBuffer,
 				predictionFactor = 1f / simulationConfig.predictionFrames,
 			};
-			handle = predictPositionsJob.ScheduleParallel(inputLiquidForcesSystem.handle);
+			handle = predictPositionsJob.ScheduleParallel(fluidInwardsInputSystem.handle);
 		}
 	}
 }

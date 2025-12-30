@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Fluid.Display.Components
 {
-	public class LiquidSimulationConfig : IComponentData
+	public class FluidSimulationConfig : IComponentData
 	{
 		public Shader shader;
 

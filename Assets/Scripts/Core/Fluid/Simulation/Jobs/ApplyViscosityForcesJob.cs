@@ -10,7 +10,7 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
+	[WithAll(typeof(FluidTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyViscosityForcesJob : IJobEntity
 	{

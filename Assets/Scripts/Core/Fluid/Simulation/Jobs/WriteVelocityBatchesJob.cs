@@ -9,7 +9,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
+	[WithAll(typeof(FluidTag))]
 	public partial struct WriteVelocityBatchesJob : IJobEntity
 	{
 		[ReadOnly]

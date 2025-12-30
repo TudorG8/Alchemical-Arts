@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Fluid.Display.Authoring
 {
-	public class LiquidSimulationAuthoring : MonoBehaviour
+	public class FluidSimulationAuthoring : MonoBehaviour
 	{
 		public Shader shader;
 
@@ -20,12 +20,12 @@ namespace PotionCraft.Core.Fluid.Display.Authoring
 		public float particleSize;
 	}
 
-	public class LiquidSimulationAuthoringBaker : Baker<LiquidSimulationAuthoring>
+	public class FluidSimulationAuthoringBaker : Baker<FluidSimulationAuthoring>
 	{
-		public override void Bake(LiquidSimulationAuthoring authoring)
+		public override void Bake(FluidSimulationAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.None);
-			AddComponentObject(entity, new LiquidSimulationConfig() 
+			AddComponentObject(entity, new FluidSimulationConfig() 
 			{
 				shader = authoring.shader,
 				mesh = authoring.mesh,

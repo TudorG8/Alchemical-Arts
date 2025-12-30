@@ -5,7 +5,7 @@ namespace PotionCraft.Core.Naming.Authoring
 {
 	public struct FolderManagerData : IComponentData
 	{
-		public Entity LiquidFolder;
+		public Entity FluidFolder;
 
 		public Entity BuildingFolder;
 	}
@@ -13,7 +13,7 @@ namespace PotionCraft.Core.Naming.Authoring
 	public class FolderManagerAuthoring : MonoBehaviour
 	{
 		[field: SerializeField]
-		private Transform LiquidFolder { get; set; }
+		private Transform FluidFolder { get; set; }
 
 		[field: SerializeField]
 		private Transform BuildingFolder { get; set; }
@@ -26,7 +26,7 @@ namespace PotionCraft.Core.Naming.Authoring
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
 				AddComponent(entity, new FolderManagerData()
 				{
-					LiquidFolder = GetEntity(authoring.LiquidFolder, TransformUsageFlags.Dynamic),
+					FluidFolder = GetEntity(authoring.FluidFolder, TransformUsageFlags.Dynamic),
 					BuildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),
 				});
 			}

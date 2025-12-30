@@ -9,9 +9,9 @@ using Unity.Transforms;
 namespace PotionCraft.Gameplay.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
-	partial struct LiquidSpawningSystem : ISystem
+	partial struct FluidSpawningSystem : ISystem
 	{
-		private EntityQuery validLiquidSpawnerQuery;
+		private EntityQuery validFluidSpawnerQuery;
 
 		private Random random;
 
@@ -19,14 +19,14 @@ namespace PotionCraft.Gameplay.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			validLiquidSpawnerQuery = SystemAPI.QueryBuilder()
+			validFluidSpawnerQuery = SystemAPI.QueryBuilder()
 				.WithAll<LocalToWorld>()
-				.WithAll<LiquidSpawner>()
+				.WithAll<FluidSpawner>()
 				.Build();
 			random = new Random(0x6E624EB7u);
 			
 			state.RequireForUpdate<FolderManagerData>();
-			state.RequireForUpdate(validLiquidSpawnerQuery);
+			state.RequireForUpdate(validFluidSpawnerQuery);
 		}
 
 		[BurstCompile]
@@ -34,20 +34,20 @@ namespace PotionCraft.Gameplay.Systems
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
 			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
-			var liquidFolder = SystemAPI.GetSingleton<FolderManagerData>().LiquidFolder;
+			var fluidFolder = SystemAPI.GetSingleton<FolderManagerData>().FluidFolder;
 
-			var spawnLiquidJob = new SpawnLiquidJob
+			var spawnFluidJob = new SpawnFluidJob
 			{
 				ecb = commandBuffer,
 				elapsedTime = elapsedTime,
 				baseSeed = random.NextUInt(),
-				folder = liquidFolder
+				folder = fluidFolder
 			};
-			state.Dependency = spawnLiquidJob.ScheduleParallel(validLiquidSpawnerQuery, state.Dependency);
+			state.Dependency = spawnFluidJob.ScheduleParallel(validFluidSpawnerQuery, state.Dependency);
 		}
 
 		[BurstCompile]
-		public partial struct SpawnLiquidJob : IJobEntity
+		public partial struct SpawnFluidJob : IJobEntity
 		{
 			[WriteOnly]
 			public EntityCommandBuffer.ParallelWriter ecb;
@@ -64,28 +64,28 @@ namespace PotionCraft.Gameplay.Systems
 
 			void Execute(
 				[EntityIndexInQuery] int index,
-				ref LiquidSpawner liquidSpawner,
+				ref FluidSpawner fluidSpawner,
 				in LocalToWorld localToWorld)
 			{
-				if (liquidSpawner.timer == 0) 
+				if (fluidSpawner.timer == 0) 
 				{
-					liquidSpawner.timer = elapsedTime + liquidSpawner.delay; return;
+					fluidSpawner.timer = elapsedTime + fluidSpawner.delay; return;
 				}
 				
-				if (liquidSpawner.timer > elapsedTime) return;
+				if (fluidSpawner.timer > elapsedTime) return;
 
 
-				if (liquidSpawner.count >= liquidSpawner.max) return; 
+				if (fluidSpawner.count >= fluidSpawner.max) return; 
 
 				var random = new Random(baseSeed + (uint)index);
 
-				var obj = ecb.Instantiate(index, liquidSpawner.liquid);
+				var obj = ecb.Instantiate(index, fluidSpawner.fluid);
 				ecb.SetComponent(index, obj, LocalTransform.FromPosition(localToWorld.Position + new float3(random.NextFloat(-0.1f, 0.1f), random.NextFloat(-0.1f, 0.1f), 0)));
 				ecb.AddComponent(index, obj, new Parent() { Value = folder });
 				ecb.AddComponent(index, obj, new PreviousParent() { Value = folder });
 				
-				liquidSpawner.count++;
-				liquidSpawner.timer = elapsedTime + liquidSpawner.delay;
+				fluidSpawner.count++;
+				fluidSpawner.timer = elapsedTime + fluidSpawner.delay;
 			}
 		}
 	}

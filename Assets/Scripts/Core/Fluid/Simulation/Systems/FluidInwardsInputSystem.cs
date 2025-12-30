@@ -9,9 +9,9 @@ using PotionCraft.Core.Fluid.Simulation.Jobs;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(GravitySystem))]
-	partial struct LiquidInwardsInputSystem : ISystem
+	partial struct FluidInwardsInputSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -34,9 +34,9 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var applyGravitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var gravitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 			
 			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
@@ -44,7 +44,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingModeEntity);
 			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
 
-			handle = applyGravitySystem.handle;
+			handle = gravitySystem.handle;
 			switch(draggingParticlesModeState.ValueRO.mode)
 			{
 				case DraggingParticlesMode.Idle:
@@ -56,7 +56,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 						var collectAffectedParticlesJob = new CollectAffectedParticlesJob
 						{
 							output = output.AsParallelWriter(),
-							positions = populateLiquidPositionsSystem.positionBuffer,
+							positions = fluidPositionInitializationSystem.positionBuffer,
 							fluidInputConfig = fluidInputConfig.ValueRO,
 						};
 						handle = collectAffectedParticlesJob.ScheduleParallel(handle);
@@ -65,8 +65,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 					
 					var applyInputToCache = new ApplyInwardsForcesJob
 					{
-						velocities = populateLiquidPositionsSystem.velocityBuffer,
-						positions = populateLiquidPositionsSystem.positionBuffer,
+						velocities = fluidPositionInitializationSystem.velocityBuffer,
+						positions = fluidPositionInitializationSystem.positionBuffer,
 						fluidInputConfig = fluidInputConfig.ValueRO,
 						fluidInputState = fluidInputState.ValueRO,
 						deltaTime = SystemAPI.Time.DeltaTime,

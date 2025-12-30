@@ -2,5 +2,5 @@ using Unity.Entities;
 
 namespace PotionCraft.Core.Fluid.Simulation.Components
 {
-	public struct LiquidTag : IComponentData { }
+	public struct FluidTag : IComponentData { }
 }

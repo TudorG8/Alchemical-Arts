@@ -10,8 +10,8 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	[UpdateAfter(typeof(LiquidPositionInitializationSystem))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
+	[UpdateAfter(typeof(FluidPositionInitializationSystem))]
 	partial struct GravitySystem : ISystem
 	{
 		public JobHandle handle;
@@ -27,19 +27,19 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
-				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = simulationConfig.gravity
 			};
-			handle = applyGravityForcesJob.ScheduleParallel(populateLiquidPositionsSystem.handle);
+			handle = applyGravityForcesJob.ScheduleParallel(fluidPositionInitializationSystem.handle);
 		}
 	}
 }

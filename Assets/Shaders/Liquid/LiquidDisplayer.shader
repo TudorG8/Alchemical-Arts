@@ -1,4 +1,4 @@
-Shader "PotionCraft/Liquid/LiquidDisplayer" {
+Shader "PotionCraft/Fluid/FluidDisplayer" {
 	Properties {
 		
 	}
@@ -26,14 +26,14 @@ Shader "PotionCraft/Liquid/LiquidDisplayer" {
 
 			SamplerState linear_clamp_sampler;
 
-			struct LiquidData
+			struct FluidData
 			{
 				float4 position : SV_POSITION;
 				float2 uv : TEXCOORD0;
 				float3 colour : TEXCOORD1;
 			};
 
-			LiquidData vert (appdata_full v, uint instanceID : SV_InstanceID)
+			FluidData vert (appdata_full v, uint instanceID : SV_InstanceID)
 			{
 				float speed = length(Velocities[instanceID]);
 				float speedT = saturate(speed / MaxVelocity);
@@ -42,7 +42,7 @@ Shader "PotionCraft/Liquid/LiquidDisplayer" {
 				float3 worldVertPos = centreWorld + mul(unity_ObjectToWorld, v.vertex * Radius);
 				float3 objectVertPos = mul(unity_WorldToObject, float4(worldVertPos.xyz, 1));
 
-				LiquidData o;
+				FluidData o;
 				o.uv = v.texcoord;
 				o.position = UnityObjectToClipPos(objectVertPos);
 				o.colour = ColourMap.SampleLevel(linear_clamp_sampler, float2(speedT, 0.5), 0);
@@ -51,7 +51,7 @@ Shader "PotionCraft/Liquid/LiquidDisplayer" {
 			}
 
 
-			float4 frag (LiquidData i) : SV_Target
+			float4 frag (FluidData i) : SV_Target
 			{
 				float2 centreOffset = (i.uv.xy - 0.5) * 2;
 				float sqrDst = dot(centreOffset, centreOffset);

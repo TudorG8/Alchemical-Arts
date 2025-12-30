@@ -11,8 +11,8 @@ using Unity.Transforms;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
-	public partial struct LiquidPositionInitializationSystem : ISystem
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
+	public partial struct FluidPositionInitializationSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -23,7 +23,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public int count;
 
 
-		private EntityQuery liquidQuery;
+		private EntityQuery fluidQuery;
 
 
 		[BurstCompile]
@@ -32,8 +32,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			state.RequireForUpdate<PhysicsWorldState>();
 			positionBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
 			velocityBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
-			liquidQuery = SystemAPI.QueryBuilder()
-				.WithAll<LiquidTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
+			fluidQuery = SystemAPI.QueryBuilder()
+				.WithAll<FluidTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
 		}
 
@@ -47,7 +47,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			count = liquidQuery
+			count = fluidQuery
 				.CalculateEntityCount();
 
 			if (count == 0)
@@ -58,7 +58,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				positions = positionBuffer,
 				velocities = velocityBuffer,
 			};
-			handle = readInitialDataJob.ScheduleParallel(liquidQuery, state.Dependency);
+			handle = readInitialDataJob.ScheduleParallel(fluidQuery, state.Dependency);
 		}
 	}
 }

@@ -7,7 +7,7 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
+	[WithAll(typeof(FluidTag))]
 	public partial struct CollectAffectedParticlesJob : IJobEntity
 	{
 		[WriteOnly]

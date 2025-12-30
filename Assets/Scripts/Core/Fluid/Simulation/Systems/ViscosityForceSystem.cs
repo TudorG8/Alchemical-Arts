@@ -11,7 +11,7 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(PressureForceSystem))]
 	partial struct ViscosityForceSystem : ISystem
 	{
@@ -51,26 +51,25 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
-			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
 			ref var pressureForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PressureForceSystem>();
-
-			if (populateLiquidPositionsSystem.count == 0)
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
 			{
-				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
-				spatialOffsets = spatialDataSystem.SpatialOffsets,
-				spatial = spatialDataSystem.Spatial,
+				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
+				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
+				spatial = spatialPartitioningSystem.Spatial,
 				smoothingRadius = simulationConfig.radius,
 				offsets2D = offsets2D,
-				numParticles = populateLiquidPositionsSystem.count,
+				numParticles = fluidPositionInitializationSystem.count,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				poly6ScalingFactor = poly6ScalingFactor,
 				viscosityStrength = simulationConfig.viscosityStrength,
 				hashingLimit = 10000,

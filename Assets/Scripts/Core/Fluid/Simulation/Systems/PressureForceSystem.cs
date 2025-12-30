@@ -10,7 +10,7 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(DensityComputationSystem))]
 	partial struct PressureForceSystem : ISystem
 	{
@@ -54,36 +54,35 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
-			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
-			ref var calculateDensitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
-
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
+			ref var densityComputationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
-				densities = calculateDensitySystem.densities,
-				nearDensity = calculateDensitySystem.nearDensity,
-				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
-				spatialOffsets = spatialDataSystem.SpatialOffsets,
-				spatial = spatialDataSystem.Spatial,
+				densities = densityComputationSystem.densities,
+				nearDensity = densityComputationSystem.nearDensity,
+				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
+				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
+				spatial = spatialPartitioningSystem.Spatial,
 				smoothingRadius = simulationConfig.radius,
 				offsets2D = offsets2D,
-				numParticles = populateLiquidPositionsSystem.count,
+				numParticles = fluidPositionInitializationSystem.count,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				targetDensity = simulationConfig.targetDensity,
 				pressureMultiplier = simulationConfig.pressureMultiplier,
 				nearPressureMultiplier = simulationConfig.nearPressureMultiplier,
 				spikyPow2DerivativeScalingFactor = spikyPow2DerivativeScalingFactor,
 				spikyPow3DerivativeScalingFactor = spikyPow3DerivativeScalingFactor,
-				velocities = populateLiquidPositionsSystem.velocityBuffer,
+				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				hashingLimit = 10000
 			};
-			handle = applyPressureForcesJob.ScheduleParallel(calculateDensitySystem.handle);
+			handle = applyPressureForcesJob.ScheduleParallel(densityComputationSystem.handle);
 		}
 	}
 }

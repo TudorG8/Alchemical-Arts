@@ -8,7 +8,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {		
 	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
+	[WithAll(typeof(FluidTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct BuildSpatialKeyOffsetsJob : IJobEntity
 	{

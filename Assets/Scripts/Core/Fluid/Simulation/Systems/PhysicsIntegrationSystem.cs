@@ -6,7 +6,7 @@ using Unity.Entities;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(VelocityWritebackSystem))]
 	partial struct PhysicsIntegrationSystem : ISystem
 	{
@@ -19,13 +19,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var writeLiquidVelocitiesSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<VelocityWritebackSystem>();
+			ref var velocityWritebackSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<VelocityWritebackSystem>();
 
 			var worldQuerry = new EntityQueryBuilder(Allocator.Temp).WithAll<PhysicsWorldState>().Build(state.EntityManager);
 			var world = worldQuerry.GetSingletonEntity();
 			var worldScript = state.EntityManager.GetComponentData<PhysicsWorldState>(world);
 			
-			writeLiquidVelocitiesSystem.handle.Complete();
+			velocityWritebackSystem.handle.Complete();
 			
 			worldScript.physicsWorld.Simulate(SystemAPI.Time.DeltaTime);
 		}

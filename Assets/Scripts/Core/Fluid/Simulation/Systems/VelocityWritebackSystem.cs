@@ -9,7 +9,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(ViscosityForceSystem))]
 	partial struct VelocityWritebackSystem : ISystem
 	{
@@ -35,22 +35,22 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state) 
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var viscositySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ViscosityForceSystem>();
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var viscosityForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ViscosityForceSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var writeVelocityBatchesJob = new WriteVelocityBatchesJob
 			{
 				batchVelocityBuffer = batchVelocityBuffer,
-				velocityBuffer = populateLiquidPositionsSystem.velocityBuffer,
+				velocityBuffer = fluidPositionInitializationSystem.velocityBuffer,
 			};
-			state.Dependency = writeVelocityBatchesJob.ScheduleParallel(viscositySystem.handle);
+			state.Dependency = writeVelocityBatchesJob.ScheduleParallel(viscosityForceSystem.handle);
 
 			var prepareVelocityBatchesJob = new PrepareVelocityBatchesJob()
 			{
 				batchVelocity = batchVelocityBuffer,
-				count = populateLiquidPositionsSystem.count
+				count = fluidPositionInitializationSystem.count
 			};
 			handle = prepareVelocityBatchesJob.Schedule(state.Dependency);
 		}

@@ -10,7 +10,7 @@ using Unity.Jobs;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(PositionPredictionSystem))]
 	partial struct SpatialPartitioningSystem : ISystem
 	{
@@ -40,29 +40,28 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
-
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{
-				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
+				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
 				radius = simulationConfig.radius,
-				count = populateLiquidPositionsSystem.count,
+				count = fluidPositionInitializationSystem.count,
 				spatialOutput = Spatial,
 				spatialOffsetOutput = SpatialOffsets,
 				hashingLimit = 10000
 			};
-			state.Dependency = buildSpatialEntriesJob.ScheduleParallel(calculatePredictedPositionsSystem.handle);
+			state.Dependency = buildSpatialEntriesJob.ScheduleParallel(positionPredictionSystem.handle);
 
 			var sortSpatialEntriesJob = new SortSpatialEntriesJob
 			{
 				Spatial = Spatial,
-				count = populateLiquidPositionsSystem.count
+				count = fluidPositionInitializationSystem.count
 			};
 			state.Dependency = sortSpatialEntriesJob.Schedule(state.Dependency);
 

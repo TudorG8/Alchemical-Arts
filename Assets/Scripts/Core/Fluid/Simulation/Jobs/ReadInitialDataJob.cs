@@ -9,7 +9,7 @@ using Unity.Transforms;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(LiquidTag))]
+	[WithAll(typeof(FluidTag))]
 	public partial struct ReadInitialDataJob : IJobEntity
 	{
 		[WriteOnly]

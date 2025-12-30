@@ -10,7 +10,7 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(LiquidPhysicsGroup))]
+	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(SpatialPartitioningSystem))]
 	partial struct DensityComputationSystem : ISystem
 	{
@@ -63,11 +63,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var spatialDataSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
-			ref var calculatePredictedPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
-			ref var populateLiquidPositionsSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<LiquidPositionInitializationSystem>();
-
-			if (populateLiquidPositionsSystem.count == 0)
+			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
+			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
 			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
@@ -75,10 +74,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			var computeDensitiesJob = new ComputeDensitiesJob()
 			{
 				smoothingRadius = simulationConfig.radius,
-				predictedPositions = calculatePredictedPositionsSystem.predictedPositionsBuffer,
-				spatial = spatialDataSystem.Spatial,
-				spatialOffsets = spatialDataSystem.SpatialOffsets,
-				numParticles = populateLiquidPositionsSystem.count,
+				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
+				spatial = spatialPartitioningSystem.Spatial,
+				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
+				numParticles = fluidPositionInitializationSystem.count,
 				offsets2D = offsets2D,
 				spikyPow2ScalingFactor = spikyPow2ScalingFactor,
 				spikyPow3ScalingFactor = spikyPow3ScalingFactor,
@@ -86,7 +85,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				nearDensities = nearDensity,
 				hashingLimit = 10000
 			};
-			handle = computeDensitiesJob.ScheduleParallel(spatialDataSystem.handle);
+			handle = computeDensitiesJob.ScheduleParallel(spatialPartitioningSystem.handle);
 		}
 	}
 }
