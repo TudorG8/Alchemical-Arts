@@ -21,35 +21,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public NativeArray<float> nearDensity;
 
 
-		private NativeArray<int2> offsets2D;
-
-		private float spikyPow3ScalingFactor;
-
-		private float spikyPow2ScalingFactor;
-
-
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SimulationState>();
 
 			densities = new NativeArray<float>(10000, Allocator.Persistent);
 			nearDensity = new NativeArray<float>(10000, Allocator.Persistent);
-
-			offsets2D = new NativeArray<int2>(9, Allocator.Persistent);
-			offsets2D[0] = new int2(-1, 1);
-			offsets2D[1] = new int2(0, 1);
-			offsets2D[2] = new int2(1, 1);
-			offsets2D[3] = new int2(-1, 0);
-			offsets2D[4] = new int2(0, 0);
-			offsets2D[5] = new int2(1, 0);
-			offsets2D[6] = new int2(-1, -1);
-			offsets2D[7] = new int2(0, -1);
-			offsets2D[8] = new int2(1, -1);
-
-			spikyPow3ScalingFactor = 10 / (math.PI * math.pow(0.35f, 5));
-			spikyPow2ScalingFactor = 6 / (math.PI * math.pow(0.35f, 4));
 		}
 
 		[BurstCompile]
@@ -57,7 +36,6 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		{
 			densities.Dispose();
 			nearDensity.Dispose();
-			offsets2D.Dispose();
 		}
 
 		[BurstCompile]
@@ -69,20 +47,19 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationState = SystemAPI.GetSingleton<SimulationState>();
+			var simulationConstantsState = SystemAPI.GetSingleton<SimulationConstantsState>();
 
 			var computeDensitiesJob = new ComputeDensitiesJob()
 			{
-				smoothingRadius = simulationConfig.radius,
-				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
-				spatial = spatialPartitioningSystem.Spatial,
-				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
-				numParticles = fluidPositionInitializationSystem.count,
-				offsets2D = offsets2D,
-				spikyPow2ScalingFactor = spikyPow2ScalingFactor,
-				spikyPow3ScalingFactor = spikyPow3ScalingFactor,
 				densities = densities,
 				nearDensities = nearDensity,
+				spatial = spatialPartitioningSystem.Spatial,
+				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
+				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
+				numParticles = fluidPositionInitializationSystem.count,
+				simulationState = simulationState,
+				simulationConstantsState = simulationConstantsState,
 				hashingLimit = 10000
 			};
 			handle = computeDensitiesJob.ScheduleParallel(spatialPartitioningSystem.handle);

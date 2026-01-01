@@ -11,35 +11,28 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(FluidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyViscosityForcesJob : IJobEntity
 	{
 		[NativeDisableParallelForRestriction]
 		public NativeArray<float2> velocities;
 
 		[ReadOnly]
-		public NativeArray<float2> predictedPositions;
-
+		public NativeArray<SpatialEntry> spatial;
+		
 		[ReadOnly]
 		public NativeArray<int> spatialOffsets;
 
 		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
-
-		[ReadOnly]
-		public NativeArray<int2> offsets2D;
-
-		[ReadOnly]
-		public float smoothingRadius;
+		public NativeArray<float2> predictedPositions;
 
 		[ReadOnly]
 		public int numParticles;
 
 		[ReadOnly]
-		public float poly6ScalingFactor;
+		public SimulationState simulationState;
 
 		[ReadOnly]
-		public float viscosityStrength;
+		public SimulationConstantsState simulationConstantsState;
 
 		[ReadOnly]
 		public float deltaTime;
@@ -52,15 +45,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			[EntityIndexInQuery] int input)
 		{
 			var pos = predictedPositions[input];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, smoothingRadius);
-			var sqrRadius = smoothingRadius * smoothingRadius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationState.radius);
+			var sqrRadius = simulationState.radius * simulationState.radius;
 
 			var viscosityForce = float2.zero;
 			var velocity = velocities[input];
 
-			for (int i = 0; i < 9; i ++)
+			foreach (var offset in simulationConstantsState.offsets)
 			{
-				var hash = SpatialHashingUtility.HashCell2D(originCell + offsets2D[i]);
+				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 				var currIndex = spatialOffsets[key];
 
@@ -83,11 +76,11 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 
 					var dst = math.sqrt(sqrDstToNeighbour);
 					var neighbourVelocity = velocities[neighbourIndex];
-					viscosityForce += (neighbourVelocity - velocity) * SpatialWeightingUtility.ComputeSmoothingPoly6(poly6ScalingFactor, dst, smoothingRadius);
+					viscosityForce += (neighbourVelocity - velocity) * SpatialWeightingUtility.ComputeSmoothingPoly6(simulationConstantsState.poly6ScalingFactor, dst, simulationState.radius);
 				}
 
 			}
-			velocities[input] += deltaTime * viscosityStrength * viscosityForce;
+			velocities[input] += deltaTime * simulationState.viscosityStrength * viscosityForce;
 		}
 	}
 }

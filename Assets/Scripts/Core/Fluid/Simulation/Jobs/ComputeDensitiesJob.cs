@@ -11,7 +11,6 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(FluidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ComputeDensitiesJob : IJobEntity 
 	{
 		[WriteOnly]
@@ -21,28 +20,22 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public NativeArray<float> nearDensities;
 
 		[ReadOnly]
-		public NativeArray<int> spatialOffsets;
-
-		[ReadOnly]
 		public NativeArray<SpatialEntry> spatial;
+		
+		[ReadOnly]
+		public NativeArray<int> spatialOffsets;
 
 		[ReadOnly]
 		public NativeArray<float2> predictedPositions;
 
 		[ReadOnly]
-		public float smoothingRadius;
-
-		[ReadOnly]
 		public int numParticles;
 
 		[ReadOnly]
-		public NativeArray<int2> offsets2D;
+		public SimulationState simulationState;
 
 		[ReadOnly]
-		public float spikyPow3ScalingFactor;
-
-		[ReadOnly]
-		public float spikyPow2ScalingFactor;
+		public SimulationConstantsState simulationConstantsState;
 
 		[ReadOnly]
 		public int hashingLimit;
@@ -52,14 +45,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			[EntityIndexInQuery] int index)
 		{
 			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, smoothingRadius);
-			var sqrRadius = smoothingRadius * smoothingRadius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationState.radius);
+			var sqrRadius = simulationState.radius * simulationState.radius;
 			var density = 0f;
 			var nearDensity = 0f;
 			
-			for(int i = 0; i < 9; i++)
+			foreach (var offset in simulationConstantsState.offsets)
 			{
-				var hash = SpatialHashingUtility.HashCell2D(originCell + offsets2D[i]);
+				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 				var currIndex = spatialOffsets[key];
 
@@ -79,8 +72,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 					if (sqrDstToNeighbour > sqrRadius) continue;
 
 					var dst = math.sqrt(sqrDstToNeighbour);
-					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(spikyPow2ScalingFactor, dst, smoothingRadius);
-					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(spikyPow3ScalingFactor, dst, smoothingRadius);
+					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(simulationConstantsState.spikyPow2ScalingFactor, dst, simulationState.radius);
+					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(simulationConstantsState.spikyPow3ScalingFactor, dst, simulationState.radius);
 				}
 			}
 

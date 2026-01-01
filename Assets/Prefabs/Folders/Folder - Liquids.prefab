@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5886575791231166433, guid: 42467517bd85ad74197b162497c9c706, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5886575791231166433, guid: 42467517bd85ad74197b162497c9c706, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5886575791231166433, guid: 42467517bd85ad74197b162497c9c706, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5886575791231166433, guid: 42467517bd85ad74197b162497c9c706, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7826135175486408951, guid: 42467517bd85ad74197b162497c9c706, type: 3}
       propertyPath: m_Name
-      value: Liquids Folder Variant
+      value: Folder - Liquids
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

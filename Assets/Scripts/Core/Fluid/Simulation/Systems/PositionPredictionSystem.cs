@@ -23,7 +23,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SimulationState>();
 			predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
 		}
 
@@ -40,14 +40,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationState = SystemAPI.GetSingleton<SimulationState>();
 
 			var predictPositionsJob = new PredictPositionsJob
 			{
 				positions = fluidPositionInitializationSystem.positionBuffer,
 				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				predictedPositions = predictedPositionsBuffer,
-				predictionFactor = 1f / simulationConfig.predictionFrames,
+				predictionFactor = 1f / simulationState.predictionFrames,
 			};
 			handle = predictPositionsJob.ScheduleParallel(fluidPositionInitializationSystem.handle);
 		}

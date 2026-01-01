@@ -17,38 +17,11 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public JobHandle handle;
 
 
-		private NativeArray<int2> offsets2D;
-
-		private float spikyPow2DerivativeScalingFactor;
-
-		private float spikyPow3DerivativeScalingFactor;
-
-
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
-
-			offsets2D = new NativeArray<int2>(9, Allocator.Persistent);
-			offsets2D[0] = new int2(-1, 1);
-			offsets2D[1] = new int2(0, 1);
-			offsets2D[2] = new int2(1, 1);
-			offsets2D[3] = new int2(-1, 0);
-			offsets2D[4] = new int2(0, 0);
-			offsets2D[5] = new int2(1, 0);
-			offsets2D[6] = new int2(-1, -1);
-			offsets2D[7] = new int2(0, -1);
-			offsets2D[8] = new int2(1, -1);
-
-			spikyPow2DerivativeScalingFactor = 12 / (math.pow(0.35f, 4) * math.PI);
-			spikyPow3DerivativeScalingFactor = 30 / (math.pow(0.35f, 5) * math.PI);
-		}
-
-		[BurstCompile]
-		public void OnDestroy(ref SystemState state)
-		{
-			offsets2D.Dispose();
+			state.RequireForUpdate<SimulationState>();
 		}
 
 		[BurstCompile]
@@ -62,25 +35,21 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationState = SystemAPI.GetSingleton<SimulationState>();
+			var simulationConstantsState = SystemAPI.GetSingleton<SimulationConstantsState>();
 
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
+				velocities = fluidPositionInitializationSystem.velocityBuffer,
+				spatial = spatialPartitioningSystem.Spatial,
+				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
 				densities = densityComputationSystem.densities,
 				nearDensity = densityComputationSystem.nearDensity,
 				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
-				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
-				spatial = spatialPartitioningSystem.Spatial,
-				smoothingRadius = simulationConfig.radius,
-				offsets2D = offsets2D,
 				numParticles = fluidPositionInitializationSystem.count,
+				simulationState = simulationState,
+				simulationConstantsState = simulationConstantsState,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				targetDensity = simulationConfig.targetDensity,
-				pressureMultiplier = simulationConfig.pressureMultiplier,
-				nearPressureMultiplier = simulationConfig.nearPressureMultiplier,
-				spikyPow2DerivativeScalingFactor = spikyPow2DerivativeScalingFactor,
-				spikyPow3DerivativeScalingFactor = spikyPow3DerivativeScalingFactor,
-				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				hashingLimit = 10000
 			};
 			handle = applyPressureForcesJob.ScheduleParallel(fluidInwardsInputSystem.handle);

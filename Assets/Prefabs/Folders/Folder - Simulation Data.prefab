@@ -190,8 +190,36 @@ PrefabInstance:
     m_TransformParent: {fileID: 849820382446325050}
     m_Modifications:
     - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.radius
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.gravity
+      value: 9.807
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.targetDensity
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.predictionFrames
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.viscosityStrength
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
       propertyPath: simulationConfig.viscosityStrength
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.pressureMultiplier
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
+      propertyPath: simulationState.nearPressureMultiplier
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6523689305503583234, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
       propertyPath: m_LocalPosition.x

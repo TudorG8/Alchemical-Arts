@@ -33,7 +33,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SimulationState>();
 			Spatial = new NativeArray<SpatialEntry>(10000, Allocator.Persistent);
 			SpatialOffsets = new NativeArray<int>(10000, Allocator.Persistent);
 			spatialEntryKeyComparer = new SpatialEntryKeyComparer();
@@ -54,12 +54,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationState = SystemAPI.GetSingleton<SimulationState>();
 
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{
 				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
-				radius = simulationConfig.radius,
+				radius = simulationState.radius,
 				count = fluidPositionInitializationSystem.count,
 				spatialOutput = Spatial,
 				spatialOffsetOutput = SpatialOffsets,

@@ -6,7 +6,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
 	public class SimulationConfigAuthoring : MonoBehaviour
 	{
-		public SimulationConfig simulationConfig;
+		public SimulationState simulationState;
 	}
 
 	public class SimulationConfigBaker : Baker<SimulationConfigAuthoring>
@@ -14,7 +14,9 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 		public override void Bake(SimulationConfigAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.None);
-			AddComponent(entity, authoring.simulationConfig);
+			AddComponent(entity, authoring.simulationState);
+			AddComponent(entity, new SimulationConstantsState());
+			AddComponent(entity, new SimulationConstantsInitializeTag());
 		}
 	}
 }

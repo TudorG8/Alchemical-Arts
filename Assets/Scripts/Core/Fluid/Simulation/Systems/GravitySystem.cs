@@ -19,7 +19,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SimulationState>();
 		}
 
 		[BurstCompile]
@@ -30,13 +30,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationState = SystemAPI.GetSingleton<SimulationState>();
 
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
 				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				gravity = simulationConfig.gravity
+				gravity = simulationState.gravity
 			};
 			handle = applyGravityForcesJob.ScheduleParallel(densityComputationSystem.handle);
 		}

@@ -12,10 +12,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(FluidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyPressureForcesJob : IJobEntity
 	{
 		public NativeArray<float2> velocities;
+
+		[ReadOnly]
+		public NativeArray<SpatialEntry> spatial;
+
+		[ReadOnly]
+		public NativeArray<int> spatialOffsets;
 
 		[ReadOnly]
 		public NativeArray<float> densities;
@@ -27,37 +32,16 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public NativeArray<float2> predictedPositions;
 
 		[ReadOnly]
-		public NativeArray<int> spatialOffsets;
-
-		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
-
-		[ReadOnly]
-		public float smoothingRadius;
-
-		[ReadOnly]
-		public NativeArray<int2> offsets2D;
-
-		[ReadOnly]
 		public int numParticles;
 
 		[ReadOnly]
+		public SimulationState simulationState;
+
+		[ReadOnly]
+		public SimulationConstantsState simulationConstantsState;
+
+		[ReadOnly]
 		public float deltaTime;
-
-		[ReadOnly]
-		public float targetDensity;
-
-		[ReadOnly]
-		public float pressureMultiplier;
-
-		[ReadOnly]
-		public float nearPressureMultiplier;
-
-		[ReadOnly]
-		public float spikyPow2DerivativeScalingFactor;
-
-		[ReadOnly]
-		public float spikyPow3DerivativeScalingFactor;
 
 		[ReadOnly]
 		public int hashingLimit;
@@ -73,12 +57,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			var pressureForce = new float2();
 
 			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, smoothingRadius);
-			var sqrRadius = smoothingRadius * smoothingRadius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationState.radius);
+			var sqrRadius = simulationState.radius * simulationState.radius;
 			
-			for(int i = 0; i < 9; i++)
+			foreach (var offset in simulationConstantsState.offsets)
 			{
-				var hash = SpatialHashingUtility.HashCell2D(originCell + offsets2D[i]);
+				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 				var currIndex = spatialOffsets[key];
 				while (currIndex < numParticles)
@@ -109,8 +93,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 					var sharedPressure = (pressure + neighbourPressure) * 0.5f;
 					var sharedNearPressure = (nearPressure + neighbourNearPressure) * 0.5f;
 					
-					pressureForce += sharedPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow2(spikyPow2DerivativeScalingFactor, dst, smoothingRadius) * dirToNeighbour / neighbourDensity;
-					pressureForce += sharedNearPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow3(spikyPow3DerivativeScalingFactor, dst, smoothingRadius) * dirToNeighbour / neighbourNearDensity;
+					pressureForce += sharedPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow2(simulationConstantsState.spikyPow2DerivativeScalingFactor, dst, simulationState.radius) * dirToNeighbour / neighbourDensity;
+					pressureForce += sharedNearPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow3(simulationConstantsState.spikyPow3DerivativeScalingFactor, dst, simulationState.radius) * dirToNeighbour / neighbourNearDensity;
 				}
 			}
 
@@ -120,12 +104,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		
 		private readonly float PressureFromDensity(float density)
 		{
-			return (density - targetDensity) * pressureMultiplier;
+			return (density - simulationState.targetDensity) * simulationState.pressureMultiplier;
 		}
 
 		private readonly float NearPressureFromDensity(float nearDensity)
 		{
-			return nearPressureMultiplier * nearDensity;
+			return simulationState.nearPressureMultiplier * nearDensity;
 		}
 	}
 }
