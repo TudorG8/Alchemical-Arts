@@ -53,6 +53,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				count = fluidPositionInitializationSystem.count
 			};
 			handle = prepareVelocityBatchesJob.Schedule(state.Dependency);
+			handle.Complete();
 		}
 	}
 }

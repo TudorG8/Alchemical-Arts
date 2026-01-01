@@ -3,15 +3,13 @@ using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(FluidPositionInitializationSystem))]
+	[UpdateAfter(typeof(DensityComputationSystem))]
 	partial struct GravitySystem : ISystem
 	{
 		public JobHandle handle;
@@ -28,6 +26,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnUpdate(ref SystemState state)
 		{
 			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var densityComputationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
@@ -39,7 +38,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = simulationConfig.gravity
 			};
-			handle = applyGravityForcesJob.ScheduleParallel(fluidPositionInitializationSystem.handle);
+			handle = applyGravityForcesJob.ScheduleParallel(densityComputationSystem.handle);
 		}
 	}
 }

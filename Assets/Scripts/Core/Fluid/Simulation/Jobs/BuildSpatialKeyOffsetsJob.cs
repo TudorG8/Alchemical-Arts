@@ -9,7 +9,6 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {		
 	[BurstCompile]
 	[WithAll(typeof(FluidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct BuildSpatialKeyOffsetsJob : IJobEntity
 	{
 		[WriteOnly]

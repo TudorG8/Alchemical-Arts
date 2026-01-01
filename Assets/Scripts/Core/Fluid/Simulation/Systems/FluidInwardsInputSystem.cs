@@ -32,6 +32,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			output.Dispose();
 		}
 
+		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
 			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();

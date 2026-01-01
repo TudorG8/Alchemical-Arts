@@ -11,7 +11,7 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(DensityComputationSystem))]
+	[UpdateAfter(typeof(FluidInwardsInputSystem))]
 	partial struct PressureForceSystem : ISystem
 	{
 		public JobHandle handle;
@@ -58,6 +58,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
 			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
 			ref var densityComputationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
+			ref var fluidInwardsInputSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidInwardsInputSystem>();
 			if (fluidPositionInitializationSystem.count == 0)
 				return;
 
@@ -82,7 +83,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				velocities = fluidPositionInitializationSystem.velocityBuffer,
 				hashingLimit = 10000
 			};
-			handle = applyPressureForcesJob.ScheduleParallel(densityComputationSystem.handle);
+			handle = applyPressureForcesJob.ScheduleParallel(fluidInwardsInputSystem.handle);
 		}
 	}
 }

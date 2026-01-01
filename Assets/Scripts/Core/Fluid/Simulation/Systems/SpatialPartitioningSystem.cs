@@ -2,11 +2,16 @@ using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Fluid.Simulation.Models;
+using PotionCraft.Core.Fluid.Simulation.Utility;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
+
+[assembly: RegisterGenericJobType(typeof(SortJob<SpatialEntry, SpatialEntryKeyComparer>.SegmentSort))]
+[assembly: RegisterGenericJobType(typeof(SortJob<SpatialEntry, SpatialEntryKeyComparer>.SegmentSortMerge))]
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
@@ -21,6 +26,9 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public NativeArray<int> SpatialOffsets;
 
 
+		private SpatialEntryKeyComparer spatialEntryKeyComparer;
+
+
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
@@ -28,6 +36,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			state.RequireForUpdate<SimulationConfig>();
 			Spatial = new NativeArray<SpatialEntry>(10000, Allocator.Persistent);
 			SpatialOffsets = new NativeArray<int>(10000, Allocator.Persistent);
+			spatialEntryKeyComparer = new SpatialEntryKeyComparer();
 		}
 
 		[BurstCompile]
@@ -56,21 +65,18 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				spatialOffsetOutput = SpatialOffsets,
 				hashingLimit = 10000
 			};
-			state.Dependency = buildSpatialEntriesJob.ScheduleParallel(positionPredictionSystem.handle);
+			var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(positionPredictionSystem.handle);
+			buildSpatialEntriesHandle.Complete(); // SortJob won't work without completing this
 
-			var sortSpatialEntriesJob = new SortSpatialEntriesJob
-			{
-				Spatial = Spatial,
-				count = fluidPositionInitializationSystem.count
-			};
-			state.Dependency = sortSpatialEntriesJob.Schedule(state.Dependency);
+			var sortJobHandle = Spatial.Slice(0, fluidPositionInitializationSystem.count).SortJob(spatialEntryKeyComparer).Schedule();
 
 			var buildSpatialKeyOffsetsJob = new BuildSpatialKeyOffsetsJob()
 			{
 				spatial = Spatial,
 				spatialOffsets = SpatialOffsets
 			};
-			handle = state.Dependency = buildSpatialKeyOffsetsJob.ScheduleParallel(state.Dependency);
+			handle = buildSpatialKeyOffsetsJob.ScheduleParallel(sortJobHandle);
+			handle.Complete(); // Completing before we start doing actual work with forces
 		}
 	}
 }

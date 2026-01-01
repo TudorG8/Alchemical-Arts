@@ -11,11 +11,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(FluidTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct BuildSpatialEntriesJob : IJobEntity
 	{
-		[WriteOnly]
-		public NativeSlice<SpatialEntry> spatialOutput;
+		[NativeDisableParallelForRestriction]
+		public NativeArray<SpatialEntry> spatialOutput;
 
 		[WriteOnly]
 		public NativeArray<int> spatialOffsetOutput;
