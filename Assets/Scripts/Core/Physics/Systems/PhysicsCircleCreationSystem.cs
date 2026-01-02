@@ -7,8 +7,8 @@ using Unity.Entities;
 namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
-	[UpdateAfter(typeof(CreatePhysicsBodySystem))]
-	partial struct CreatePhysicsCircleSystem : ISystem
+	[UpdateAfter(typeof(PhysicsBodyCreationSystem))]
+	partial struct PhysicsCircleCreationSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)

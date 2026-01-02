@@ -8,7 +8,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Naming.Systems
 {
 	[UpdateInGroup(typeof(NamingInitializationGroup))]
-	partial struct SetDebugHelperNameSystem : ISystem
+	partial struct DebugHelperNamingSystem : ISystem
 	{
 		public const string NAME_REFERENCE = "PublicEntityRef";
 

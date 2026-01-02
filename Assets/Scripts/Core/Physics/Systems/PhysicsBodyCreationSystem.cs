@@ -5,17 +5,14 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
-using Unity.Jobs;
 using Unity.Transforms;
-using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
 namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
-	[UpdateAfter(typeof(CreatePhysicsWorldSystem))]
-	partial struct CreatePhysicsBodySystem : ISystem
+	[UpdateAfter(typeof(PhysicsWorldCreationSystem))]
+	partial struct PhysicsBodyCreationSystem : ISystem
 	{
 		private EntityQuery setupEntitiesQuery;
 

@@ -7,7 +7,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Naming.Systems
 {
 	[UpdateInGroup(typeof(NamingInitializationGroup))]
-	partial struct SetEntityNameSystem : ISystem
+	partial struct EntityNamingSystem : ISystem
 	{
 		private EntityQuery entitiesWithNameDataQuery;
 

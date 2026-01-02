@@ -12,7 +12,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
-	partial struct PhysicsSyncTransformSystem : ISystem
+	partial struct PhysicsTransformSyncSystem : ISystem
 	{
 		private ComponentLookup<LocalTransform> localTransformLookup;
 
@@ -40,17 +40,17 @@ namespace PotionCraft.Core.Physics.Systems
 			physicsWorldConfig.physicsWorld.bodyUpdateEvents.CopyTo(bodyUpdates.AsSpan());
 			
 			localTransformLookup.Update(ref state);
-			var physicsTransformWriteJob = new PhysicsTransformWriteJob
+			var writePhysicsTransformsJob = new WritePhysicsTransformsJob
 			{
 				bodyUpdateEvents = bodyUpdates,
 				localTransformLookup = localTransformLookup
 			};
 
-			state.Dependency = physicsTransformWriteJob.Schedule(bodyUpdatesLength, bodyUpdatesLength / JobsUtility.JobWorkerCount, state.Dependency);
+			state.Dependency = writePhysicsTransformsJob.Schedule(bodyUpdatesLength, bodyUpdatesLength / JobsUtility.JobWorkerCount, state.Dependency);
 		}
 
 		[BurstCompile]
-		public partial struct PhysicsTransformWriteJob : IJobParallelFor
+		public partial struct WritePhysicsTransformsJob : IJobParallelFor
 		{
 			[ReadOnly]
 			[DeallocateOnJobCompletion]

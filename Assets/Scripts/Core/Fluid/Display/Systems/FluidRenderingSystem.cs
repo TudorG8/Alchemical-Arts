@@ -10,10 +10,8 @@ using UnityEngine;
 namespace PotionCraft.Core.Fluid.Display.Systems
 {
 	[UpdateInGroup(typeof(PresentationSystemGroup))]
-	partial class FluidDisplaySystem : SystemBase
+	partial class FluidRenderingSystem : SystemBase
 	{
-		private SystemHandle populateFluidPositionsSystemHandle;
-
 		private EntityQuery simulationStateQuery;
 		
 		private ComputeBuffer argsBuffer;
@@ -29,7 +27,6 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnCreate()
 		{
-			populateFluidPositionsSystemHandle = World.Unmanaged.GetExistingUnmanagedSystem<FluidPositionInitializationSystem>();
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<FluidSimulationConfig>().Build(entityManager);
 			RequireForUpdate<PhysicsWorldState>();
@@ -63,17 +60,17 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnUpdate()
 		{
-			ref var populateFluidPositionsSystem = ref World.Unmanaged.GetUnsafeSystemRef<FluidPositionInitializationSystem>(populateFluidPositionsSystemHandle);
+			ref var fluidBuffersSystem = ref World.Unmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
+			if (fluidBuffersSystem.count == 0)
+				return;
+			
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			var fluidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();
 			var fluidSimulation = entityManager.GetComponentData<FluidSimulationConfig>(fluidSimulationStateEntity);
 
-			if (populateFluidPositionsSystem.count == 0)
-				return;
-			
-			positionsBuffer.SetData(populateFluidPositionsSystem.positionBuffer, 0, 0, populateFluidPositionsSystem.count);
-			velocitiesBuffer.SetData(populateFluidPositionsSystem.velocityBuffer, 0, 0, populateFluidPositionsSystem.count);
-			ComputeBufferUtility.CreateArgsBuffer(ref argsBuffer, fluidSimulation.mesh, (uint)populateFluidPositionsSystem.count);
+			positionsBuffer.SetData(fluidBuffersSystem.positionBuffer, 0, 0, fluidBuffersSystem.count);
+			velocitiesBuffer.SetData(fluidBuffersSystem.velocityBuffer, 0, 0, fluidBuffersSystem.count);
+			ComputeBufferUtility.CreateArgsBuffer(ref argsBuffer, fluidSimulation.mesh, (uint)fluidBuffersSystem.count);
 			Graphics.DrawMeshInstancedIndirect(fluidSimulation.mesh, 0, material, bounds, argsBuffer);
 		}
 	}

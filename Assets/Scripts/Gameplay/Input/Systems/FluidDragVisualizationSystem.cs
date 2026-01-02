@@ -11,7 +11,7 @@ using UnityEngine;
 namespace PotionCraft.Gameplay.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup))]
-	partial struct FluidDraggingPresentationSystem : ISystem
+	partial struct FluidDragVisualizationSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)

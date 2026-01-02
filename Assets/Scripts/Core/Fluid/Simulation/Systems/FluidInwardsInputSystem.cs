@@ -2,7 +2,6 @@ using PotionCraft.Core.Input.Components;
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
@@ -16,28 +15,18 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public JobHandle handle;
 
 
-		private NativeList<int> output;
-
-
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			output = new NativeList<int>(10000, Allocator.Persistent);
 			state.RequireForUpdate<InputDataState>();
-		}
-
-		[BurstCompile]
-		public void OnDestroy(ref SystemState state)
-		{
-			output.Dispose();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
 			ref var gravitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
-			if (fluidPositionInitializationSystem.count == 0)
+			if (fluidBuffersSystem.count == 0)
 				return;
 			
 			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
@@ -49,15 +38,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			switch(draggingParticlesModeState.ValueRO.mode)
 			{
 				case DraggingParticlesMode.Idle:
-					output.Clear();
+					fluidBuffersSystem.inwardsForceBuffer.Clear();
 					break;
 				case DraggingParticlesMode.Inwards:
-					if (output.Length == 0)
+					if (fluidBuffersSystem.inwardsForceBuffer.Length == 0)
 					{
 						var collectAffectedParticlesJob = new CollectAffectedParticlesJob
 						{
-							output = output.AsParallelWriter(),
-							positions = fluidPositionInitializationSystem.positionBuffer,
+							output = fluidBuffersSystem.inwardsForceBuffer.AsParallelWriter(),
+							positions = fluidBuffersSystem.positionBuffer,
 							fluidInputConfig = fluidInputConfig.ValueRO,
 						};
 						handle = collectAffectedParticlesJob.ScheduleParallel(handle);
@@ -66,14 +55,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 					
 					var applyInputToCache = new ApplyInwardsForcesJob
 					{
-						velocities = fluidPositionInitializationSystem.velocityBuffer,
-						positions = fluidPositionInitializationSystem.positionBuffer,
+						velocities = fluidBuffersSystem.velocityBuffer,
+						positions = fluidBuffersSystem.positionBuffer,
 						fluidInputConfig = fluidInputConfig.ValueRO,
 						fluidInputState = fluidInputState.ValueRO,
 						deltaTime = SystemAPI.Time.DeltaTime,
-						indexes = output,
+						indexes = fluidBuffersSystem.inwardsForceBuffer,
 					};
-					handle = applyInputToCache.Schedule(output.Length, 64, handle);
+					handle = applyInputToCache.Schedule(fluidBuffersSystem.inwardsForceBuffer.Length, 64, handle);
 					break;
 			}
 		}

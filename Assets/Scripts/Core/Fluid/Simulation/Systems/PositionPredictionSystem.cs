@@ -16,37 +16,29 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 	{
 		public JobHandle handle;
 
-		public NativeArray<float2> predictedPositionsBuffer;
-
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SimulationState>();
-			predictedPositionsBuffer = new NativeArray<float2>(10000, Allocator.Persistent);
-		}
-
-		[BurstCompile]
-		public void OnDestroy(ref SystemState state)
-		{
-			predictedPositionsBuffer.Dispose();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
 			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
-			if (fluidPositionInitializationSystem.count == 0)
+			if (fluidBuffersSystem.count == 0)
 				return;
 
 			var simulationState = SystemAPI.GetSingleton<SimulationState>();
 
 			var predictPositionsJob = new PredictPositionsJob
 			{
-				positions = fluidPositionInitializationSystem.positionBuffer,
-				velocities = fluidPositionInitializationSystem.velocityBuffer,
-				predictedPositions = predictedPositionsBuffer,
+				positions = fluidBuffersSystem.positionBuffer,
+				velocities = fluidBuffersSystem.velocityBuffer,
+				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				predictionFactor = 1f / simulationState.predictionFrames,
 			};
 			handle = predictPositionsJob.ScheduleParallel(fluidPositionInitializationSystem.handle);

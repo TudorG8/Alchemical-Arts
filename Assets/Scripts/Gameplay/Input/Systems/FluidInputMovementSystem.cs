@@ -8,7 +8,7 @@ using Unity.Entities;
 namespace PotionCraft.Gameplay.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup), OrderLast = true)]
-	partial struct InputFluidMoverSystem : ISystem
+	partial struct FluidInputMovementSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace PotionCraft.Core.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup), OrderFirst = true)]
-	partial class InputSystem : SystemBase
+	partial class InputProcessingSystem : SystemBase
 	{
 		private GameInput gameInput;
 

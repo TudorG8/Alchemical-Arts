@@ -9,7 +9,7 @@ using Unity.Transforms;
 namespace PotionCraft.Gameplay.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
-	partial struct FluidSpawningSystem : ISystem
+	partial struct FluidSpawnSystem : ISystem
 	{
 		private EntityQuery validFluidSpawnerQuery;
 
@@ -36,18 +36,18 @@ namespace PotionCraft.Gameplay.Systems
 			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 			var fluidFolder = SystemAPI.GetSingleton<FolderManagerData>().FluidFolder;
 
-			var spawnFluidJob = new SpawnFluidJob
+			var spawnFluidEntitiesJob = new SpawnFluidEntitiesJob
 			{
 				ecb = commandBuffer,
 				elapsedTime = elapsedTime,
 				baseSeed = random.NextUInt(),
 				folder = fluidFolder
 			};
-			state.Dependency = spawnFluidJob.ScheduleParallel(validFluidSpawnerQuery, state.Dependency);
+			state.Dependency = spawnFluidEntitiesJob.ScheduleParallel(validFluidSpawnerQuery, state.Dependency);
 		}
 
 		[BurstCompile]
-		public partial struct SpawnFluidJob : IJobEntity
+		public partial struct SpawnFluidEntitiesJob : IJobEntity
 		{
 			[WriteOnly]
 			public EntityCommandBuffer.ParallelWriter ecb;

@@ -1,13 +1,10 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
-using PotionCraft.Core.Fluid.Simulation.Models;
 using PotionCraft.Core.Physics.Components;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
@@ -28,11 +25,9 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
-			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
-			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
 			ref var pressureForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PressureForceSystem>();
-			if (fluidPositionInitializationSystem.count == 0)
+			if (fluidBuffersSystem.count == 0)
 				return;
 
 			var simulationState = SystemAPI.GetSingleton<SimulationState>();
@@ -40,15 +35,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 
 			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
 			{
-				velocities = fluidPositionInitializationSystem.velocityBuffer,
-				spatial = spatialPartitioningSystem.Spatial,
-				spatialOffsets = spatialPartitioningSystem.SpatialOffsets,
-				predictedPositions = positionPredictionSystem.predictedPositionsBuffer,
-				numParticles = fluidPositionInitializationSystem.count,
+				velocities = fluidBuffersSystem.velocityBuffer,
+				spatial = fluidBuffersSystem.spatialBuffer,
+				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
+				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
+				numParticles = fluidBuffersSystem.count,
 				simulationState = simulationState,
 				simulationConstantsState = simulationConstantsState,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				hashingLimit = 10000,
+				hashingLimit = fluidBuffersSystem.hashingLimit,
 			};
 			handle = applyViscosityForcesJob.ScheduleParallel(pressureForceSystem.handle);
 		}

@@ -4,7 +4,7 @@ using Unity.Physics.Systems;
 using static Unity.Entities.RateUtils;
 
 [UpdateInGroup(typeof(PhysicsInitializationGroup), OrderFirst = true)]
-partial class FixDeathSpiralSystemBase : SystemBase
+partial class PhysicsSimulationRateOverrideSystem : SystemBase
 {
 	protected override void OnCreate()
 	{

@@ -8,7 +8,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	public partial struct PrepareVelocityBatchesJob : IJob
+	public partial struct SetVelocityBatchesJob : IJob
 	{
 		[ReadOnly]
 		public NativeArray<BatchVelocity> batchVelocity;

@@ -25,16 +25,16 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
 			ref var densityComputationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
-			if (fluidPositionInitializationSystem.count == 0)
+			if (fluidBuffersSystem.count == 0)
 				return;
 
 			var simulationState = SystemAPI.GetSingleton<SimulationState>();
 
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
-				velocities = fluidPositionInitializationSystem.velocityBuffer,
+				velocities = fluidBuffersSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = simulationState.gravity
 			};

@@ -16,43 +16,33 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public JobHandle handle;
 
 
-		private NativeArray<BatchVelocity> batchVelocityBuffer;
-
-
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			batchVelocityBuffer = new NativeArray<BatchVelocity>(10000, Allocator.Persistent);
-		}
-
-		[BurstCompile]
-		public void OnDestroy(ref SystemState state)
-		{
-			batchVelocityBuffer.Dispose();
 		}
 
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state) 
 		{
-			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidPositionInitializationSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
 			ref var viscosityForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ViscosityForceSystem>();
-			if (fluidPositionInitializationSystem.count == 0)
+			if (fluidBuffersSystem.count == 0)
 				return;
 
 			var writeVelocityBatchesJob = new WriteVelocityBatchesJob
 			{
-				batchVelocityBuffer = batchVelocityBuffer,
-				velocityBuffer = fluidPositionInitializationSystem.velocityBuffer,
+				batchVelocityBuffer = fluidBuffersSystem.batchVelocityBuffer,
+				velocityBuffer = fluidBuffersSystem.velocityBuffer,
 			};
 			state.Dependency = writeVelocityBatchesJob.ScheduleParallel(viscosityForceSystem.handle);
 
-			var prepareVelocityBatchesJob = new PrepareVelocityBatchesJob()
+			var setVelocityBatchesJob = new SetVelocityBatchesJob()
 			{
-				batchVelocity = batchVelocityBuffer,
-				count = fluidPositionInitializationSystem.count
+				batchVelocity = fluidBuffersSystem.batchVelocityBuffer,
+				count = fluidBuffersSystem.count
 			};
-			handle = prepareVelocityBatchesJob.Schedule(state.Dependency);
+			handle = setVelocityBatchesJob.Schedule(state.Dependency);
 			handle.Complete();
 		}
 	}
