@@ -27,11 +27,11 @@ namespace PotionCraft.Core.Naming.Systems
 			var ecbSingleton = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>();
 			var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 
-			// var setNamesJob = new SetNamesJob
-			// {
-			// 	ecb = commandBuffer,
-			// };
-			// state.Dependency = setNamesJob.ScheduleParallel(entitiesWithNameDataQuery, state.Dependency);
+			var setNamesJob = new SetNamesJob
+			{
+				ecb = commandBuffer,
+			};
+			state.Dependency = setNamesJob.ScheduleParallel(entitiesWithNameDataQuery, state.Dependency);
 		}
 	}
 

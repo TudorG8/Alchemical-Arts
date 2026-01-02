@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
-	public class SimulationConfigAuthoring : MonoBehaviour
+	public class SimulationAuthoring : MonoBehaviour
 	{
 		public SimulationConfig simulationState;
 	}
 
-	public class SimulationConfigBaker : Baker<SimulationConfigAuthoring>
+	public class SimulationAuthoringBaker : Baker<SimulationAuthoring>
 	{
-		public override void Bake(SimulationConfigAuthoring authoring)
+		public override void Bake(SimulationAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.None);
 			AddComponent(entity, authoring.simulationState);
