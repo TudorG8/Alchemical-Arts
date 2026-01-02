@@ -2,8 +2,5 @@ using Unity.Entities;
 
 namespace PotionCraft.Core.Cameras.Components
 {
-	public struct MainCameraTag : IComponentData
-	{
-		
-	}
+	public struct MainCameraTag : IComponentData { }
 }

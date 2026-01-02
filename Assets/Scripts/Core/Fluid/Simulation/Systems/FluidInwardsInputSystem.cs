@@ -5,12 +5,13 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
+using PotionCraft.Core.Fluid.Simulation.Models;
 
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(GravitySystem))]
-	partial struct FluidInwardsInputSystem : ISystem
+	public partial struct FluidInwardsInputSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -18,7 +19,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<InputDataState>();
+			state.RequireForUpdate<InputDataConfig>();
 		}
 
 		[BurstCompile]
@@ -47,7 +48,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 						{
 							output = fluidBuffersSystem.inwardsForceBuffer.AsParallelWriter(),
 							positions = fluidBuffersSystem.positionBuffer,
-							fluidInputConfig = fluidInputConfig.ValueRO,
+							fluidInputState = fluidInputState.ValueRO,
 						};
 						handle = collectAffectedParticlesJob.ScheduleParallel(handle);
 						break;

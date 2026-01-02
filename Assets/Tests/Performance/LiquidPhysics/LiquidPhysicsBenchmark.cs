@@ -1,18 +1,9 @@
-using System.Collections;
-using Unity.PerformanceTesting;
 using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
 using UnityEngine.SceneManagement;
-using System.Linq;
-using PotionCraft.Tests.Performance.Scopes;
-using PotionCraft.Tests.Performance.Utility;
 using Unity.Entities;
 using Unity.Scenes;
 using Unity.Entities.Serialization;
 using Cysharp.Threading.Tasks;
-using Unity.Collections;
-using PotionCraft.Gameplay.Authoring;
 using System;
 using System.Threading.Tasks;
 using Object = UnityEngine.Object;

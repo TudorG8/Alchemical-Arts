@@ -1,6 +1,5 @@
 using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Extensions;
-using PotionCraft.Shared.Extensions;
+using PotionCraft.Core.Physics.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -12,7 +11,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
-	partial struct PhysicsTransformSyncSystem : ISystem
+	public partial struct PhysicsTransformSyncSystem : ISystem
 	{
 		private ComponentLookup<LocalTransform> localTransformLookup;
 
@@ -47,31 +46,6 @@ namespace PotionCraft.Core.Physics.Systems
 			};
 
 			state.Dependency = writePhysicsTransformsJob.Schedule(bodyUpdatesLength, bodyUpdatesLength / JobsUtility.JobWorkerCount, state.Dependency);
-		}
-
-		[BurstCompile]
-		public partial struct WritePhysicsTransformsJob : IJobParallelFor
-		{
-			[ReadOnly]
-			[DeallocateOnJobCompletion]
-			public NativeArray<BodyUpdateEvent> bodyUpdateEvents;
-			
-			[NativeDisableParallelForRestriction]
-			public ComponentLookup<LocalTransform> localTransformLookup;
-
-			public void Execute(int index)
-			{
-				var bodyUpdate = bodyUpdateEvents[index];
-				var entity = bodyUpdate.body.userData.physicsMaskValue.DecodeFromPhysicsMask();
-				var transform = localTransformLookup[entity];
-
-				var position = bodyUpdate.transform.position.ToFloat3();
-				var rotation = bodyUpdate.transform.rotation.ToECSQuaternion();
-				transform.Position = position;
-				transform.Rotation = rotation;
-
-				localTransformLookup[entity] = transform;
-			}
 		}
 	}
 }

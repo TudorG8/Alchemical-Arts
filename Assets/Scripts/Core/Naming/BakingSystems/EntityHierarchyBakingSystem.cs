@@ -8,7 +8,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Naming.BakingSystems
 {
 	[WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
-	partial struct EntityHierarchyBakingSystem : ISystem
+	public partial struct EntityHierarchyBakingSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)

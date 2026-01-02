@@ -17,14 +17,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public NativeArray<float2> positions;
 
 		[ReadOnly]
-		public FluidInputConfig fluidInputConfig;
+		public FluidInputState fluidInputState;
 
 
 		public void Execute([EntityIndexInQuery] int index)
 		{
-			var offset = fluidInputConfig.position - positions[index];
+			var offset = fluidInputState.position - positions[index];
 			var sqrDst = math.dot(offset, offset);
-			if (sqrDst < fluidInputConfig.interactionRadius * fluidInputConfig.interactionRadius)
+			if (sqrDst < fluidInputState.interactionRadius * fluidInputState.interactionRadius)
 			{
 				output.AddNoResize(index);
 			}

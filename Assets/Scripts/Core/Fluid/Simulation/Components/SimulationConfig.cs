@@ -3,7 +3,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Fluid.Simulation.Components
 {
 	[System.Serializable]
-	public struct SimulationState : IComponentData
+	public struct SimulationConfig : IComponentData
 	{
 		public float gravity;
 

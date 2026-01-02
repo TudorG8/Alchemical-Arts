@@ -10,7 +10,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(SpatialPartitioningSystem))]
-	partial struct DensityComputationSystem : ISystem
+	public partial struct DensityComputationSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -19,7 +19,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationState>();
+			state.RequireForUpdate<SimulationConfig>();
 		}
 
 		[BurstCompile]
@@ -30,8 +30,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationState = SystemAPI.GetSingleton<SimulationState>();
-			var simulationConstantsState = SystemAPI.GetSingleton<SimulationConstantsState>();
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationConstantsConfig = SystemAPI.GetSingleton<SimulationConstantsConfig>();
 
 			var computeDensitiesJob = new ComputeDensitiesJob()
 			{
@@ -41,8 +41,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				numParticles = fluidBuffersSystem.count,
-				simulationState = simulationState,
-				simulationConstantsState = simulationConstantsState,
+				simulationConfig = simulationConfig,
+				simulationConstantsConfig = simulationConstantsConfig,
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};
 			handle = computeDensitiesJob.ScheduleParallel(spatialPartitioningSystem.handle);

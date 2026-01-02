@@ -8,7 +8,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(VelocityWritebackSystem))]
-	partial struct PhysicsIntegrationSystem : ISystem
+	public partial struct PhysicsIntegrationSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)

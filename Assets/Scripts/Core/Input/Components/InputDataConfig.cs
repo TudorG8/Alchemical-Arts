@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Input.Components
 {
-	public struct InputDataState : IComponentData
+	public struct InputDataConfig : IComponentData
 	{
 		public float2 screenPosition;
 

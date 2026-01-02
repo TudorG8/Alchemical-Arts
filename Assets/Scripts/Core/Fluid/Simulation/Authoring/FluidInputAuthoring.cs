@@ -1,17 +1,11 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
+using PotionCraft.Core.Fluid.Simulation.Models;
+using PotionCraft.Shared.Models;
 using Unity.Entities;
 using UnityEngine;
 
 namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
-	[System.Serializable]
-	public class MinMaxFloatValueWrapper
-	{
-		public MinMaxFloatValue bounds;
-
-		public float value;
-	}
-
 	public class FluidInputAuthoring : MonoBehaviour
 	{
 		public float interactionStrength;
@@ -35,13 +29,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 				mode = DraggingParticlesMode.Idle
 			});
 			
-			AddComponent(entity, new FluidInputConfig()
+			AddComponent(entity, new FluidInputState()
 			{
 				interactionRadius = authoring.interactionRadius.value,
 				target = GetEntity(authoring.target, TransformUsageFlags.Dynamic)
 			});
 
-			AddComponent(entity, new FluidInputState()
+			AddComponent(entity, new FluidInputConfig()
 			{
 				interactionStrength = authoring.interactionStrength,
 				interactionRadiusBounds = authoring.interactionRadius.bounds,

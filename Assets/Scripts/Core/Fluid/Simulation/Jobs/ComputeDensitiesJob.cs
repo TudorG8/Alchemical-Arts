@@ -32,10 +32,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public int numParticles;
 
 		[ReadOnly]
-		public SimulationState simulationState;
+		public SimulationConfig simulationConfig;
 
 		[ReadOnly]
-		public SimulationConstantsState simulationConstantsState;
+		public SimulationConstantsConfig simulationConstantsConfig;
 
 		[ReadOnly]
 		public int hashingLimit;
@@ -45,12 +45,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			[EntityIndexInQuery] int index)
 		{
 			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationState.radius);
-			var sqrRadius = simulationState.radius * simulationState.radius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationConfig.radius);
+			var sqrRadius = simulationConfig.radius * simulationConfig.radius;
 			var density = 0f;
 			var nearDensity = 0f;
 			
-			foreach (var offset in simulationConstantsState.offsets)
+			foreach (var offset in simulationConstantsConfig.offsets)
 			{
 				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
@@ -72,8 +72,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 					if (sqrDstToNeighbour > sqrRadius) continue;
 
 					var dst = math.sqrt(sqrDstToNeighbour);
-					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(simulationConstantsState.spikyPow2ScalingFactor, dst, simulationState.radius);
-					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(simulationConstantsState.spikyPow3ScalingFactor, dst, simulationState.radius);
+					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(simulationConstantsConfig.spikyPow2ScalingFactor, dst, simulationConfig.radius);
+					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(simulationConstantsConfig.spikyPow3ScalingFactor, dst, simulationConfig.radius);
 				}
 			}
 

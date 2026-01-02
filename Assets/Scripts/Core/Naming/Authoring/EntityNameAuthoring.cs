@@ -6,13 +6,15 @@ namespace PotionCraft.Core.Naming.Authoring
 {
 	public class EntityNameAuthoring : MonoBehaviour 
 	{
-		public class EntityNameBaker : Baker<EntityNameAuthoring>
+		
+	}
+
+	public class EntityNameBaker : Baker<EntityNameAuthoring>
+	{
+		public override void Bake(EntityNameAuthoring authoring)
 		{
-			public override void Bake(EntityNameAuthoring authoring)
-			{
-				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new EntityNameConfig() { Value = authoring.gameObject.name});
-			}
+			var entity = GetEntity(TransformUsageFlags.Dynamic);
+			AddComponent(entity, new EntityNameConfig() { Value = authoring.gameObject.name});
 		}
 	}
 }

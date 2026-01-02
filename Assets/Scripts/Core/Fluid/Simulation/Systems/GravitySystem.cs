@@ -10,7 +10,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(DensityComputationSystem))]
-	partial struct GravitySystem : ISystem
+	public partial struct GravitySystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -19,7 +19,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationState>();
+			state.RequireForUpdate<SimulationConfig>();
 		}
 
 		[BurstCompile]
@@ -30,13 +30,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationState = SystemAPI.GetSingleton<SimulationState>();
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
 				velocities = fluidBuffersSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				gravity = simulationState.gravity
+				gravity = simulationConfig.gravity
 			};
 			handle = applyGravityForcesJob.ScheduleParallel(densityComputationSystem.handle);
 		}

@@ -6,13 +6,15 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
 	public class FluidAuthoring : MonoBehaviour
 	{
-		public class FluidAuthoringBaker : Baker<FluidAuthoring>
+		
+	}
+
+	public class FluidAuthoringBaker : Baker<FluidAuthoring>
+	{
+		public override void Bake(FluidAuthoring authoring)
 		{
-			public override void Bake(FluidAuthoring authoring)
-			{
-				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new FluidTag());
-			}
+			var entity = GetEntity(TransformUsageFlags.Dynamic);
+			AddComponent(entity, new FluidTag());
 		}
 	}
 }

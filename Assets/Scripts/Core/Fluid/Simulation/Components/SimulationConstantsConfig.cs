@@ -4,7 +4,7 @@ using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Components
 {
-	public struct SimulationConstantsState : IComponentData
+	public struct SimulationConstantsConfig : IComponentData
 	{
 		public FixedList128Bytes<int2> offsets;
 
@@ -18,6 +18,4 @@ namespace PotionCraft.Core.Fluid.Simulation.Components
 
 		public float poly6ScalingFactor;
 	}
-
-	public struct SimulationConstantsInitializeTag : IComponentData { }
 }

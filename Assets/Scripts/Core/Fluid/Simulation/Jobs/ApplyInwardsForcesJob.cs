@@ -32,13 +32,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		{
 			var actualIndex = indexes[index];
 
-			var offset = fluidInputConfig.position - positions[actualIndex];
+			var offset = fluidInputState.position - positions[actualIndex];
 			var distance = math.length(offset);
 			var direction = distance <= float.Epsilon ? float2.zero : offset / distance;
-			var smoothingToCenter = math.clamp(distance / fluidInputConfig.interactionRadius, 0, 1);
+			var smoothingToCenter = math.clamp(distance / fluidInputState.interactionRadius, 0, 1);
 
-			var springForce = smoothingToCenter * fluidInputState.interactionStrength * direction;
-			var dampingForce = smoothingToCenter * fluidInputState.damping * -velocities[actualIndex];
+			var springForce = smoothingToCenter * fluidInputConfig.interactionStrength * direction;
+			var dampingForce = smoothingToCenter * fluidInputConfig.damping * -velocities[actualIndex];
 
 			velocities[actualIndex] += (springForce + dampingForce) * deltaTime;
 		}

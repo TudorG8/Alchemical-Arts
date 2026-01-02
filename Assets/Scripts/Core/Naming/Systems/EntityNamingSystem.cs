@@ -7,7 +7,7 @@ using Unity.Entities;
 namespace PotionCraft.Core.Naming.Systems
 {
 	[UpdateInGroup(typeof(NamingInitializationGroup))]
-	partial struct EntityNamingSystem : ISystem
+	public partial struct EntityNamingSystem : ISystem
 	{
 		private EntityQuery entitiesWithNameDataQuery;
 
@@ -27,16 +27,16 @@ namespace PotionCraft.Core.Naming.Systems
 			var ecbSingleton = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>();
 			var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 
-			var writeParticlesJob = new SetNameJob
-			{
-				ecb = commandBuffer,
-			};
-			state.Dependency = writeParticlesJob.ScheduleParallel(entitiesWithNameDataQuery, state.Dependency);
+			// var setNamesJob = new SetNamesJob
+			// {
+			// 	ecb = commandBuffer,
+			// };
+			// state.Dependency = setNamesJob.ScheduleParallel(entitiesWithNameDataQuery, state.Dependency);
 		}
 	}
 
 	[BurstCompile]
-	public partial struct SetNameJob : IJobEntity
+	public partial struct SetNamesJob : IJobEntity
 	{
 		[WriteOnly]
 		public EntityCommandBuffer.ParallelWriter ecb;

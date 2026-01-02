@@ -12,7 +12,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(FluidPositionInitializationSystem))]
-	partial struct PositionPredictionSystem : ISystem
+	public partial struct PositionPredictionSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -21,7 +21,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationState>();
+			state.RequireForUpdate<SimulationConfig>();
 		}
 
 		[BurstCompile]
@@ -32,14 +32,14 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationState = SystemAPI.GetSingleton<SimulationState>();
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var predictPositionsJob = new PredictPositionsJob
 			{
 				positions = fluidBuffersSystem.positionBuffer,
 				velocities = fluidBuffersSystem.velocityBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				predictionFactor = 1f / simulationState.predictionFrames,
+				predictionFactor = 1f / simulationConfig.predictionFrames,
 			};
 			handle = predictPositionsJob.ScheduleParallel(fluidPositionInitializationSystem.handle);
 		}

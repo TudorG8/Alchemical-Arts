@@ -8,7 +8,7 @@ namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
 	[UpdateAfter(typeof(PhysicsBodyCreationSystem))]
-	partial struct PhysicsBoxCreationSystem : ISystem
+	public partial struct PhysicsBoxCreationSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)

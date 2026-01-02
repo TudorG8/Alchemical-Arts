@@ -10,7 +10,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(PressureForceSystem))]
-	partial struct ViscosityForceSystem : ISystem
+	public partial struct ViscosityForceSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -30,8 +30,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationState = SystemAPI.GetSingleton<SimulationState>();
-			var simulationConstantsState = SystemAPI.GetSingleton<SimulationConstantsState>();
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationConstantsConfig = SystemAPI.GetSingleton<SimulationConstantsConfig>();
 
 			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
 			{
@@ -40,8 +40,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				numParticles = fluidBuffersSystem.count,
-				simulationState = simulationState,
-				simulationConstantsState = simulationConstantsState,
+				simulationConfig = simulationConfig,
+				simulationConstantsConfig = simulationConstantsConfig,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				hashingLimit = fluidBuffersSystem.hashingLimit,
 			};

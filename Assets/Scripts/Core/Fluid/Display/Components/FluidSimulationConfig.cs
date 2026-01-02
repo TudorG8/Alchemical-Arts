@@ -9,10 +9,10 @@ namespace PotionCraft.Core.Fluid.Display.Components
 
 		public Mesh mesh;
 
+		public Texture2D texture;
+		
 		public float maxVelocity;
 		
 		public float particleSize;
-
-		public Texture2D texture;
 	}
 }

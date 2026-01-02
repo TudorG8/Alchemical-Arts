@@ -29,10 +29,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public int numParticles;
 
 		[ReadOnly]
-		public SimulationState simulationState;
+		public SimulationConfig simulationConfig;
 
 		[ReadOnly]
-		public SimulationConstantsState simulationConstantsState;
+		public SimulationConstantsConfig simulationConstantsConfig;
 
 		[ReadOnly]
 		public float deltaTime;
@@ -45,13 +45,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			[EntityIndexInQuery] int input)
 		{
 			var pos = predictedPositions[input];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationState.radius);
-			var sqrRadius = simulationState.radius * simulationState.radius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationConfig.radius);
+			var sqrRadius = simulationConfig.radius * simulationConfig.radius;
 
 			var viscosityForce = float2.zero;
 			var velocity = velocities[input];
 
-			foreach (var offset in simulationConstantsState.offsets)
+			foreach (var offset in simulationConstantsConfig.offsets)
 			{
 				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
@@ -76,11 +76,11 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 
 					var dst = math.sqrt(sqrDstToNeighbour);
 					var neighbourVelocity = velocities[neighbourIndex];
-					viscosityForce += (neighbourVelocity - velocity) * SpatialWeightingUtility.ComputeSmoothingPoly6(simulationConstantsState.poly6ScalingFactor, dst, simulationState.radius);
+					viscosityForce += (neighbourVelocity - velocity) * SpatialWeightingUtility.ComputeSmoothingPoly6(simulationConstantsConfig.poly6ScalingFactor, dst, simulationConfig.radius);
 				}
 
 			}
-			velocities[input] += deltaTime * simulationState.viscosityStrength * viscosityForce;
+			velocities[input] += deltaTime * simulationConfig.viscosityStrength * viscosityForce;
 		}
 	}
 }

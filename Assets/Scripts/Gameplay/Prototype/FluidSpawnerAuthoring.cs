@@ -1,22 +1,9 @@
+using PotionCraft.Gameplay.Prototype.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Gameplay.Authoring
+namespace PotionCraft.Gameplay.Prototype.Authoring
 {
-	public struct FluidSpawner : IComponentData
-	{
-		public int max;
-
-		public int count;
-
-		public double timer;
-
-		public float delay;
-
-		public Entity fluid;
-	}
-
-
 	public class FluidSpawnerAuthoring : MonoBehaviour
 	{
 		public int max;
@@ -24,20 +11,20 @@ namespace PotionCraft.Gameplay.Authoring
 		public float delay;
 
 		public GameObject fluid;
+	}
 
-
-		public class FluidSpawnerAuthoringBaker : Baker<FluidSpawnerAuthoring>
+	public class FluidSpawnerAuthoringBaker : Baker<FluidSpawnerAuthoring>
+	{
+		public override void Bake(FluidSpawnerAuthoring authoring)
 		{
-			public override void Bake(FluidSpawnerAuthoring authoring)
+			var entity = GetEntity(TransformUsageFlags.Dynamic);
+			AddComponent(entity, new FluidSpawnerState());
+			AddComponent(entity, new FluidSpawnerConfig()
 			{
-				var entity = GetEntity(TransformUsageFlags.Dynamic);
-				AddComponent(entity, new FluidSpawner()
-				{
-					max = authoring.max,
-					delay = authoring.delay,
-					fluid = GetEntity(authoring.fluid, TransformUsageFlags.Dynamic)
-				});
-			}
+				max = authoring.max,
+				delay = authoring.delay,
+				fluid = GetEntity(authoring.fluid, TransformUsageFlags.Dynamic)
+			});
 		}
 	}
 }

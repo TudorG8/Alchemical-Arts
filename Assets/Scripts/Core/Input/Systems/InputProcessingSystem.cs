@@ -8,7 +8,7 @@ using UnityEngine;
 namespace PotionCraft.Core.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup), OrderFirst = true)]
-	partial class InputProcessingSystem : SystemBase
+	public partial class InputProcessingSystem : SystemBase
 	{
 		private GameInput gameInput;
 
@@ -23,7 +23,7 @@ namespace PotionCraft.Core.Input.Systems
 			gameInput.Enable();
 
 			cameraQuery = SystemAPI.QueryBuilder().WithAll<MainCameraTag>().WithAll<CameraReference>().Build();
-			gameInputQuery = SystemAPI.QueryBuilder().WithAll<InputDataState>().Build();
+			gameInputQuery = SystemAPI.QueryBuilder().WithAll<InputDataConfig>().Build();
 			
 			RequireForUpdate(cameraQuery);
 			RequireForUpdate(gameInputQuery);
@@ -37,7 +37,7 @@ namespace PotionCraft.Core.Input.Systems
 
 		protected override void OnUpdate()
 		{
-			var inputData = gameInputQuery.GetSingleton<InputDataState>();
+			var inputData = gameInputQuery.GetSingleton<InputDataConfig>();
 			
 			inputData.primaryPressed = gameInput.Player.Primary.IsPressed();
 			inputData.secondaryPressed = gameInput.Player.Secondary.IsPressed();

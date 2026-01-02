@@ -10,7 +10,7 @@ using UnityEngine;
 namespace PotionCraft.Core.Fluid.Display.Systems
 {
 	[UpdateInGroup(typeof(PresentationSystemGroup))]
-	partial class FluidRenderingSystem : SystemBase
+	public partial class FluidRenderingSystemBase : SystemBase
 	{
 		private EntityQuery simulationStateQuery;
 		
@@ -35,7 +35,7 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnDestroy()
 		{
-			argsBuffer.Release();
+			argsBuffer?.Release(); 
 			positionsBuffer.Release();
 			velocitiesBuffer.Release();
 		}
@@ -44,18 +44,18 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 		{
 			var fluidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-			var fluidSimulation = entityManager.GetComponentData<FluidSimulationConfig>(fluidSimulationStateEntity);
+			var fluidSimulationState = entityManager.GetComponentData<FluidSimulationConfig>(fluidSimulationStateEntity);
 			
 			positionsBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
 			velocitiesBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
-			material = new Material(fluidSimulation.shader);
+			material = new Material(fluidSimulationState.shader);
 			bounds = new Bounds(Vector3.zero, Vector3.one * 10000);
 
 			material.SetBuffer("Positions", positionsBuffer);
 			material.SetBuffer("Velocities", velocitiesBuffer);
-			material.SetFloat("Radius", fluidSimulation.particleSize);
-			material.SetFloat("MaxVelocity", fluidSimulation.maxVelocity);
-			material.SetTexture("ColourMap", fluidSimulation.texture);
+			material.SetFloat("Radius", fluidSimulationState.particleSize);
+			material.SetFloat("MaxVelocity", fluidSimulationState.maxVelocity);
+			material.SetTexture("ColourMap", fluidSimulationState.texture);
 		}
 
 		protected override void OnUpdate()
@@ -66,12 +66,12 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 			
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			var fluidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();
-			var fluidSimulation = entityManager.GetComponentData<FluidSimulationConfig>(fluidSimulationStateEntity);
+			var fluidSimulationState = entityManager.GetComponentData<FluidSimulationConfig>(fluidSimulationStateEntity);
 
 			positionsBuffer.SetData(fluidBuffersSystem.positionBuffer, 0, 0, fluidBuffersSystem.count);
 			velocitiesBuffer.SetData(fluidBuffersSystem.velocityBuffer, 0, 0, fluidBuffersSystem.count);
-			ComputeBufferUtility.CreateArgsBuffer(ref argsBuffer, fluidSimulation.mesh, (uint)fluidBuffersSystem.count);
-			Graphics.DrawMeshInstancedIndirect(fluidSimulation.mesh, 0, material, bounds, argsBuffer);
+			ComputeBufferUtility.CreateArgsBuffer(ref argsBuffer, fluidSimulationState.mesh, (uint)fluidBuffersSystem.count);
+			Graphics.DrawMeshInstancedIndirect(fluidSimulationState.mesh, 0, material, bounds, argsBuffer);
 		}
 	}
 }

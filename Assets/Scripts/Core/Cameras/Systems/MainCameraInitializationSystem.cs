@@ -7,7 +7,7 @@ using UnityEngine;
 namespace PotionCraft.Core.Cameras.Systems
 {
 	[UpdateInGroup(typeof(CameraInitializationGroup))]
-	partial struct MainCameraInitializationSystem : ISystem
+	public partial struct MainCameraInitializationSystem : ISystem
 	{
 		private EntityQuery cameraQuery;
 

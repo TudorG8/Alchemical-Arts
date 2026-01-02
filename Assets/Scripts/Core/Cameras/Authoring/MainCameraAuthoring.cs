@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace PotionCraft.Core.Cameras.Authoring
 {
-	class MainCameraAuthoring : MonoBehaviour
+	public class MainCameraAuthoring : MonoBehaviour
 	{
 		
 	}
 
-	class MainCameraAuthoringBaker : Baker<MainCameraAuthoring>
+	public class MainCameraAuthoringBaker : Baker<MainCameraAuthoring>
 	{
 		public override void Bake(MainCameraAuthoring authoring)
 		{

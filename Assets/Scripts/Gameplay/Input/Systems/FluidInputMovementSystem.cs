@@ -1,14 +1,16 @@
 
 using PotionCraft.Core.Fluid.Simulation.Components;
+using PotionCraft.Core.Fluid.Simulation.Models;
 using PotionCraft.Core.Input.Components;
 using PotionCraft.Core.Input.Groups;
+using PotionCraft.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 
 namespace PotionCraft.Gameplay.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup), OrderLast = true)]
-	partial struct FluidInputMovementSystem : ISystem
+	public partial struct FluidInputMovementSystem : ISystem
 	{
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
@@ -24,11 +26,11 @@ namespace PotionCraft.Gameplay.Input.Systems
 			// 	return
 
 			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
-			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingModeEntity);
-			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRO<FluidInputConfig>(draggingModeEntity);
+			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingModeEntity);
 			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingModeEntity);
 			
-			var inputData = SystemAPI.GetSingleton<InputDataState>();
+			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
 
 			switch (draggingParticlesModeState.ValueRO.mode)
 			{
@@ -36,12 +38,12 @@ namespace PotionCraft.Gameplay.Input.Systems
 				case DraggingParticlesMode.Inwards when !inputData.primaryPressed: draggingParticlesModeState.ValueRW.mode = DraggingParticlesMode.Idle; break;
 			}
 
-			fluidInputConfig.ValueRW.position = inputData.worldPosition;
+			fluidInputState.ValueRW.position = inputData.worldPosition;
 			
 			if (draggingParticlesModeState.ValueRW.mode == DraggingParticlesMode.Idle)
 			{
-				fluidInputConfig.ValueRW.interactionRadius = fluidInputState.ValueRO.interactionRadiusBounds
-					.Clamp(fluidInputConfig.ValueRW.interactionRadius + inputData.scrollDelta * fluidInputState.ValueRO.scrollSpeed * SystemAPI.Time.DeltaTime);
+				fluidInputState.ValueRW.interactionRadius = fluidInputConfig.ValueRO.interactionRadiusBounds
+					.Clamp(fluidInputState.ValueRW.interactionRadius + inputData.scrollDelta * fluidInputConfig.ValueRO.scrollSpeed * SystemAPI.Time.DeltaTime);
 				return;
 			}
 		}

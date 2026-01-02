@@ -15,7 +15,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(PositionPredictionSystem))]
-	partial struct SpatialPartitioningSystem : ISystem
+	public partial struct SpatialPartitioningSystem : ISystem
 	{
 		public JobHandle handle;
 
@@ -27,7 +27,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationState>();
+			state.RequireForUpdate<SimulationConfig>();
 			spatialEntryKeyComparer = new SpatialEntryKeyComparer();
 		}
 
@@ -39,12 +39,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationState = SystemAPI.GetSingleton<SimulationState>();
+			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
 
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				radius = simulationState.radius,
+				radius = simulationConfig.radius,
 				count = fluidBuffersSystem.count,
 				spatialOutput = fluidBuffersSystem.spatialBuffer,
 				spatialOffsetOutput = fluidBuffersSystem.spatialOffsetsBuffer,

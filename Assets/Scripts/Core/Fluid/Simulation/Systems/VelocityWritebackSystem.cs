@@ -11,7 +11,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(ViscosityForceSystem))]
-	partial struct VelocityWritebackSystem : ISystem
+	public partial struct VelocityWritebackSystem : ISystem
 	{
 		public JobHandle handle;
 
