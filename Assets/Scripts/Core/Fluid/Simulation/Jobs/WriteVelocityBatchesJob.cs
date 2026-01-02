@@ -1,5 +1,6 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,8 +10,9 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(FluidTag))]
-	public partial struct WriteVelocityBatchesJob : IJobEntity
+	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(PhysicsBodyState))]
+	public partial struct ReadVelocityBatchesJob : IJobEntity
 	{
 		[ReadOnly]
 		public NativeArray<float2> velocityBuffer;

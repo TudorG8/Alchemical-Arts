@@ -11,6 +11,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 namespace PotionCraft.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
+	[UpdateBefore(typeof(EndFixedStepSimulationEntityCommandBufferSystem))]
 	public partial struct PhysicsTransformSyncSystem : ISystem
 	{
 		private ComponentLookup<LocalTransform> localTransformLookup;

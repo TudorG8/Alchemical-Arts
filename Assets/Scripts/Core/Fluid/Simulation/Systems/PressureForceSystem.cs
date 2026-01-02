@@ -2,6 +2,8 @@ using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
+using PotionCraft.Core.SpatialPartioning.Systems;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
@@ -9,7 +11,7 @@ using Unity.Jobs;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(FluidInwardsInputSystem))]
+	[UpdateAfter(typeof(GravitySystem))]
 	public partial struct PressureForceSystem : ISystem
 	{
 		public JobHandle handle;
@@ -25,8 +27,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
-			ref var fluidInwardsInputSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidInwardsInputSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
+			ref var fluidInwardsInputSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
 			if (fluidBuffersSystem.count == 0)
 				return;
 

@@ -2,6 +2,8 @@ using PotionCraft.Core.Fluid.Simulation.Components;
 using PotionCraft.Core.Fluid.Simulation.Groups;
 using PotionCraft.Core.Fluid.Simulation.Jobs;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
+using PotionCraft.Core.SpatialPartioning.Systems;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
@@ -9,7 +11,6 @@ using Unity.Jobs;
 namespace PotionCraft.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(SpatialPartitioningSystem))]
 	public partial struct DensityComputationSystem : ISystem
 	{
 		public JobHandle handle;
@@ -25,8 +26,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
-			ref var spatialPartitioningSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialPartitioningSystem>();
+			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
 			if (fluidBuffersSystem.count == 0)
 				return;
 
@@ -45,7 +45,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				simulationConstantsConfig = simulationConstantsConfig,
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};
-			handle = computeDensitiesJob.ScheduleParallel(spatialPartitioningSystem.handle);
+			handle = computeDensitiesJob.ScheduleParallel(state.Dependency);
 		}
 	}
 }

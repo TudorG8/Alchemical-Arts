@@ -1,8 +1,9 @@
 
 using PotionCraft.Core.Fluid.Simulation.Components;
-using PotionCraft.Core.Fluid.Simulation.Models;
-using PotionCraft.Core.Fluid.Simulation.Utility;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
+using PotionCraft.Core.SpatialPartioning.Models;
+using PotionCraft.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -11,7 +12,8 @@ using Unity.Mathematics;
 namespace PotionCraft.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(FluidTag))]
+	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyPressureForcesJob : IJobEntity
 	{
 		public NativeArray<float2> velocities;

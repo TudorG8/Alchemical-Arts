@@ -4,21 +4,19 @@ using Unity.Physics.Systems;
 using static Unity.Entities.RateUtils;
 
 [UpdateInGroup(typeof(PhysicsInitializationGroup), OrderFirst = true)]
-partial class PhysicsSimulationRateOverrideSystem : SystemBase
+partial struct PhysicsSimulationRateOverrideSystem : ISystem
 {
-	protected override void OnCreate()
+	public void OnCreate(ref SystemState state)
 	{
-		var fixedStepGroup = World.GetExistingSystemManaged<FixedStepSimulationSystemGroup>();
+		var fixedStepGroup = state.World.GetExistingSystemManaged<FixedStepSimulationSystemGroup>();
 		fixedStepGroup.RateManager = new FixedRateSimpleManager(1f / 120f);
-
-		
 	}
 
-	protected override void OnUpdate()
+	public void OnUpdate(ref SystemState state)
 	{
-		var group = World.GetExistingSystemManaged<PhysicsSystemGroup>();
+		var group = state.World.GetExistingSystemManaged<PhysicsSystemGroup>();
 		group.Enabled = false;
 
-		Enabled = false;
+		state.Enabled = false;
 	}
 }

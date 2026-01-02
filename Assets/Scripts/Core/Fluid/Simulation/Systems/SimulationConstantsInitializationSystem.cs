@@ -1,10 +1,11 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Scenes;
 
-namespace PotionCraft.Core.Cameras.Systems
+namespace PotionCraft.Core.Camera.Systems
 {
 	[UpdateInGroup(typeof(InitializationSystemGroup))]
 	[UpdateAfter(typeof(SceneSystemGroup))]

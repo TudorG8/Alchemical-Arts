@@ -1,8 +1,7 @@
-using PotionCraft.Core.Fluid.Simulation.Components;
-using PotionCraft.Core.Fluid.Simulation.Models;
+using PotionCraft.Core.Fluid.Interaction.Components;
+using PotionCraft.Core.Fluid.Interaction.Models;
 using PotionCraft.Core.Input.Components;
 using PotionCraft.Core.Input.Groups;
-using PotionCraft.Gameplay.Input.Systems;
 using PotionCraft.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;

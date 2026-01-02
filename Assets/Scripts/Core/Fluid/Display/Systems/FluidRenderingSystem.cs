@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using PotionCraft.Core.Fluid.Display.Components;
-using PotionCraft.Core.Fluid.Simulation.Systems;
 using PotionCraft.Core.Physics.Components;
+using PotionCraft.Core.SpatialPartioning.Systems;
 using PotionCraft.Shared.Utility;
 using Unity.Collections;
 using Unity.Entities;
@@ -60,7 +60,7 @@ namespace PotionCraft.Core.Fluid.Display.Systems
 
 		protected override void OnUpdate()
 		{
-			ref var fluidBuffersSystem = ref World.Unmanaged.GetUnmanagedSystemRefWithoutHandle<FluidBuffersSystem>();
+			ref var fluidBuffersSystem = ref World.Unmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
 			if (fluidBuffersSystem.count == 0)
 				return;
 			

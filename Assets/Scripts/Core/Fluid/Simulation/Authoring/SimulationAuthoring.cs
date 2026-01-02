@@ -1,4 +1,5 @@
 using PotionCraft.Core.Fluid.Simulation.Components;
+using PotionCraft.Core.SpatialPartioning.Components;
 using Unity.Entities;
 using UnityEngine;
 
