@@ -12,5 +12,7 @@ namespace PotionCraft.Core.Fluid.Interaction.Components
 		public float damping;
 
 		public float interactionStrength;
+
+		public Entity target;
 	}
 }

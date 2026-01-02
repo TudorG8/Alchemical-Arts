@@ -24,12 +24,13 @@ namespace PotionCraft.Gameplay.Input.Systems
 			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
 			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingModeEntity);
 			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingModeEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
 
 			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
 
-			var targetEntity = fluidInputState.ValueRO.target;
+			var targetEntity = fluidInputConfig.ValueRO.target;
 			var targetEntityLocalTransform = SystemAPI.GetComponentRW<LocalTransform>(targetEntity);
-			var spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(fluidInputState.ValueRO.target);
+			var spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(fluidInputConfig.ValueRO.target);
 			
 			targetEntityLocalTransform.ValueRW.Position = inputData.worldPosition.ToFloat3();
 			targetEntityLocalTransform.ValueRW.Scale = fluidInputState.ValueRO.interactionRadius * 2;

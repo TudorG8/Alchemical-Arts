@@ -8,7 +8,5 @@ namespace PotionCraft.Core.Fluid.Interaction.Components
 		public float interactionRadius;
 
 		public float2 position;
-
-		public Entity target;
 	}
 }

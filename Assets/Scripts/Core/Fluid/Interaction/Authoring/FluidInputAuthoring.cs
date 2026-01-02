@@ -37,7 +37,6 @@ namespace PotionCraft.Core.Fluid.Interaction.Authoring
 			AddComponent(entity, new FluidInputState()
 			{
 				interactionRadius = authoring.InteractionRadius.value,
-				target = GetEntity(authoring.Target, TransformUsageFlags.Dynamic)
 			});
 
 			AddComponent(entity, new FluidInputConfig()
@@ -46,6 +45,7 @@ namespace PotionCraft.Core.Fluid.Interaction.Authoring
 				interactionRadiusBounds = authoring.InteractionRadius.bounds,
 				damping = authoring.Damping,
 				scrollSpeed = authoring.ScrollSpeed,
+				target = GetEntity(authoring.Target, TransformUsageFlags.Dynamic)
 			});
 		}
 	}
