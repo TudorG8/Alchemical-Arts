@@ -30,8 +30,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2990326708664581505}
   - {fileID: 950300572278140367}
+  - {fileID: 2990326708664581505}
   - {fileID: 4337208575186692841}
   - {fileID: 4480891854690480231}
   - {fileID: 5952717024386347652}
@@ -104,10 +104,6 @@ PrefabInstance:
     - target: {fileID: 3740603389638880066, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
       propertyPath: m_Name
       value: Physics World
-      objectReference: {fileID: 0}
-    - target: {fileID: 4474653625569028857, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
-      propertyPath: <WorldDefinition>k__BackingField.m_DrawOptions
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -189,38 +185,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 849820382446325050}
     m_Modifications:
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.radius
-      value: 0.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.gravity
-      value: 9.807
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.targetDensity
-      value: 55
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.predictionFrames
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.viscosityStrength
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationConfig.viscosityStrength
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.pressureMultiplier
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 57373103879328378, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
-      propertyPath: simulationState.nearPressureMultiplier
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 6523689305503583234, guid: 28b175c28b7ddec4ab155e7c314e56f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -283,18 +247,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 849820382446325050}
     m_Modifications:
-    - target: {fileID: 2397430984255275611, guid: 7712edd5efbf3e4479246dce2c9c59fc, type: 3}
-      propertyPath: gradient.ctime1
-      value: 43754
-      objectReference: {fileID: 0}
-    - target: {fileID: 2397430984255275611, guid: 7712edd5efbf3e4479246dce2c9c59fc, type: 3}
-      propertyPath: gradient.key1.b
-      value: 0.70457727
-      objectReference: {fileID: 0}
-    - target: {fileID: 2397430984255275611, guid: 7712edd5efbf3e4479246dce2c9c59fc, type: 3}
-      propertyPath: gradient.key1.r
-      value: 0.5801887
-      objectReference: {fileID: 0}
     - target: {fileID: 8131485982916739572, guid: 7712edd5efbf3e4479246dce2c9c59fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -357,26 +309,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 849820382446325050}
     m_Modifications:
-    - target: {fileID: 1985077062887312112, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
-      propertyPath: damping
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985077062887312112, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
-      propertyPath: scrollSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985077062887312112, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
-      propertyPath: interactionRadius.value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985077062887312112, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
-      propertyPath: interactionRadius.bounds.maximum
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1985077062887312112, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
-      propertyPath: interactionRadius.bounds.minimum
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 3034053761269461939, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -419,7 +351,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5983802766117192217, guid: b1f0ffe9abf02d34792d057dd916bf66, type: 3}
       propertyPath: m_Name
-      value: Fluid Dragging Input Data
+      value: Fluid Input Data
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -441,7 +373,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3130389683594695892, guid: bee64cd3b5b70f34891a93b45a8ad83f, type: 3}
       propertyPath: m_Name
-      value: Folder Manager
+      value: Folder Manager Data
       objectReference: {fileID: 0}
     - target: {fileID: 4773921319314601642, guid: bee64cd3b5b70f34891a93b45a8ad83f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -543,7 +475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3957063042753868470, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
       propertyPath: m_Name
-      value: Physics Step
+      value: Physics Step Data
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

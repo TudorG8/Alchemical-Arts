@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3034053761269461939}
+  - component: {fileID: 2418563904156269913}
   - component: {fileID: 1985077062887312112}
   m_Layer: 0
   m_Name: Fluid Input Data
@@ -32,6 +33,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2418563904156269913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5983802766117192217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionCraft.Core::PotionCraft.Core.Naming.Authoring.EntityHierarchyAuthoring
+  <IncludeChildren>k__BackingField: 1
 --- !u!114 &1985077062887312112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,5 +59,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core.Fluid.Simulation::PotionCraft.Core.Fluid.Simulation.Authoring.FluidInputAuthoring
   interactionStrength: 150
-  interactionRadius: 3
+  interactionRadius:
+    bounds:
+      minimum: 0.5
+      maximum: 3
+    value: 1
+  damping: 8
+  scrollSpeed: 15
   target: {fileID: 0}

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3130389683594695892
+--- !u!1 &3923978228362886209
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4773921319314601642}
-  - component: {fileID: 2863886200340099652}
+  - component: {fileID: 6865434398988206569}
+  - component: {fileID: 5755584281778414633}
   m_Layer: 0
-  m_Name: Folder Manager
+  m_Name: Fluid Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4773921319314601642
+--- !u!4 &6865434398988206569
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3130389683594695892}
+  m_GameObject: {fileID: 3923978228362886209}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,17 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2863886200340099652
+--- !u!114 &5755584281778414633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3130389683594695892}
+  m_GameObject: {fileID: 3923978228362886209}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92363644f24fc6642b926cbd56a836cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  <FluidFolder>k__BackingField: {fileID: 0}
-  <BuildingFolder>k__BackingField: {fileID: 0}
+  m_EditorClassIdentifier: PotionCraft.Scripts.Gameplay::PotionCraft.Gameplay.Authoring.FluidSpawnerAuthoring
+  max: 250
+  delay: 0
+  fluid: {fileID: 3345850477814946435, guid: 909ff1db9bee5624a9f846348f55be4b, type: 3}

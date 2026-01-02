@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6523689305503583234}
+  - component: {fileID: 7348070753660493144}
   - component: {fileID: 57373103879328378}
   m_Layer: 0
   m_Name: Simulation Data
@@ -32,6 +33,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7348070753660493144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6581040838557418017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionCraft.Core::PotionCraft.Core.Naming.Authoring.EntityHierarchyAuthoring
+  <IncludeChildren>k__BackingField: 1
 --- !u!114 &57373103879328378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e8ad308a2b3d5f48a99b2dbadce54a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core.Fluid.Simulation::PotionCraft.Core.Fluid.Simulation.Authoring.SimulationConfigAuthoring
-  simulationConfig:
+  simulationState:
     gravity: 9.807
     predictionFrames: 120
     radius: 0.35
