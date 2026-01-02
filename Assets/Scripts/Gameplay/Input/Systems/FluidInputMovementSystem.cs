@@ -35,7 +35,9 @@ namespace PotionCraft.Gameplay.Input.Systems
 			switch (draggingParticlesModeState.ValueRO.mode)
 			{
 				case DraggingParticlesMode.Idle when inputData.primaryPressed: draggingParticlesModeState.ValueRW.mode = DraggingParticlesMode.Inwards; break;
+				case DraggingParticlesMode.Idle when inputData.secondaryPressed: draggingParticlesModeState.ValueRW.mode = DraggingParticlesMode.Outwards; break;
 				case DraggingParticlesMode.Inwards when !inputData.primaryPressed: draggingParticlesModeState.ValueRW.mode = DraggingParticlesMode.Idle; break;
+				case DraggingParticlesMode.Outwards when !inputData.secondaryPressed: draggingParticlesModeState.ValueRW.mode = DraggingParticlesMode.Idle; break;
 			}
 
 			fluidInputState.ValueRW.position = inputData.worldPosition;

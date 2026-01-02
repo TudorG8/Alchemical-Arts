@@ -13,9 +13,6 @@ namespace PotionCraft.Core.Fluid.Interaction.Systems
 	[UpdateInGroup(typeof(FluidInteractionGroup))]
 	public partial struct FluidInwardsInputSystem : ISystem
 	{
-		public JobHandle handle;
-
-
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
