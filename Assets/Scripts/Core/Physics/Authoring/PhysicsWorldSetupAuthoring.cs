@@ -10,7 +10,7 @@ namespace PotionCraft.Core.Physics.Authoring
 	public class PhysicsWorldSetupAuthoring : MonoBehaviour
 	{
 		[field: SerializeField]
-		public PhysicsWorldDefinition WorldDefinition { get; set; } = PhysicsWorldDefinition.defaultDefinition;
+		public PhysicsWorldDefinition WorldDefinition { get; private set; } = PhysicsWorldDefinition.defaultDefinition;
 	}
 
 	public class PhysicsWorldAuthoringBaker : Baker<PhysicsWorldSetupAuthoring>

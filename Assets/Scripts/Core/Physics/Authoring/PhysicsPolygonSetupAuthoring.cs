@@ -13,13 +13,13 @@ namespace PotionCraft.Core.Physics.Authoring
 	public class PhysicsPolygonSetupAuthoring : MonoBehaviour, IDrawableShape
 	{
 		[field: SerializeField]
-		public PhysicsBodyAuthoring PhysicsBodyAuthoring { get; set; }
+		public PhysicsBodyAuthoring PhysicsBodyAuthoring { get; private set; }
 
 		[field: SerializeField]
-		public PolygonCollider2D PolygonCollider2D { get; set; }
+		public PolygonCollider2D PolygonCollider2D { get; private set; }
 
 		[field: SerializeField]
-		public PhysicsShapeDefinition ShapeDefinition { get; set; } = PhysicsShapeDefinition.defaultDefinition;
+		public PhysicsShapeDefinition ShapeDefinition { get; private set; } = PhysicsShapeDefinition.defaultDefinition;
 
 
 		public NativeArray<PolygonGeometry> ToGeometry(PhysicsTransform offset)

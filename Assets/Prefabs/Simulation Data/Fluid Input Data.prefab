@@ -58,12 +58,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c35bd5feb9c85499e5b8c4b2f9776e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core.Fluid.Simulation::PotionCraft.Core.Fluid.Simulation.Authoring.FluidInputAuthoring
-  interactionStrength: 150
-  interactionRadius:
+  <InteractionStrength>k__BackingField: 150
+  <InteractionRadius>k__BackingField:
     bounds:
       minimum: 0.5
       maximum: 3
     value: 1
-  damping: 8
-  scrollSpeed: 15
-  target: {fileID: 0}
+  <Damping>k__BackingField: 8
+  <ScrollSpeed>k__BackingField: 15
+  <Target>k__BackingField: {fileID: 0}

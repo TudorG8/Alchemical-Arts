@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6e9760eb859ab4c843cfa802bce5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core.SpatialPartioning::PotionCraft.Core.Fluid.Simulation.Authoring.SpatialPartioningAuthoring
-  simulationState:
+  <SimulationState>k__BackingField:
     predictionFrames: 120
     radius: 0.35

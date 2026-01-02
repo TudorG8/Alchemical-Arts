@@ -353,16 +353,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 979660470434670571, guid: 40a0d2141cf9daa4387a58248b521eaa, type: 3}
-      propertyPath: target
+      propertyPath: <Target>k__BackingField
       value: 
       objectReference: {fileID: 57223740}
     - target: {fileID: 3256978552630441388, guid: 40a0d2141cf9daa4387a58248b521eaa, type: 3}
       propertyPath: m_Name
       value: Folder - Simulation Data
-      objectReference: {fileID: 0}
-    - target: {fileID: 7705399290577769863, guid: 40a0d2141cf9daa4387a58248b521eaa, type: 3}
-      propertyPath: m_Name
-      value: Fluid Simulation Display Data
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -379,7 +375,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 358013670072159234, guid: a669afd0f66979247bad17a35411517f, type: 3}
       propertyPath: m_Name
-      value: Folder - Liquids
+      value: Folder - Fluid
       objectReference: {fileID: 0}
     - target: {fileID: 5736033557823354784, guid: a669afd0f66979247bad17a35411517f, type: 3}
       propertyPath: m_LocalPosition.x

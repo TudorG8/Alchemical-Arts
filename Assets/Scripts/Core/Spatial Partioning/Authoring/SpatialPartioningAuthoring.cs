@@ -8,7 +8,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 {
 	public class SpatialPartioningAuthoring : MonoBehaviour
 	{
-		public SpatialPartioningConfig simulationState;
+		[field: SerializeField]
+		public SpatialPartioningConfig SimulationState { get; private set; }
 	}
 
 	public class SpatialPartioningAuthoringBaker : Baker<SpatialPartioningAuthoring>
@@ -16,7 +17,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Authoring
 		public override void Bake(SpatialPartioningAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.None);
-			AddComponent(entity, authoring.simulationState);
+			AddComponent(entity, authoring.SimulationState);
 
 			var list = new FixedList128Bytes<int2> ();
 			for (int y = -1; y <= 1; y++)

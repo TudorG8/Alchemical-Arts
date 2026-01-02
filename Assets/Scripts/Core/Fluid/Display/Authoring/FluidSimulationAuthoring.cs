@@ -7,17 +7,23 @@ namespace PotionCraft.Core.Fluid.Display.Authoring
 {
 	public class FluidSimulationAuthoring : MonoBehaviour
 	{
-		public Shader shader;
-
-		public Mesh mesh;
-
-		public Gradient gradient;
-
-		public float maxVelocity;
-
-		public int gradientResolution;
+		[field: SerializeField]
+		public Shader Shader { get; private set; }
 		
-		public float particleSize;
+		[field: SerializeField]
+		public Mesh Mesh { get; private set;}
+		
+		[field: SerializeField]
+		public Gradient Gradient { get; private set;}
+		
+		[field: SerializeField]
+		public float MaxVelocity { get; private set;}
+		
+		[field: SerializeField]
+		public int GradientResolution { get; private set;}
+		
+		[field: SerializeField]
+		public float ParticleSize { get; private set;}
 	}
 
 	public class FluidSimulationAuthoringBaker : Baker<FluidSimulationAuthoring>
@@ -27,11 +33,11 @@ namespace PotionCraft.Core.Fluid.Display.Authoring
 			var entity = GetEntity(TransformUsageFlags.None);
 			AddComponentObject(entity, new FluidSimulationConfig() 
 			{
-				shader = authoring.shader,
-				mesh = authoring.mesh,
-				maxVelocity = authoring.maxVelocity,
-				particleSize = authoring.particleSize,
-				texture = TextureUtility.TextureFromGradient(authoring.gradientResolution, authoring.gradient)
+				shader = authoring.Shader,
+				mesh = authoring.Mesh,
+				maxVelocity = authoring.MaxVelocity,
+				particleSize = authoring.ParticleSize,
+				texture = TextureUtility.TextureFromGradient(authoring.GradientResolution, authoring.Gradient)
 			});
 		}
 	}

@@ -7,7 +7,7 @@ namespace PotionCraft.Core.Naming.Authoring
 	public class EntityHierarchyAuthoring : MonoBehaviour 
 	{
 		[field:SerializeField]
-		public bool IncludeChildren { get; set; } = true;
+		public bool IncludeChildren { get; private set; } = true;
 	}
 
 	public class EntityHierarchyBaker : Baker<EntityHierarchyAuthoring>

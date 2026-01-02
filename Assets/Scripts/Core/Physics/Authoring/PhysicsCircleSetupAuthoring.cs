@@ -14,13 +14,13 @@ namespace PotionCraft.Core.Physics.Authoring
 	public class PhysicsCircleSetupAuthoring : MonoBehaviour, IDrawableShape
 	{
 		[field: SerializeField]
-		public PhysicsBodyAuthoring PhysicsBodyAuthoring { get; set; }
+		public PhysicsBodyAuthoring PhysicsBodyAuthoring { get; private set; }
 
 		[field: SerializeField]
-		public CircleCollider2D CircleCollider2D { get; set; }
+		public CircleCollider2D CircleCollider2D { get; private set; }
 
 		[field: SerializeField]
-		public PhysicsShapeDefinition ShapeDefinition { get; set; } = PhysicsShapeDefinition.defaultDefinition;
+		public PhysicsShapeDefinition ShapeDefinition { get; private set; } = PhysicsShapeDefinition.defaultDefinition;
 
 
 		public CircleGeometry ToCircleGeometry(PhysicsTransform offset)

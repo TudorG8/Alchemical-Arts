@@ -288,7 +288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8918014395533728663, guid: 7712edd5efbf3e4479246dce2c9c59fc, type: 3}
       propertyPath: m_Name
-      value: Simulation Display Data
+      value: Fluid Simulation Display Data
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

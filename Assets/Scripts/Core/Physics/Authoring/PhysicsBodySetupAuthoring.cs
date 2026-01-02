@@ -9,7 +9,7 @@ namespace PotionCraft.Core.Physics.Authoring
 	public class PhysicsBodyAuthoring : MonoBehaviour, IDrawableShape
 	{
 		[field: SerializeField]
-		public PhysicsBodyDefinition BodyDefinition { get; set; } = PhysicsBodyDefinition.defaultDefinition;
+		public PhysicsBodyDefinition BodyDefinition { get; private set; } = PhysicsBodyDefinition.defaultDefinition;
 
 
 		public PhysicsBodyDefinition ToBody()

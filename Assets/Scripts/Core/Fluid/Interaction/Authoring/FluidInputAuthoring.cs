@@ -8,15 +8,20 @@ namespace PotionCraft.Core.Fluid.Interaction.Authoring
 {
 	public class FluidInputAuthoring : MonoBehaviour
 	{
-		public float interactionStrength;
+		[field: SerializeField]
+		public float InteractionStrength { get; private set; }
 
-		public MinMaxFloatValueWrapper interactionRadius;
+		[field: SerializeField]
+		public MinMaxFloatValueWrapper InteractionRadius { get; private set; }
 
-		public float damping;
+		[field: SerializeField]
+		public float Damping { get; private set; }
 
-		public float scrollSpeed;
+		[field: SerializeField]
+		public float ScrollSpeed { get; private set; }
 
-		public Transform target;
+		[field: SerializeField]
+		public Transform Target { get; private set; }
 	}
 
 	public class FluidInputAuthoringBaker : Baker<FluidInputAuthoring>
@@ -31,16 +36,16 @@ namespace PotionCraft.Core.Fluid.Interaction.Authoring
 			
 			AddComponent(entity, new FluidInputState()
 			{
-				interactionRadius = authoring.interactionRadius.value,
-				target = GetEntity(authoring.target, TransformUsageFlags.Dynamic)
+				interactionRadius = authoring.InteractionRadius.value,
+				target = GetEntity(authoring.Target, TransformUsageFlags.Dynamic)
 			});
 
 			AddComponent(entity, new FluidInputConfig()
 			{
-				interactionStrength = authoring.interactionStrength,
-				interactionRadiusBounds = authoring.interactionRadius.bounds,
-				damping = authoring.damping,
-				scrollSpeed = authoring.scrollSpeed,
+				interactionStrength = authoring.InteractionStrength,
+				interactionRadiusBounds = authoring.InteractionRadius.bounds,
+				damping = authoring.Damping,
+				scrollSpeed = authoring.ScrollSpeed,
 			});
 		}
 	}

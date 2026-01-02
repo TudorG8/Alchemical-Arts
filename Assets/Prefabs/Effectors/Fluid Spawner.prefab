@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2149eab0f3df9ee4aa5ea629156c7e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Scripts.Gameplay::PotionCraft.Gameplay.Authoring.FluidSpawnerAuthoring
-  max: 250
-  delay: 0
-  fluid: {fileID: 3345850477814946435, guid: 909ff1db9bee5624a9f846348f55be4b, type: 3}
+  <Max>k__BackingField: 250
+  <Delay>k__BackingField: 0
+  <Fluid>k__BackingField: {fileID: 3345850477814946435, guid: 909ff1db9bee5624a9f846348f55be4b, type: 3}

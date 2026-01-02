@@ -58,10 +58,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e8ad308a2b3d5f48a99b2dbadce54a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core.Fluid.Simulation::PotionCraft.Core.Fluid.Simulation.Authoring.SimulationConfigAuthoring
-  simulationState:
-    gravity: 9.807
-    predictionFrames: 120
-    radius: 0.35
+  <SimulationState>k__BackingField:
+    gravity: 9.8
     targetDensity: 55
     pressureMultiplier: 500
     nearPressureMultiplier: 4

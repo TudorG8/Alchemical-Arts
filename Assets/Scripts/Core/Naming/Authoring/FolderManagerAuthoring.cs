@@ -7,10 +7,10 @@ namespace PotionCraft.Core.Naming.Authoring
 	public class FolderManagerAuthoring : MonoBehaviour
 	{
 		[field: SerializeField]
-		public Transform FluidFolder { get; set; }
+		public Transform FluidFolder { get; private set; }
 
 		[field: SerializeField]
-		public Transform BuildingFolder { get; set; }
+		public Transform BuildingFolder { get; private set; }
 	}
 
 	public class FolderManagerAuthoringBaker : Baker<FolderManagerAuthoring>

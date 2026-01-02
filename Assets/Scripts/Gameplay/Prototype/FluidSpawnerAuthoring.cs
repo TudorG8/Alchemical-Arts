@@ -6,11 +6,14 @@ namespace PotionCraft.Gameplay.Prototype.Authoring
 {
 	public class FluidSpawnerAuthoring : MonoBehaviour
 	{
-		public int max;
+		[field: SerializeField]
+		public int Max { get; private set; }
 
-		public float delay;
+		[field: SerializeField]
+		public float Delay { get; private set; }
 
-		public GameObject fluid;
+		[field: SerializeField]
+		public GameObject Fluid { get; private set; }
 	}
 
 	public class FluidSpawnerAuthoringBaker : Baker<FluidSpawnerAuthoring>
@@ -21,9 +24,9 @@ namespace PotionCraft.Gameplay.Prototype.Authoring
 			AddComponent(entity, new FluidSpawnerState());
 			AddComponent(entity, new FluidSpawnerConfig()
 			{
-				max = authoring.max,
-				delay = authoring.delay,
-				fluid = GetEntity(authoring.fluid, TransformUsageFlags.Dynamic)
+				max = authoring.Max,
+				delay = authoring.Delay,
+				fluid = GetEntity(authoring.Fluid, TransformUsageFlags.Dynamic)
 			});
 		}
 	}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5736033557823354784}
   - component: {fileID: 8275354088371943030}
   m_Layer: 0
-  m_Name: Folder - Liquids
+  m_Name: Folder - Fluid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
