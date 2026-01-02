@@ -1,10 +1,10 @@
-using PotionCraft.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace PotionCraft.Core.Fluid.Simulation.Authoring
+namespace AlchemicalArts.Core.Fluid.Simulation.Authoring
 {
 	public class SpatialPartioningAuthoring : MonoBehaviour
 	{

@@ -1,7 +1,7 @@
-using PotionCraft.Shared.Models;
+using AlchemicalArts.Shared.Models;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Fluid.Interaction.Components
+namespace AlchemicalArts.Core.Fluid.Interaction.Components
 {
 	public struct FluidInputConfig : IComponentData
 	{

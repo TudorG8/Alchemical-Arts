@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-namespace PotionCraft.Shared.Utility
+namespace AlchemicalArts.Shared.Utility
 {
 	public static class TaskUtility
 	{

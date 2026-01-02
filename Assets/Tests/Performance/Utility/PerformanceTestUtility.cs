@@ -2,7 +2,7 @@ using Unity.PerformanceTesting;
 using UnityEngine;
 using static Unity.PerformanceTesting.Measurements.FramesMeasurement;
 
-namespace PotionCraft.Tests.Performance.Utility
+namespace AlchemicalArts.Tests.Performance.Utility
 {
 	public static class PerformanceTestUtility
 	{

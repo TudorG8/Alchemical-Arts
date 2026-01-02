@@ -1,4 +1,4 @@
-Shader "PotionCraft/Fluid/FluidDisplayer" {
+Shader "AlchemicalArts/Fluid/FluidDisplayer" {
 	Properties {
 		
 	}

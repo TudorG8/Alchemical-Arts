@@ -1,10 +1,10 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Groups;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Groups;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Physics.Systems
+namespace AlchemicalArts.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
 	[UpdateAfter(typeof(PhysicsBodyCreationSystem))]

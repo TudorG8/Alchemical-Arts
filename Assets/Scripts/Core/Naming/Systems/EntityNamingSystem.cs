@@ -1,10 +1,10 @@
-using PotionCraft.Core.Naming.Components;
-using PotionCraft.Core.Naming.Groups;
+using AlchemicalArts.Core.Naming.Components;
+using AlchemicalArts.Core.Naming.Groups;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.Systems
+namespace AlchemicalArts.Core.Naming.Systems
 {
 	[UpdateInGroup(typeof(NamingInitializationGroup))]
 	public partial struct EntityNamingSystem : ISystem

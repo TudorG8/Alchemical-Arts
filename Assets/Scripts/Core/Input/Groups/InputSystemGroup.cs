@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Input.Groups
+namespace AlchemicalArts.Core.Input.Groups
 {
 	[UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
 	[UpdateBefore(typeof(FixedStepSimulationSystemGroup))]

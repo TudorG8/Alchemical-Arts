@@ -1,11 +1,11 @@
-using PotionCraft.Gameplay.Prototype.Components;
+using AlchemicalArts.Gameplay.Prototype.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace PotionCraft.Gameplay.Prototype.Jobs
+namespace AlchemicalArts.Gameplay.Prototype.Jobs
 {
 	[BurstCompile]
 	public partial struct SpawnFluidEntitiesJob : IJobEntity

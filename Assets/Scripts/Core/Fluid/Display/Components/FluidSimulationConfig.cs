@@ -1,7 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Fluid.Display.Components
+namespace AlchemicalArts.Core.Fluid.Display.Components
 {
 	public class FluidSimulationConfig : IComponentData
 	{

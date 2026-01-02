@@ -1,10 +1,10 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Core.Physics.Authoring
+namespace AlchemicalArts.Core.Physics.Authoring
 {
 	public class PhysicsBodyAuthoring : MonoBehaviour, IDrawableShape
 	{

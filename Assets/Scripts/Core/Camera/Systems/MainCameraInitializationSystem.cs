@@ -1,9 +1,9 @@
-using PotionCraft.Core.Camera.Components;
-using PotionCraft.Core.Camera.Groups;
+using AlchemicalArts.Core.Camera.Components;
+using AlchemicalArts.Core.Camera.Groups;
 using Unity.Burst;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Camera.Systems
+namespace AlchemicalArts.Core.Camera.Systems
 {
 	[UpdateInGroup(typeof(CameraInitializationGroup))]
 	public partial struct MainCameraInitializationSystem : ISystem

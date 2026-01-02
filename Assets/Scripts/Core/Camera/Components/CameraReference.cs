@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Camera.Components
+namespace AlchemicalArts.Core.Camera.Components
 {
 	public struct CameraReference : IComponentData
 	{

@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.Fluid.Interaction.Components
+namespace AlchemicalArts.Core.Fluid.Interaction.Components
 {
 	public struct FluidInputState : IComponentData
 	{

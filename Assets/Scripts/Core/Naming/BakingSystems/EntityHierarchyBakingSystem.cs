@@ -1,11 +1,11 @@
-using PotionCraft.Core.Naming.BakingComponents;
-using PotionCraft.Core.Naming.Components;
-using PotionCraft.Shared.Utility;
+using AlchemicalArts.Core.Naming.BakingComponents;
+using AlchemicalArts.Core.Naming.Components;
+using AlchemicalArts.Shared.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.BakingSystems
+namespace AlchemicalArts.Core.Naming.BakingSystems
 {
 	[WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
 	public partial struct EntityHierarchyBakingSystem : ISystem

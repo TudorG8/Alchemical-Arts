@@ -1,12 +1,12 @@
-using PotionCraft.Core.Naming.Components;
-using PotionCraft.Gameplay.Prototype.Components;
-using PotionCraft.Gameplay.Prototype.Jobs;
+using AlchemicalArts.Core.Naming.Components;
+using AlchemicalArts.Gameplay.Prototype.Components;
+using AlchemicalArts.Gameplay.Prototype.Jobs;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace PotionCraft.Gameplay.Prototype.Systems
+namespace AlchemicalArts.Gameplay.Prototype.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
 	[UpdateBefore(typeof(EndFixedStepSimulationEntityCommandBufferSystem))]

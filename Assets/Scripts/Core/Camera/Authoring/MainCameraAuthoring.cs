@@ -1,8 +1,8 @@
-using PotionCraft.Core.Camera.Components;
+using AlchemicalArts.Core.Camera.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Camera.Authoring
+namespace AlchemicalArts.Core.Camera.Authoring
 {
 	public class MainCameraAuthoring : MonoBehaviour
 	{

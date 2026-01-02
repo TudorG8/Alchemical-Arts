@@ -10,8 +10,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "UniTask",
-        "PotionCraft.Scripts.Gameplay",
-        "PotionCraft.Shared",
+        "AlchemicalArts.Scripts.Gameplay",
+        "AlchemicalArts.Shared",
         "Unity.Mathematics"
     ],
     "includePlatforms": [],

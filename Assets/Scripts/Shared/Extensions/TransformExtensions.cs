@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Shared.Extensions
+namespace AlchemicalArts.Shared.Extensions
 {
 	public static class TransformExtensions
 	{

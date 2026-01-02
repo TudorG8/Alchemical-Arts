@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.Groups
+namespace AlchemicalArts.Core.Naming.Groups
 {
 	[UpdateInGroup(typeof(InitializationSystemGroup))]
 	[UpdateAfter(typeof(WorldUpdateAllocatorResetSystem))]

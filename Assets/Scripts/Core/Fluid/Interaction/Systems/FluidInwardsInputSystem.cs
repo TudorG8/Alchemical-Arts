@@ -1,14 +1,14 @@
-using PotionCraft.Core.Input.Components;
+using AlchemicalArts.Core.Input.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
-using PotionCraft.Core.Fluid.Interaction.Groups;
-using PotionCraft.Core.Fluid.Interaction.Components;
-using PotionCraft.Core.Fluid.Interaction.Models;
-using PotionCraft.Core.Fluid.Interaction.Jobs;
-using PotionCraft.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Core.Fluid.Interaction.Groups;
+using AlchemicalArts.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Core.Fluid.Interaction.Jobs;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
 
-namespace PotionCraft.Core.Fluid.Interaction.Systems
+namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 {
 	[UpdateInGroup(typeof(FluidInteractionGroup))]
 	public partial struct FluidInwardsInputSystem : ISystem

@@ -1,14 +1,14 @@
-using PotionCraft.Core.Fluid.Simulation.Components;
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Components;
-using PotionCraft.Core.SpatialPartioning.Models;
-using PotionCraft.Core.SpatialPartioning.Utility;
+using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Models;
+using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.Fluid.Simulation.Jobs
+namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(SimulatedItemTag))]

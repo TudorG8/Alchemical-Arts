@@ -1,5 +1,5 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Jobs;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,7 +8,7 @@ using Unity.Jobs.LowLevel.Unsafe;
 using Unity.Transforms;
 using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 
-namespace PotionCraft.Core.Physics.Systems
+namespace AlchemicalArts.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
 	[UpdateBefore(typeof(EndFixedStepSimulationEntityCommandBufferSystem))]

@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Gameplay.Prototype.Components
+namespace AlchemicalArts.Gameplay.Prototype.Components
 {
 	public struct FluidSpawnerConfig : IComponentData
 	{

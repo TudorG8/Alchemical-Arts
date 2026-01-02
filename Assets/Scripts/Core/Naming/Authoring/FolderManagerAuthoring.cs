@@ -1,8 +1,8 @@
-using PotionCraft.Core.Naming.Components;
+using AlchemicalArts.Core.Naming.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Naming.Authoring
+namespace AlchemicalArts.Core.Naming.Authoring
 {
 	public class FolderManagerAuthoring : MonoBehaviour
 	{

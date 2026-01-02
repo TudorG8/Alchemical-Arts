@@ -5,7 +5,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
-namespace PotionCraft.Core.Fluid.Simulation.Jobs
+namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
 	public partial struct SetVelocityBatchesJob : IJob

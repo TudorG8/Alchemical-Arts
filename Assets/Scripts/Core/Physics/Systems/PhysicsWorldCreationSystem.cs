@@ -1,10 +1,10 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Groups;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Groups;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Core.Physics.Systems
+namespace AlchemicalArts.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
 	public partial struct PhysicsWorldCreationSystem : ISystem

@@ -8,7 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Object = UnityEngine.Object;
 
-namespace PotionCraft.Tests.Performance
+namespace AlchemicalArts.Tests.Performance
 {
 	public class FluidPhysicsBenchmark
 	{

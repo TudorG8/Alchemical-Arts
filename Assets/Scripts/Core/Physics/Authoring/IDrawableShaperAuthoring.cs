@@ -1,5 +1,5 @@
 
-namespace PotionCraft.Core.Physics.Authoring
+namespace AlchemicalArts.Core.Physics.Authoring
 {
 	public interface IDrawableShape { }
 }

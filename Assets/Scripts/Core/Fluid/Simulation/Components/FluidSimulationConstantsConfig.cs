@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Fluid.Simulation.Components
+namespace AlchemicalArts.Core.Fluid.Simulation.Components
 {
 	public struct FluidSimulationConstantsConfig : IComponentData
 	{

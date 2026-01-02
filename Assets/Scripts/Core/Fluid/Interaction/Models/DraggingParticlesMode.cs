@@ -1,4 +1,4 @@
-namespace PotionCraft.Core.Fluid.Interaction.Models
+namespace AlchemicalArts.Core.Fluid.Interaction.Models
 {
 	public enum DraggingParticlesMode
 	{

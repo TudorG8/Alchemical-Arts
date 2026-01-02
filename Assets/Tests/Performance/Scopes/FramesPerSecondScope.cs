@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
-using PotionCraft.Shared.Utility;
+using AlchemicalArts.Shared.Utility;
 using Unity.PerformanceTesting;
 using UnityEngine;
 
-namespace PotionCraft.Tests.Performance.Scopes
+namespace AlchemicalArts.Tests.Performance.Scopes
 {
 	public class FramesPerSecondScope : IDisposable
 	{

@@ -1,14 +1,14 @@
-using PotionCraft.Core.Fluid.Interaction.Components;
-using PotionCraft.Core.Fluid.Interaction.Models;
-using PotionCraft.Core.Input.Components;
-using PotionCraft.Core.Input.Groups;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Core.Input.Components;
+using AlchemicalArts.Core.Input.Groups;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace PotionCraft.Gameplay.Input.Systems
+namespace AlchemicalArts.Gameplay.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup))]
 	public partial struct FluidDragVisualizationSystem : ISystem

@@ -1,13 +1,13 @@
 using System.Runtime.InteropServices;
-using PotionCraft.Core.Fluid.Display.Components;
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Systems;
-using PotionCraft.Shared.Utility;
+using AlchemicalArts.Core.Fluid.Display.Components;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Utility;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Fluid.Display.Systems
+namespace AlchemicalArts.Core.Fluid.Display.Systems
 {
 	[UpdateInGroup(typeof(PresentationSystemGroup))]
 	public partial class FluidRenderingSystemBase : SystemBase

@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace PotionCraft.Shared.Extensions
+namespace AlchemicalArts.Shared.Extensions
 {
 	public static class float2Extensions
 	{

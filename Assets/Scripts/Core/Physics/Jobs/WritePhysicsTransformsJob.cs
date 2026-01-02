@@ -1,7 +1,7 @@
 
 
-using PotionCraft.Core.Physics.Extensions;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Physics.Extensions;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +9,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using static UnityEngine.LowLevelPhysics2D.PhysicsEvents;
 
-namespace PotionCraft.Core.Physics.Jobs
+namespace AlchemicalArts.Core.Physics.Jobs
 {
 	[BurstCompile]
 	public partial struct WritePhysicsTransformsJob : IJobParallelFor

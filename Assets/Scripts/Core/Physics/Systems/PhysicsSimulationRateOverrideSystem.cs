@@ -1,4 +1,4 @@
-using PotionCraft.Core.Physics.Groups;
+using AlchemicalArts.Core.Physics.Groups;
 using Unity.Entities;
 using Unity.Physics.Systems;
 using static Unity.Entities.RateUtils;

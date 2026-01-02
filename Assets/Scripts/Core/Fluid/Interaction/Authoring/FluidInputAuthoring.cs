@@ -1,10 +1,10 @@
-using PotionCraft.Core.Fluid.Interaction.Components;
-using PotionCraft.Core.Fluid.Interaction.Models;
-using PotionCraft.Shared.Models;
+using AlchemicalArts.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Shared.Models;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Fluid.Interaction.Authoring
+namespace AlchemicalArts.Core.Fluid.Interaction.Authoring
 {
 	public class FluidInputAuthoring : MonoBehaviour
 	{

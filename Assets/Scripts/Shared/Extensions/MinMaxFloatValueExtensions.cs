@@ -1,7 +1,7 @@
-using PotionCraft.Shared.Models;
+using AlchemicalArts.Shared.Models;
 using Unity.Mathematics;
 
-namespace PotionCraft.Shared.Extensions
+namespace AlchemicalArts.Shared.Extensions
 {
 	public static class MinMaxFloatValueExtensions
 	{

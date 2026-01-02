@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.SpatialPartioning.Groups
+namespace AlchemicalArts.Core.SpatialPartioning.Groups
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
 	[UpdateAfter(typeof(BeginFixedStepSimulationEntityCommandBufferSystem))]

@@ -1,14 +1,14 @@
-using PotionCraft.Core.Fluid.Simulation.Components;
-using PotionCraft.Core.Fluid.Simulation.Groups;
-using PotionCraft.Core.Fluid.Simulation.Jobs;
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Components;
-using PotionCraft.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Fluid.Simulation.Groups;
+using AlchemicalArts.Core.Fluid.Simulation.Jobs;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 
-namespace PotionCraft.Core.Fluid.Simulation.Systems
+namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(DensityComputationSystem))]

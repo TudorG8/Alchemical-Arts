@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Core.Physics.Extensions
+namespace AlchemicalArts.Core.Physics.Extensions
 {
 	public static class PhysicsRotateExtensions
 	{

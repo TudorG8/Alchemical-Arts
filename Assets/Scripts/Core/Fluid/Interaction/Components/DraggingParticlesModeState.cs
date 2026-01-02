@@ -1,7 +1,7 @@
-using PotionCraft.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Core.Fluid.Interaction.Models;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Fluid.Interaction.Components
+namespace AlchemicalArts.Core.Fluid.Interaction.Components
 {
 	public struct DraggingParticlesModeState : IComponentData
 	{

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace PotionCraft.Shared.Scopes
+namespace AlchemicalArts.Shared.Scopes
 {
 	public class ResetPositionScope : IDisposable
 	{

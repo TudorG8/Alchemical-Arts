@@ -1,8 +1,8 @@
-using PotionCraft.Gameplay.Prototype.Components;
+using AlchemicalArts.Gameplay.Prototype.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Gameplay.Prototype.Authoring
+namespace AlchemicalArts.Gameplay.Prototype.Authoring
 {
 	public class FluidSpawnerAuthoring : MonoBehaviour
 	{

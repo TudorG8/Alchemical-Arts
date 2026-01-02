@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.SpatialPartioning.Components
+namespace AlchemicalArts.Core.SpatialPartioning.Components
 {
 	[System.Serializable]
 	public struct SpatialPartioningConfig : IComponentData

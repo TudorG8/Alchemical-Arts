@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PotionCraft.Shared.Utility
+namespace AlchemicalArts.Shared.Utility
 {
 	public static class ComputeBufferUtility
 	{

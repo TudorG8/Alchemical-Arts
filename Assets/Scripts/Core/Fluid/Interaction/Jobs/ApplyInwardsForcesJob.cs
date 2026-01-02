@@ -1,10 +1,10 @@
-using PotionCraft.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Core.Fluid.Interaction.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.Fluid.Interaction.Jobs
+namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
 {
 	[BurstCompile]
 	public partial struct ApplyInwardsForcesJob : IJobParallelFor

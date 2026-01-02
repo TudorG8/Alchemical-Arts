@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.Input.Components
+namespace AlchemicalArts.Core.Input.Components
 {
 	public struct InputDataConfig : IComponentData
 	{

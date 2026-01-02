@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Scenes;
 
-namespace PotionCraft.Core.Physics.Groups
+namespace AlchemicalArts.Core.Physics.Groups
 {
 	[UpdateInGroup(typeof(InitializationSystemGroup))]
 	[UpdateAfter(typeof(SceneSystemGroup))]

@@ -1,8 +1,8 @@
-using PotionCraft.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Fluid.Simulation.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Fluid.Simulation.Authoring
+namespace AlchemicalArts.Core.Fluid.Simulation.Authoring
 {
 	public class FluidSimulationAuthoring : MonoBehaviour
 	{

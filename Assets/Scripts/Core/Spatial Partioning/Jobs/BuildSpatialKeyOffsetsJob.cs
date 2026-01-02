@@ -1,11 +1,11 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Components;
-using PotionCraft.Core.SpatialPartioning.Models;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Models;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.SpatialPartioning.Jobs
+namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {		
 	[BurstCompile]
 	[WithAll(typeof(SimulatedItemTag))]

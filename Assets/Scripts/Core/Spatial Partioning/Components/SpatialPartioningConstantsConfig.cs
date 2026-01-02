@@ -2,7 +2,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.SpatialPartioning.Components
+namespace AlchemicalArts.Core.SpatialPartioning.Components
 {
 	public struct SpatialPartioningConstantsConfig : IComponentData
 	{

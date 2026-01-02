@@ -1,8 +1,8 @@
-using PotionCraft.Core.Fluid.Simulation.Groups;
-using PotionCraft.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.Fluid.Simulation.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Fluid.Interaction.Groups
+namespace AlchemicalArts.Core.Fluid.Interaction.Groups
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 	[UpdateAfter(typeof(SpatialPartioningGroup))]

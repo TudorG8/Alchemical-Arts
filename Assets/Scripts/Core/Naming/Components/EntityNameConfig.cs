@@ -1,7 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.Components
+namespace AlchemicalArts.Core.Naming.Components
 {
 	public struct EntityNameConfig : IComponentData, IEnableableComponent
 	{

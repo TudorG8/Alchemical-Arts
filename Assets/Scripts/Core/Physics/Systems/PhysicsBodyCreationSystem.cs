@@ -1,14 +1,14 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Extensions;
-using PotionCraft.Core.Physics.Groups;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Extensions;
+using AlchemicalArts.Core.Physics.Groups;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Core.Physics.Systems
+namespace AlchemicalArts.Core.Physics.Systems
 {
 	[UpdateInGroup(typeof(PhysicsInitializationGroup))]
 	[UpdateAfter(typeof(PhysicsWorldCreationSystem))]

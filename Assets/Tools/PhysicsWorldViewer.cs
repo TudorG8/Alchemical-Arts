@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
-using PotionCraft.Core.Physics.Authoring;
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Extensions;
+using AlchemicalArts.Core.Physics.Authoring;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Extensions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;

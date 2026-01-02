@@ -2,7 +2,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace PotionCraft.Shared.Utility
+namespace AlchemicalArts.Shared.Utility
 {
 	public static class ParentUtility
 	{

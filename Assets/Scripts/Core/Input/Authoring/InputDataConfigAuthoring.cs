@@ -1,8 +1,8 @@
-using PotionCraft.Core.Input.Components;
+using AlchemicalArts.Core.Input.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Input.Authoring
+namespace AlchemicalArts.Core.Input.Authoring
 {
 	public class InputDataAuthoring : MonoBehaviour
 	{

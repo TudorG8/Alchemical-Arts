@@ -1,10 +1,10 @@
-using PotionCraft.Core.Fluid.Simulation.Groups;
-using PotionCraft.Core.Physics.Components;
+using AlchemicalArts.Core.Fluid.Simulation.Groups;
+using AlchemicalArts.Core.Physics.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Fluid.Simulation.Systems
+namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
 	[UpdateAfter(typeof(VelocityWritebackSystem))]

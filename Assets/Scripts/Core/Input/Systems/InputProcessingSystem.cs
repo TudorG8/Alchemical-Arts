@@ -1,11 +1,11 @@
-using PotionCraft.Core.Camera.Components;
-using PotionCraft.Core.Input.Components;
-using PotionCraft.Core.Input.Groups;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Camera.Components;
+using AlchemicalArts.Core.Input.Components;
+using AlchemicalArts.Core.Input.Groups;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Input.Systems
+namespace AlchemicalArts.Core.Input.Systems
 {
 	[UpdateInGroup(typeof(InputSystemGroup), OrderFirst = true)]
 	public partial class InputProcessingSystem : SystemBase

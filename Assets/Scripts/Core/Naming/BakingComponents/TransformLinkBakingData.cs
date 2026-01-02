@@ -1,7 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.BakingComponents
+namespace AlchemicalArts.Core.Naming.BakingComponents
 {
 	[BakingType]
 	public struct TransformLinkBakingData : IBufferElementData

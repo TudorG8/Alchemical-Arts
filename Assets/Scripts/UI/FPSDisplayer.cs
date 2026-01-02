@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace PotionCraft.UI
+namespace AlchemicalArts.UI
 {
 	public class FPSDisplayer : MonoBehaviour
 	{

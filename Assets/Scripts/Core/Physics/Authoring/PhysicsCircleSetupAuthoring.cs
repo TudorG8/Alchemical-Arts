@@ -1,12 +1,12 @@
-using PotionCraft.Core.Naming.Authoring;
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.Physics.Extensions;
-using PotionCraft.Shared.Extensions;
+using AlchemicalArts.Core.Naming.Authoring;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.Physics.Extensions;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-namespace PotionCraft.Core.Physics.Authoring
+namespace AlchemicalArts.Core.Physics.Authoring
 {
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(CircleCollider2D))]

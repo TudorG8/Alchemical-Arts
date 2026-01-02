@@ -1,13 +1,13 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Components;
-using PotionCraft.Core.SpatialPartioning.Groups;
-using PotionCraft.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 
-namespace PotionCraft.Core.SpatialPartioning.Systems
+namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
 	[UpdateInGroup(typeof(SpatialPartioningGroup))]
 	public partial struct PositionInitializationSystem : ISystem

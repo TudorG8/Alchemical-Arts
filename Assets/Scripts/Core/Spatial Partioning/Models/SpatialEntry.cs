@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PotionCraft.Core.SpatialPartioning.Models
+namespace AlchemicalArts.Core.SpatialPartioning.Models
 {
 	public struct SpatialEntry
 	{

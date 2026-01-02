@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PotionCraft.Shared.Extensions
+namespace AlchemicalArts.Shared.Extensions
 {
 	public static class MonoBehaviourExtensions
 	{

@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-namespace PotionCraft.Core.SpatialPartioning.Utility
+namespace AlchemicalArts.Core.SpatialPartioning.Utility
 {
 	public static class SpatialHashingUtility
 	{

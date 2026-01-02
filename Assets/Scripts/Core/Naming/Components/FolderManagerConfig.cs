@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.Naming.Components
+namespace AlchemicalArts.Core.Naming.Components
 {
 	public struct FolderManagerConfig : IComponentData
 	{

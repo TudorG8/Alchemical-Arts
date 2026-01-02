@@ -1,7 +1,7 @@
-using PotionCraft.Core.Physics.Components;
-using PotionCraft.Core.SpatialPartioning.Components;
-using PotionCraft.Core.SpatialPartioning.Groups;
-using PotionCraft.Core.SpatialPartioning.Models;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Models;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
-namespace PotionCraft.Core.SpatialPartioning.Systems
+namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
 	[UpdateInGroup(typeof(SpatialPartioningGroup), OrderFirst = true)]
 	public partial struct SimulationBuffersSystem : ISystem

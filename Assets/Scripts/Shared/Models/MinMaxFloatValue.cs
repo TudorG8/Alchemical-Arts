@@ -1,4 +1,4 @@
-namespace PotionCraft.Shared.Models
+namespace AlchemicalArts.Shared.Models
 {
 	[System.Serializable]
 	public struct MinMaxFloatValue

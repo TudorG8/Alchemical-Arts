@@ -1,8 +1,8 @@
-using PotionCraft.Core.Naming.BakingComponents;
+using AlchemicalArts.Core.Naming.BakingComponents;
 using Unity.Entities;
 using UnityEngine;
 
-namespace PotionCraft.Core.Naming.Authoring
+namespace AlchemicalArts.Core.Naming.Authoring
 {
 	public class EntityHierarchyAuthoring : MonoBehaviour 
 	{
