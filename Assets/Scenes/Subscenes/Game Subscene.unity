@@ -360,6 +360,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Folder - Simulation Data
       objectReference: {fileID: 0}
+    - target: {fileID: 7705399290577769863, guid: 40a0d2141cf9daa4387a58248b521eaa, type: 3}
+      propertyPath: m_Name
+      value: Fluid Simulation Display Data
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -422,10 +426,68 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a669afd0f66979247bad17a35411517f, type: 3}
+--- !u!1001 &7277549359367428254
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.42875
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.27488
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468027085802805027, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8639765624381595748, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
+      propertyPath: m_Name
+      value: Folder - Physics Setup
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab700785584f5e64bafa63b527ef4366, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 7277549359367428254}
   - {fileID: 3318134811366696109}
   - {fileID: 769333167427916208}
   - {fileID: 587000697}

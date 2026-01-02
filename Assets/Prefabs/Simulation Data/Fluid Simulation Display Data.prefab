@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1472021785136516943}
   - component: {fileID: 2397430984255275611}
   m_Layer: 0
-  m_Name: Simulation Display Data
+  m_Name: Fluid Simulation Display Data
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

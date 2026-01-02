@@ -9,7 +9,7 @@ namespace PotionCraft.Core.SpatialPartioning.Jobs
 {
 	[BurstCompile]
 	[WithAll(typeof(SimulatedItemTag))]
-	[WithAbsent(typeof(PhysicsBodyState))]
+	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct PredictPositionsJob : IJobEntity
 	{
 		[WriteOnly]

@@ -21,7 +21,7 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
 		}
 
 		[BurstCompile]
@@ -32,8 +32,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
-			var simulationConstantsConfig = SystemAPI.GetSingleton<SimulationConstantsConfig>();
+			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
+			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
+			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
+			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
@@ -44,8 +46,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				nearDensity = fluidBuffersSystem.nearDensityBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				numParticles = fluidBuffersSystem.count,
-				simulationConfig = simulationConfig,
-				simulationConstantsConfig = simulationConstantsConfig,
+				spatialPartioningConfig = spatialPartioningConfig,
+				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
+				fluidSimulationConfig = fluidSimulationConfig,
+				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};

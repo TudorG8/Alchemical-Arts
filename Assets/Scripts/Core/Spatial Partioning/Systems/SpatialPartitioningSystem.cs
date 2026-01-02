@@ -27,7 +27,7 @@ namespace PotionCraft.Core.SpatialPartioning.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
-			state.RequireForUpdate<SimulationConfig>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
 			spatialEntryKeyComparer = new SpatialEntryKeyComparer();
 		}
 
@@ -39,7 +39,7 @@ namespace PotionCraft.Core.SpatialPartioning.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
+			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{

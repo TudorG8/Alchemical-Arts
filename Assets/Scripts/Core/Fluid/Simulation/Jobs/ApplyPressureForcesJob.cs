@@ -37,10 +37,16 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public int numParticles;
 
 		[ReadOnly]
-		public SimulationConfig simulationConfig;
+		public SpatialPartioningConfig spatialPartioningConfig;
 
 		[ReadOnly]
-		public SimulationConstantsConfig simulationConstantsConfig;
+		public SpatialPartioningConstantsConfig spatialPartioningConstantsConfig;
+
+		[ReadOnly]
+		public FluidSimulationConfig fluidSimulationConfig;
+
+		[ReadOnly]
+		public FluidSimulationConstantsConfig fluidSimulationConstantsConfig;
 
 		[ReadOnly]
 		public float deltaTime;
@@ -59,10 +65,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			var pressureForce = new float2();
 
 			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationConfig.radius);
-			var sqrRadius = simulationConfig.radius * simulationConfig.radius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, spatialPartioningConfig.radius);
+			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 			
-			foreach (var offset in simulationConstantsConfig.offsets)
+			foreach (var offset in spatialPartioningConstantsConfig.offsets)
 			{
 				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
@@ -95,8 +101,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 					var sharedPressure = (pressure + neighbourPressure) * 0.5f;
 					var sharedNearPressure = (nearPressure + neighbourNearPressure) * 0.5f;
 					
-					pressureForce += sharedPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow2(simulationConstantsConfig.spikyPow2DerivativeScalingFactor, dst, simulationConfig.radius) * dirToNeighbour / neighbourDensity;
-					pressureForce += sharedNearPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow3(simulationConstantsConfig.spikyPow3DerivativeScalingFactor, dst, simulationConfig.radius) * dirToNeighbour / neighbourNearDensity;
+					pressureForce += sharedPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow2(fluidSimulationConstantsConfig.spikyPow2DerivativeScalingFactor, dst, spatialPartioningConfig.radius) * dirToNeighbour / neighbourDensity;
+					pressureForce += sharedNearPressure * SpatialWeightingUtility.ComputeDerivativeSpikyPow3(fluidSimulationConstantsConfig.spikyPow3DerivativeScalingFactor, dst, spatialPartioningConfig.radius) * dirToNeighbour / neighbourNearDensity;
 				}
 			}
 
@@ -106,12 +112,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		
 		private readonly float PressureFromDensity(float density)
 		{
-			return (density - simulationConfig.targetDensity) * simulationConfig.pressureMultiplier;
+			return (density - fluidSimulationConfig.targetDensity) * fluidSimulationConfig.pressureMultiplier;
 		}
 
 		private readonly float NearPressureFromDensity(float nearDensity)
 		{
-			return simulationConfig.nearPressureMultiplier * nearDensity;
+			return fluidSimulationConfig.nearPressureMultiplier * nearDensity;
 		}
 	}
 }

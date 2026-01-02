@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8639765624381595748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5468027085802805027}
+  - component: {fileID: 2643718699070702228}
+  m_Layer: 0
+  m_Name: Folder - Physics Setup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5468027085802805027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8639765624381595748}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.42875, y: 1.27488, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3067374673093503233}
+  - {fileID: 874194744702338004}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2643718699070702228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8639765624381595748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionCraft.Core::PotionCraft.Core.Naming.Authoring.EntityHierarchyAuthoring
+  <IncludeChildren>k__BackingField: 1
+--- !u!1001 &125145475198468286
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5468027085802805027}
+    m_Modifications:
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3740603389638880066, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+      propertyPath: m_Name
+      value: Physics World
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+--- !u!4 &874194744702338004 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 981037431435084650, guid: 4508a22733d7c6f4c886ea7170e2c2eb, type: 3}
+  m_PrefabInstance: {fileID: 125145475198468286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3271074057031084508
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5468027085802805027}
+    m_Modifications:
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957063042753868470, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+      propertyPath: m_Name
+      value: Physics Step
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+--- !u!4 &3067374673093503233 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 573278238807277789, guid: f5a92b5e27ab7d3408704ef4db27a695, type: 3}
+  m_PrefabInstance: {fileID: 3271074057031084508}
+  m_PrefabAsset: {fileID: 0}

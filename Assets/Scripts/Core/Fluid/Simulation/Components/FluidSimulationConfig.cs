@@ -1,14 +1,10 @@
 using Unity.Entities;
 
-namespace PotionCraft.Core.SpatialPartioning.Components
+namespace PotionCraft.Core.Fluid.Simulation.Components
 {
 	[System.Serializable]
-	public struct SimulationConfig : IComponentData
+	public struct FluidSimulationConfig : IComponentData
 	{
-		public int predictionFrames;
-
-		public float radius;
-
 		public float gravity;
 
 		public float targetDensity;

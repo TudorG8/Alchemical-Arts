@@ -32,8 +32,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SimulationConfig>();
-			var simulationConstantsConfig = SystemAPI.GetSingleton<SimulationConstantsConfig>();
+			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
+			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
+			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
+			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
 			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
 			{
@@ -42,8 +44,10 @@ namespace PotionCraft.Core.Fluid.Simulation.Systems
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				numParticles = fluidBuffersSystem.count,
-				simulationConfig = simulationConfig,
-				simulationConstantsConfig = simulationConstantsConfig,
+				spatialPartioningConfig = spatialPartioningConfig,
+				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
+				fluidSimulationConfig = fluidSimulationConfig,
+				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				hashingLimit = fluidBuffersSystem.hashingLimit,
 			};

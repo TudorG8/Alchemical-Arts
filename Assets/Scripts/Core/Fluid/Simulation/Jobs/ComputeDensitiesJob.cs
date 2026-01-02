@@ -34,10 +34,13 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 		public int numParticles;
 
 		[ReadOnly]
-		public SimulationConfig simulationConfig;
+		public SpatialPartioningConfig spatialPartioningConfig;
 
 		[ReadOnly]
-		public SimulationConstantsConfig simulationConstantsConfig;
+		public SpatialPartioningConstantsConfig spatialPartioningConstantsConfig;
+
+		[ReadOnly]
+		public FluidSimulationConstantsConfig fluidSimulationConstantsConfig;
 
 		[ReadOnly]
 		public int hashingLimit;
@@ -47,12 +50,12 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 			[EntityIndexInQuery] int index)
 		{
 			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, simulationConfig.radius);
-			var sqrRadius = simulationConfig.radius * simulationConfig.radius;
+			var originCell = SpatialHashingUtility.GetCell2D(pos, spatialPartioningConfig.radius);
+			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 			var density = 0f;
 			var nearDensity = 0f;
 			
-			foreach (var offset in simulationConstantsConfig.offsets)
+			foreach (var offset in spatialPartioningConstantsConfig.offsets)
 			{
 				var hash = SpatialHashingUtility.HashCell2D(originCell + offset);
 				var key = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
@@ -74,8 +77,8 @@ namespace PotionCraft.Core.Fluid.Simulation.Jobs
 					if (sqrDstToNeighbour > sqrRadius) continue;
 
 					var dst = math.sqrt(sqrDstToNeighbour);
-					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(simulationConstantsConfig.spikyPow2ScalingFactor, dst, simulationConfig.radius);
-					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(simulationConstantsConfig.spikyPow3ScalingFactor, dst, simulationConfig.radius);
+					density += SpatialWeightingUtility.ComputeSpikyPow2Weight(fluidSimulationConstantsConfig.spikyPow2ScalingFactor, dst, spatialPartioningConfig.radius);
+					nearDensity += SpatialWeightingUtility.ComputeSpikyPow3Weight(fluidSimulationConstantsConfig.spikyPow3ScalingFactor, dst, spatialPartioningConfig.radius);
 				}
 			}
 
