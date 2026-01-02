@@ -14,7 +14,7 @@ namespace PotionCraft.Core.Naming.Authoring
 		public override void Bake(EntityNameAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new EntityNameConfig() { Value = authoring.gameObject.name});
+			AddComponent(entity, new EntityNameConfig() { value = authoring.gameObject.name});
 		}
 	}
 }

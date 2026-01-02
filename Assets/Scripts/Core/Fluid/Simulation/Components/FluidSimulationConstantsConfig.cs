@@ -1,6 +1,4 @@
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 
 namespace PotionCraft.Core.Fluid.Simulation.Components
 {

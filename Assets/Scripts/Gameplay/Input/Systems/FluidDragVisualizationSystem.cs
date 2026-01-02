@@ -21,18 +21,18 @@ namespace PotionCraft.Gameplay.Input.Systems
 
 		public void OnUpdate(ref SystemState state)
 		{
-			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
-			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingModeEntity);
-			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingModeEntity);
-			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
+			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
+			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingParticlesModeStateEntity);
+			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingParticlesModeStateEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
 
-			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
+			var inputDataConfig = SystemAPI.GetSingleton<InputDataConfig>();
 
 			var targetEntity = fluidInputConfig.ValueRO.target;
 			var targetEntityLocalTransform = SystemAPI.GetComponentRW<LocalTransform>(targetEntity);
 			var spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(fluidInputConfig.ValueRO.target);
 			
-			targetEntityLocalTransform.ValueRW.Position = inputData.worldPosition.ToFloat3();
+			targetEntityLocalTransform.ValueRW.Position = inputDataConfig.worldPosition.ToFloat3();
 			targetEntityLocalTransform.ValueRW.Scale = fluidInputState.ValueRO.interactionRadius * 2;
 
 			spriteRenderer.enabled = draggingParticlesModeState.ValueRO.mode == DraggingParticlesMode.Idle;

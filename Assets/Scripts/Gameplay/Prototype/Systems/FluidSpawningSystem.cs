@@ -36,7 +36,7 @@ namespace PotionCraft.Gameplay.Prototype.Systems
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
 			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
-			var fluidFolder = SystemAPI.GetSingleton<FolderManagerConfig>().FluidFolder;
+			var fluidFolder = SystemAPI.GetSingleton<FolderManagerConfig>().fluidFolder;
 
 			var spawnFluidEntitiesJob = new SpawnFluidEntitiesJob
 			{

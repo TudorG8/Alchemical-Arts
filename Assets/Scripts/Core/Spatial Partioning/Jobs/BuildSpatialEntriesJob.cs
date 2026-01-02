@@ -15,10 +15,10 @@ namespace PotionCraft.Core.SpatialPartioning.Jobs
 	public partial struct BuildSpatialEntriesJob : IJobEntity
 	{
 		[NativeDisableParallelForRestriction]
-		public NativeArray<SpatialEntry> spatialOutput;
+		public NativeArray<SpatialEntry> spatial;
 
 		[WriteOnly]
-		public NativeArray<int> spatialOffsetOutput;
+		public NativeArray<int> spatialOffsets;
 
 		[ReadOnly]
 		public NativeArray<float2> predictedPositions;
@@ -40,8 +40,8 @@ namespace PotionCraft.Core.SpatialPartioning.Jobs
 			var hash = SpatialHashingUtility.HashCell2D(cell);
 			var cellKey = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 			
-			spatialOutput[index] = new SpatialEntry() { index = index, key = cellKey };
-			spatialOffsetOutput[index] = int.MaxValue;
+			spatial[index] = new SpatialEntry() { index = index, key = cellKey };
+			spatialOffsets[index] = int.MaxValue;
 		}
 	}
 }

@@ -25,10 +25,10 @@ namespace PotionCraft.Gameplay.Input.Systems
 			// if mode is not active
 			// 	return
 
-			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
-			var fluidInputConfig = SystemAPI.GetComponentRO<FluidInputConfig>(draggingModeEntity);
-			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingModeEntity);
-			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingModeEntity);
+			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
+			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingParticlesModeStateEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRO<FluidInputConfig>(draggingParticlesModeStateEntity);
+			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingParticlesModeStateEntity);
 			
 			var inputData = SystemAPI.GetSingleton<InputDataConfig>();
 

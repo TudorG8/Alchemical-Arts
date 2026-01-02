@@ -50,7 +50,7 @@ namespace PotionCraft.Core.Naming.Systems
 					stringBuffer.Append($"MISSING NAME: Entity({entity.Version}:{entity.Index})");
 				}
 
-				commandBuffer.AddComponent(entity, new EntityNameConfig() { Value = stringBuffer });
+				commandBuffer.AddComponent(entity, new EntityNameConfig() { value = stringBuffer });
 			}
 		}
 	}

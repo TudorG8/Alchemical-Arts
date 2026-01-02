@@ -26,10 +26,10 @@ namespace PotionCraft.Core.Fluid.Interaction.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 			
-			var draggingModeEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
-			var draggingParticlesModeState = SystemAPI.GetComponentRO<DraggingParticlesModeState>(draggingModeEntity);
-			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingModeEntity);
-			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingModeEntity);
+			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
+			var draggingParticlesModeState = SystemAPI.GetComponentRO<DraggingParticlesModeState>(draggingParticlesModeStateEntity);
+			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingParticlesModeStateEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
 
 			var handle = state.Dependency;
 			switch(draggingParticlesModeState.ValueRO.mode)

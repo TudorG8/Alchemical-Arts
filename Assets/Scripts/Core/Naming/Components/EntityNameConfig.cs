@@ -5,6 +5,6 @@ namespace PotionCraft.Core.Naming.Components
 {
 	public struct EntityNameConfig : IComponentData, IEnableableComponent
 	{
-		public FixedString64Bytes Value;
+		public FixedString64Bytes value;
 	}
 }

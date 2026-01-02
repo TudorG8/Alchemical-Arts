@@ -2,7 +2,6 @@ using PotionCraft.Core.Camera.Components;
 using PotionCraft.Core.Camera.Groups;
 using Unity.Burst;
 using Unity.Entities;
-using UnityEngine;
 
 namespace PotionCraft.Core.Camera.Systems
 {

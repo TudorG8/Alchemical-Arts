@@ -46,7 +46,7 @@ namespace PotionCraft.Core.Naming.Systems
 			Entity entity,
 			ref EntityNameConfig name)
 		{
-			ecb.SetName(index, entity, name.Value);
+			ecb.SetName(index, entity, name.value);
 			ecb.SetComponentEnabled<EntityNameConfig>(index, entity, false);
 		}
 	}

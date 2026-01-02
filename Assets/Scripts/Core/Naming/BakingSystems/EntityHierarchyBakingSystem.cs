@@ -21,7 +21,7 @@ namespace PotionCraft.Core.Naming.BakingSystems
 			{
 				foreach(var transformLink in transformLinkBuffer)
 				{
-					commandBuffer.AddComponent(transformLink.Child, new EntityNameConfig { Value = transformLink.Name });
+					commandBuffer.AddComponent(transformLink.Child, new EntityNameConfig { value = transformLink.Name });
 					if (transformLink.Parent != Entity.Null)
 					{
 						ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);

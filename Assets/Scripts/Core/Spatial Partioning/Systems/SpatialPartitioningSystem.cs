@@ -46,8 +46,8 @@ namespace PotionCraft.Core.SpatialPartioning.Systems
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
 				radius = simulationConfig.radius,
 				count = fluidBuffersSystem.count,
-				spatialOutput = fluidBuffersSystem.spatialBuffer,
-				spatialOffsetOutput = fluidBuffersSystem.spatialOffsetsBuffer,
+				spatial = fluidBuffersSystem.spatialBuffer,
+				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};
 			var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(positionPredictionSystem.handle);

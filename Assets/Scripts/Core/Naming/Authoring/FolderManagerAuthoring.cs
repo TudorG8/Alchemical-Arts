@@ -20,8 +20,8 @@ namespace PotionCraft.Core.Naming.Authoring
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			AddComponent(entity, new FolderManagerConfig()
 			{
-				FluidFolder = GetEntity(authoring.FluidFolder, TransformUsageFlags.Dynamic),
-				BuildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),
+				fluidFolder = GetEntity(authoring.FluidFolder, TransformUsageFlags.Dynamic),
+				buildingFolder = GetEntity(authoring.BuildingFolder, TransformUsageFlags.Dynamic),
 			});
 		}
 	}
