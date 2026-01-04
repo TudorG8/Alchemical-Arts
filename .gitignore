@@ -70,6 +70,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # DOTS scene Dependencies
-*/[Aa]ssets/GlobalEntitiesDependencies
-*/[Aa]ssets/SceneDependencyCache
-*/[Aa]ssets/TypeDependencyCache
+/[Aa]ssets/GlobalEntitiesDependencies
+/[Aa]ssets/SceneDependencyCache*
+/[Aa]ssets/TypeDependencyCache
