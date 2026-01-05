@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 314862051825837892}
   - component: {fileID: 2839408627747477303}
-  - component: {fileID: 7541379417781451787}
-  - component: {fileID: 2887135388066899259}
   - component: {fileID: 3444110554109722287}
   - component: {fileID: 2661011991443115837}
   m_Layer: 4
-  m_Name: LiquidPhysicsBenchmark - Box2D - Liquid
+  m_Name: PhysicsEngineBenchmark - Box2D - Fluid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,31 +70,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.04
---- !u!114 &7541379417781451787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3345850477814946435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71d5d1d3a8650e5408e78eea5552d179, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2887135388066899259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3345850477814946435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5579a15c2125c74c853aa9aed03f1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <IncludeChildren>k__BackingField: 1
 --- !u!114 &3444110554109722287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +87,7 @@ MonoBehaviour:
   <ShapeDefinition>k__BackingField:
     surfaceMaterial:
       m_Friction: 0
-      m_Bounciness: 1
+      m_Bounciness: 0.1
       m_FrictionCombine: 3
       m_BouncinessCombine: 3
       m_FrictionPriority: 0
@@ -162,7 +135,7 @@ MonoBehaviour:
     m_AngularVelocity: 0
     m_LinearDamping: 0
     m_AngularDamping: 0
-    m_GravityScale: 0
+    m_GravityScale: 1
     m_SleepThreshold: 0.05
     m_FastRotationAllowed: 0
     m_FastCollisionsAllowed: 0

@@ -36,8 +36,8 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 		protected override void OnDestroy()
 		{
 			argsBuffer?.Release(); 
-			positionsBuffer.Release();
-			velocitiesBuffer.Release();
+			positionsBuffer?.Release();
+			velocitiesBuffer?.Release();
 		}
 
 		protected override void OnStartRunning()

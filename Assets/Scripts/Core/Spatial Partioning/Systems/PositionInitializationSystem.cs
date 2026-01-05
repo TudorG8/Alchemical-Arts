@@ -22,6 +22,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
 			fluidQuery = SystemAPI.QueryBuilder()
 				.WithAll<SimulatedItemTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();

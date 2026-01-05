@@ -8,9 +8,7 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace AlchemicalArts.Core.Physics.Authoring
 {
-	[ExecuteInEditMode]
 	[RequireComponent(typeof(CircleCollider2D))]
-	[RequireComponent(typeof(EntityHierarchyAuthoring))]
 	public class PhysicsCircleSetupAuthoring : MonoBehaviour, IDrawableShape
 	{
 		[field: SerializeField]

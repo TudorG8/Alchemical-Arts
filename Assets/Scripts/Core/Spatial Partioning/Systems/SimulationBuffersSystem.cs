@@ -46,6 +46,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
 			bufferCapacity = 10000;
 			positionBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			velocityBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);

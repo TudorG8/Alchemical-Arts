@@ -1,6 +1,8 @@
+using AlchemicalArts.Core.Fluid.Simulation.Components;
 using AlchemicalArts.Core.Fluid.Simulation.Groups;
 using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
 using Unity.Burst;
 using Unity.Entities;
@@ -19,6 +21,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
+			state.RequireForUpdate<FluidSimulationConfig>();
 		}
 
 		[BurstCompile]

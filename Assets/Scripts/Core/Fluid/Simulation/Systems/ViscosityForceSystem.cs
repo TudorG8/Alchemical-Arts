@@ -21,6 +21,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		public void OnCreate(ref SystemState state)
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
+			state.RequireForUpdate<FluidSimulationConfig>();
 		}
 
 

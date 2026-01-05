@@ -1,4 +1,5 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Entities;
@@ -17,6 +18,9 @@ namespace AlchemicalArts.Core.Camera.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
+			state.RequireForUpdate<PhysicsWorldState>();
+			state.RequireForUpdate<SpatialPartioningConfig>();
+			state.RequireForUpdate<FluidSimulationConfig>();
 			fluidSimulationConstantsQuery = SystemAPI.QueryBuilder()
 				.WithAll<FluidSimulationConstantsConfig>()
 				.WithAll<FluidSimulationConstantsConfigInitializeTag>().Build();

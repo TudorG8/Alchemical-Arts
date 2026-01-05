@@ -22,6 +22,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
+			state.RequireForUpdate<FluidSimulationConfig>();
 		}
 
 		[BurstCompile]

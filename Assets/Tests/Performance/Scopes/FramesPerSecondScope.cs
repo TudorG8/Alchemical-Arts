@@ -12,17 +12,14 @@ namespace AlchemicalArts.Tests.Performance.Scopes
 
 		private readonly SampleGroup sampleGroup;
 
-		private readonly Action takeMeasurement;
-
 
 		public FramesPerSecondScope(string name = "Frames Per Second")
 		{
 			cancelSource = new CancellationTokenSource ();
 			sampleGroup = new SampleGroup(name, SampleUnit.Undefined);
-			takeMeasurement = () => Measure.Custom(sampleGroup, 1f / Time.deltaTime);
 
-			PerformOrderMeasurement();
-			TaskUtility.EveryFrame(cancelSource.Token, takeMeasurement);
+			TakeMeasurement();
+			TaskUtility.EveryFrame(cancelSource.Token, TakeMeasurement);
 		}
 
 
@@ -31,10 +28,9 @@ namespace AlchemicalArts.Tests.Performance.Scopes
 			cancelSource.Cancel();
 		}
 
-
-		private void PerformOrderMeasurement()
+		private void TakeMeasurement()
 		{
-			takeMeasurement();
+			Measure.Custom(sampleGroup, 1f / Time.deltaTime);
 		}
 	}
 }

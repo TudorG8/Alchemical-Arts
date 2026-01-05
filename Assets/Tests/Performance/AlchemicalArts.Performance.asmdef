@@ -7,12 +7,12 @@
         "Unity.Collections",
         "Unity.Entities.Hybrid",
         "Unity.PerformanceTesting",
-        "UnityEngine.TestRunner",
+        "Unity.Mathematics",
         "UnityEditor.TestRunner",
+        "UnityEngine.TestRunner",
         "UniTask",
-        "AlchemicalArts.Scripts.Gameplay",
         "AlchemicalArts.Shared",
-        "Unity.Mathematics"
+        "AlchemicalArts.Gameplay.Prototype"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
