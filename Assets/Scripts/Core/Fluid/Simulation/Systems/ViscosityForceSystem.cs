@@ -34,26 +34,28 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
-			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
-			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
-			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
-			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
+			// var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
+			// var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
+			// var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
+			// var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
-			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
-			{
-				velocities = fluidBuffersSystem.velocityBuffer,
-				spatial = fluidBuffersSystem.spatialBuffer,
-				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
-				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				numParticles = fluidBuffersSystem.count,
-				spatialPartioningConfig = spatialPartioningConfig,
-				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
-				fluidSimulationConfig = fluidSimulationConfig,
-				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
-				deltaTime = SystemAPI.Time.DeltaTime,
-				hashingLimit = fluidBuffersSystem.hashingLimit,
-			};
-			handle = applyViscosityForcesJob.ScheduleParallel(pressureForceSystem.handle);
+			// var applyViscosityForcesJob = new ApplyViscosityForcesJob()
+			// {
+			// 	velocities = fluidBuffersSystem.velocityBuffer,
+			// 	spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
+			// 	spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
+			// 	predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
+			// 	numParticles = fluidBuffersSystem.fluidCount,
+			// 	spatialPartioningConfig = spatialPartioningConfig,
+			// 	spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
+			// 	fluidSimulationConfig = fluidSimulationConfig,
+			// 	fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
+			// 	deltaTime = SystemAPI.Time.DeltaTime,
+			// 	hashingLimit = fluidBuffersSystem.hashingLimit,
+			// };
+			// handle = applyViscosityForcesJob.ScheduleParallel(pressureForceSystem.handle);
+			// handle.Complete();
+			handle = pressureForceSystem.handle;
 		}
 	}
 }

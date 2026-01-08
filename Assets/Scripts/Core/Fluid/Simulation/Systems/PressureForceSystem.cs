@@ -41,12 +41,12 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
 				velocities = fluidBuffersSystem.velocityBuffer,
-				spatial = fluidBuffersSystem.spatialBuffer,
+				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				densities = fluidBuffersSystem.densityBuffer,
 				nearDensity = fluidBuffersSystem.nearDensityBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				numParticles = fluidBuffersSystem.count,
+				numParticles = fluidBuffersSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				fluidSimulationConfig = fluidSimulationConfig,
@@ -55,6 +55,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};
 			handle = applyPressureForcesJob.ScheduleParallel(fluidInwardsInputSystem.handle);
+			// handle = fluidInwardsInputSystem.handle;
 		}
 	}
 }

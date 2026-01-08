@@ -1,0 +1,17 @@
+﻿<Solution>
+  <Project Path="AlchemicalArts.Core.Fluid.Interaction.csproj" />
+  <Project Path="AlchemicalArts.Camera.csproj" />
+  <Project Path="AlchemicalArts.Core.Fluid.Simulation.csproj" />
+  <Project Path="AlchemicalArts.UI.csproj" />
+  <Project Path="AlchemicalArts.Core.Physics.csproj" />
+  <Project Path="AlchemicalArts.Core.Input.csproj" />
+  <Project Path="AlchemicalArts.Shared.csproj" />
+  <Project Path="AlchemicalArts.Gameplay.Prototype.csproj" />
+  <Project Path="AlchemicalArts.Core.SpatialPartioning.csproj" />
+  <Project Path="AlchemicalArts.Core.Naming.csproj" />
+  <Project Path="AlchemicalArts.InputConfig.csproj" />
+  <Project Path="Tests.csproj" />
+  <Project Path="AlchemicalArts.Gameplay.Input.csproj" />
+  <Project Path="AlchemicalArts.Core.Fluid.Display.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+</Solution>

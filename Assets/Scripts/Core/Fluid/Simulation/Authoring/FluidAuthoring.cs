@@ -14,7 +14,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Authoring
 		public override void Bake(FluidAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
-			AddComponent(entity, new SimulatedItemTag());
+			AddComponent(entity, new FluidItemTag());
 		}
 	}
 }

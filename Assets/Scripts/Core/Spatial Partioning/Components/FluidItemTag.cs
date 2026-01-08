@@ -2,5 +2,8 @@ using Unity.Entities;
 
 namespace AlchemicalArts.Core.SpatialPartioning.Components
 {
-	public struct SimulatedItemTag : IComponentData { }
+	public struct FluidItemTag : IComponentData
+	{
+		public int index;
+	}
 }

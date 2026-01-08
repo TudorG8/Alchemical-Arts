@@ -15,6 +15,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		public JobHandle handle;
 
 
+		private EntityQuery simulatedQuery;
+
 		private EntityQuery fluidQuery;
 
 
@@ -23,9 +25,10 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
-			fluidQuery = SystemAPI.QueryBuilder()
-				.WithAll<SimulatedItemTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
+			simulatedQuery = SystemAPI.QueryBuilder()
+				.WithAll<SpatiallyPartionedItemState>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
+			fluidQuery = SystemAPI.QueryBuilder().WithAll<FluidItemTag>().Build();
 		}
 
 		[BurstCompile]
@@ -35,12 +38,41 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			if (fluidBuffersSystem.count == 0)
 				return;
 
+			var writeSpatialDataIDJob = new WriteSpatialDataID();
+			var writeSpatialDataIDHandle = writeSpatialDataIDJob.Schedule(state.Dependency);
+
+			var writeFluidDataIDJob = new WriteFluidDataID();
+			var writeFluidDataIDHandle = writeFluidDataIDJob.Schedule(writeSpatialDataIDHandle);
+
 			var readInitialDataJob = new ReadInitialDataJob
 			{
-				positions = fluidBuffersSystem.positionBuffer,
-				velocities = fluidBuffersSystem.velocityBuffer,
+				positionBuffer = fluidBuffersSystem.positionBuffer,
+				velocityBuffer = fluidBuffersSystem.velocityBuffer,
 			};
-			handle = readInitialDataJob.ScheduleParallel(fluidQuery, state.Dependency);
+			handle = readInitialDataJob.ScheduleParallel(simulatedQuery, writeFluidDataIDHandle);
+			handle.Complete();
+		}
+	}
+
+	[BurstCompile]
+	public partial struct WriteSpatialDataID : IJobEntity
+	{
+		public void Execute(
+			[EntityIndexInQuery] int index,
+			ref SpatiallyPartionedItemState spatiallyPartionedItemState)
+		{
+			spatiallyPartionedItemState.index = index;
+		}
+	}
+
+	[BurstCompile]
+	public partial struct WriteFluidDataID : IJobEntity
+	{
+		public void Execute(
+			[EntityIndexInQuery] int index,
+			ref FluidItemTag fluidItemState)
+		{
+			fluidItemState.index = index;
 		}
 	}
 }

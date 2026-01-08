@@ -37,6 +37,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			{
 				batchVelocityBuffer = fluidBuffersSystem.batchVelocityBuffer,
 				velocityBuffer = fluidBuffersSystem.velocityBuffer,
+				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
 			};
 			state.Dependency = readVelocityBatchesJob.ScheduleParallel(viscosityForceSystem.handle);
 

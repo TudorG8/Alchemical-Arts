@@ -39,16 +39,19 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			{
 				densities = fluidBuffersSystem.densityBuffer,
 				nearDensities = fluidBuffersSystem.nearDensityBuffer,
-				spatial = fluidBuffersSystem.spatialBuffer,
+				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
 				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				numParticles = fluidBuffersSystem.count,
+				numParticles = fluidBuffersSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
 				hashingLimit = fluidBuffersSystem.hashingLimit
 			};
 			handle = computeDensitiesJob.ScheduleParallel(state.Dependency);
+			handle.Complete();
+
+			var x = "";
 		}
 	}
 }

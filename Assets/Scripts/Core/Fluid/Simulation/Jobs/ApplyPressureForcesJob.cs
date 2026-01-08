@@ -12,14 +12,15 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(FluidItemTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyPressureForcesJob : IJobEntity
 	{
+		[NativeDisableParallelForRestriction]
 		public NativeArray<float2> velocities;
 
 		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
+		public NativeArray<FluidSpatialEntry> spatial;
 
 		[ReadOnly]
 		public NativeArray<int> spatialOffsets;
@@ -56,15 +57,22 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int index)
+			[EntityIndexInQuery] int i,
+			in SpatiallyPartionedItemState spatiallyPartionedItemState,
+			in FluidItemTag fluidItemTag)
 		{
-			var density = densities[index];
-			var densityNear = nearDensity[index];
+			// var fluidIndex = spatial[i].fluidIndex;
+			// var simulationIndex = spatial[i].simulationIndex;
+			var fluidIndex = fluidItemTag.index;
+			var simulationIndex = spatiallyPartionedItemState.index;
+
+			var density = densities[fluidIndex];
+			var densityNear = nearDensity[fluidIndex];
 			var pressure = PressureFromDensity(density);
 			var nearPressure = NearPressureFromDensity(densityNear);
 			var pressureForce = new float2();
 
-			var pos = predictedPositions[index];
+			var pos = predictedPositions[simulationIndex];
 			var originCell = SpatialHashingUtility.GetCell2D(pos, spatialPartioningConfig.radius);
 			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 			
@@ -76,15 +84,16 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				while (currIndex < numParticles)
 				{
 					var neighbourIndex = currIndex;
-					var test = spatial[neighbourIndex].index;
+					var neighbourFluidIndex = spatial[neighbourIndex].fluidIndex;
+					var neighbourSimulationIndex = spatial[neighbourIndex].simulationIndex;
 					currIndex++;
 
-					if (test == index) continue;
+					if (neighbourFluidIndex == fluidIndex) continue;
 
 					var neighbourKey = spatial[neighbourIndex].key;
 					if (neighbourKey != key) break;
 
-					var neighbourPos = predictedPositions[test];
+					var neighbourPos = predictedPositions[neighbourSimulationIndex];
 					var offsetToNeighbour = neighbourPos - pos;
 					var sqrDstToNeighbour = math.dot(offsetToNeighbour, offsetToNeighbour);
 
@@ -93,8 +102,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 					var dst = math.sqrt(sqrDstToNeighbour);
 					var dirToNeighbour = dst > 0 ? offsetToNeighbour / dst : new float2(0, 1);
 					
-					var neighbourDensity = densities[test];
-					var neighbourNearDensity = nearDensity[test];
+					var neighbourDensity = densities[neighbourFluidIndex];
+					var neighbourNearDensity = nearDensity[neighbourFluidIndex];
 					var neighbourPressure = PressureFromDensity(neighbourDensity);
 					var neighbourNearPressure = NearPressureFromDensity(neighbourNearDensity);
 					
@@ -107,7 +116,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 			}
 
 			var acceleration = pressureForce / density;
-			velocities[index] += acceleration * deltaTime;
+			velocities[simulationIndex] += acceleration * deltaTime;
 		}
 		
 		private readonly float PressureFromDensity(float density)

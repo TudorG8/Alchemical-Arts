@@ -9,7 +9,7 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(FluidItemTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyOutwardsForcesJob : IJobEntity
 	{

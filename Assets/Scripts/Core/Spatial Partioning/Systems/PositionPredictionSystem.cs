@@ -32,14 +32,17 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
+			fluidPositionInitializationSystem.handle.Complete();
+
 			var predictPositionsJob = new PredictPositionsJob
 			{
-				positions = fluidBuffersSystem.positionBuffer,
-				velocities = fluidBuffersSystem.velocityBuffer,
-				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
+				positionBuffer = fluidBuffersSystem.positionBuffer,
+				velocityBuffer = fluidBuffersSystem.velocityBuffer,
+				predictedPositionsBuffer = fluidBuffersSystem.predictedPositionsBuffer,
 				predictionFactor = 1f / simulationConfig.predictionFrames,
 			};
-			handle = predictPositionsJob.ScheduleParallel(fluidPositionInitializationSystem.handle);
+			handle = predictPositionsJob.Schedule(fluidPositionInitializationSystem.handle);
+			handle.Complete();
 		}
 	}
 }

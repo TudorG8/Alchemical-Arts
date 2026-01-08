@@ -4,20 +4,19 @@ using AlchemicalArts.Core.SpatialPartioning.Models;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 
 namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {		
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
-	[WithAll(typeof(PhysicsBodyState))]
-	public partial struct BuildSpatialKeyOffsetsJob : IJobEntity
+	public partial struct BuildSpatialKeyOffsetsJob : IJobParallelFor
 	{
 		[WriteOnly]
 		[NativeDisableParallelForRestriction]
 		public NativeArray<int> spatialOffsets;
 		
 		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
+		public NativeArray<FluidSpatialEntry> spatial;
 
 
 		public void Execute(

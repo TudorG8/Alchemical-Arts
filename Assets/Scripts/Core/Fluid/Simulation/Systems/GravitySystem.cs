@@ -38,6 +38,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
 				velocities = fluidBuffersSystem.velocityBuffer,
+				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = fluidSimulationConfig.gravity
 			};

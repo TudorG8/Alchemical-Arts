@@ -23,6 +23,11 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		public NativeArray<float2> predictedPositionsBuffer;
 
 		public NativeArray<SpatialEntry> spatialBuffer;
+
+
+		public int fluidCount;
+
+		public NativeList<FluidSpatialEntry> fluidSpatialBuffer;
 		
 		public NativeArray<int> spatialOffsetsBuffer;
 
@@ -36,6 +41,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		public int hashingLimit;
 
+
+		private EntityQuery simulatedQuery;
 
 		private EntityQuery fluidQuery;
 
@@ -51,15 +58,17 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			positionBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			velocityBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			predictedPositionsBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
+			fluidSpatialBuffer = new NativeList<FluidSpatialEntry>(bufferCapacity, Allocator.Persistent);
 			spatialBuffer = new NativeArray<SpatialEntry>(bufferCapacity, Allocator.Persistent);
 			spatialOffsetsBuffer = new NativeArray<int>(bufferCapacity, Allocator.Persistent);
 			densityBuffer = new NativeArray<float>(bufferCapacity, Allocator.Persistent);
 			nearDensityBuffer = new NativeArray<float>(bufferCapacity, Allocator.Persistent);
 			inwardsForceBuffer = new NativeList<int>(bufferCapacity, Allocator.Persistent);
 			batchVelocityBuffer = new NativeArray<BatchVelocity>(bufferCapacity, Allocator.Persistent);
-			fluidQuery = SystemAPI.QueryBuilder()
-				.WithAll<SimulatedItemTag>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
+			simulatedQuery = SystemAPI.QueryBuilder()
+				.WithAll<SpatiallyPartionedItemState>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
+			fluidQuery =  SystemAPI.QueryBuilder().WithAll<FluidItemTag>().Build();
 		}
 
 		[BurstCompile]
@@ -68,6 +77,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			positionBuffer.Dispose();
 			velocityBuffer.Dispose();
 			predictedPositionsBuffer.Dispose();
+			fluidSpatialBuffer.Dispose();
 			spatialBuffer.Dispose();
 			spatialOffsetsBuffer.Dispose();
 			densityBuffer.Dispose();
@@ -79,7 +89,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			count = fluidQuery.CalculateEntityCount();
+			count = simulatedQuery.CalculateEntityCount();
+			fluidCount = fluidQuery.CalculateEntityCount();
 			hashingLimit = math.min(count, bufferCapacity);
 		}
 	}

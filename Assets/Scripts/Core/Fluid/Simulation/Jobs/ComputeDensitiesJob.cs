@@ -11,18 +11,18 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(FluidItemTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ComputeDensitiesJob : IJobEntity 
 	{
-		[WriteOnly]
+		[NativeDisableParallelForRestriction]
 		public NativeArray<float> densities;
 
-		[WriteOnly]
+		[NativeDisableParallelForRestriction]
 		public NativeArray<float> nearDensities;
 
 		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
+		public NativeArray<FluidSpatialEntry> spatial;
 		
 		[ReadOnly]
 		public NativeArray<int> spatialOffsets;
@@ -47,10 +47,17 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int index)
+			[EntityIndexInQuery] int i,
+			in SpatiallyPartionedItemState spatiallyPartionedItemState,
+			in FluidItemTag fluidItemTag)
 		{
-			var pos = predictedPositions[index];
-			var originCell = SpatialHashingUtility.GetCell2D(pos, spatialPartioningConfig.radius);
+			// var fluidIndex = spatial[i].fluidIndex;
+			// var simulationIndex = spatial[i].simulationIndex;
+			var fluidIndex = fluidItemTag.index;
+			var simulationIndex = spatiallyPartionedItemState.index;
+			
+			var position = predictedPositions[simulationIndex];
+			var originCell = SpatialHashingUtility.GetCell2D(position, spatialPartioningConfig.radius);
 			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 			var density = 0f;
 			var nearDensity = 0f;
@@ -64,14 +71,14 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				while (currIndex < numParticles)
 				{
 					var neighbourIndex = currIndex;
-					var test = spatial[neighbourIndex].index;
+					var neighbourSimulationIndex = spatial[neighbourIndex].simulationIndex;
 					currIndex++;
 
 					var neighbourKey = spatial[neighbourIndex].key;
 					if (neighbourKey != key) break;
 
-					var neighbourPos = predictedPositions[test];
-					var offsetToNeighbour = neighbourPos - pos;
+					var neighbourPos = predictedPositions[neighbourSimulationIndex];
+					var offsetToNeighbour = neighbourPos - position;
 					var sqrDstToNeighbour = math.dot(offsetToNeighbour, offsetToNeighbour);
 
 					if (sqrDstToNeighbour > sqrRadius) continue;
@@ -82,8 +89,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				}
 			}
 
-			densities[index] = density;
-			nearDensities[index] = nearDensity;
+			densities[fluidIndex] = density;
+			nearDensities[fluidIndex] = nearDensity;
 		}
 	}
 }

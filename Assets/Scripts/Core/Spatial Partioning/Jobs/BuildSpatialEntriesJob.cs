@@ -10,7 +10,7 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(SpatiallyPartionedItemState))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct BuildSpatialEntriesJob : IJobEntity
 	{
@@ -21,7 +21,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 		public NativeArray<int> spatialOffsets;
 
 		[ReadOnly]
-		public NativeArray<float2> predictedPositions;
+		public NativeArray<float2> predictedPositionsBuffer;
 		
 		[ReadOnly]
 		public float radius;
@@ -34,14 +34,16 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int index)
+			[EntityIndexInQuery] int index,
+			in SpatiallyPartionedItemState spatiallyPartionedItemState,
+			in Entity entity)
 		{
-			var cell = SpatialHashingUtility.GetCell2D(predictedPositions[index], radius);
+			var cell = SpatialHashingUtility.GetCell2D(predictedPositionsBuffer[spatiallyPartionedItemState.index], radius);
 			var hash = SpatialHashingUtility.HashCell2D(cell);
 			var cellKey = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 			
-			spatial[index] = new SpatialEntry() { index = index, key = cellKey };
-			spatialOffsets[index] = int.MaxValue;
+			spatial[spatiallyPartionedItemState.index] = new SpatialEntry() { simulationIndex = spatiallyPartionedItemState.index, key = cellKey, entity = entity };
+			spatialOffsets[spatiallyPartionedItemState.index] = int.MaxValue;
 		}
 	}
 }

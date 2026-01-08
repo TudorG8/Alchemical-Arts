@@ -11,7 +11,7 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
+	[WithAll(typeof(FluidItemTag))]
 	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyViscosityForcesJob : IJobEntity
 	{
@@ -19,7 +19,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 		public NativeArray<float2> velocities;
 
 		[ReadOnly]
-		public NativeArray<SpatialEntry> spatial;
+		public NativeArray<FluidSpatialEntry> spatial;
 		
 		[ReadOnly]
 		public NativeArray<int> spatialOffsets;
@@ -50,14 +50,21 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int input)
+			[EntityIndexInQuery] int i,
+			in SpatiallyPartionedItemState spatiallyPartionedItemState,
+			in FluidItemTag fluidItemTag)
 		{
-			var pos = predictedPositions[input];
+			// var fluidIndex = spatial[i].fluidIndex;
+			// var simulationIndex = spatial[i].simulationIndex;
+			var fluidIndex = fluidItemTag.index;
+			var simulationIndex = spatiallyPartionedItemState.index;
+			
+			var pos = predictedPositions[simulationIndex];
 			var originCell = SpatialHashingUtility.GetCell2D(pos, spatialPartioningConfig.radius);
 			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 
 			var viscosityForce = float2.zero;
-			var velocity = velocities[input];
+			var velocity = velocities[simulationIndex];
 
 			foreach (var offset in spatialPartioningConstantsConfig.offsets)
 			{
@@ -68,10 +75,10 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				while (currIndex < numParticles)
 				{
 					var spatialNeighbourIndex = currIndex;
-					var neighbourIndex = spatial[spatialNeighbourIndex].index;
+					var neighbourIndex = spatial[spatialNeighbourIndex].simulationIndex;
 					currIndex ++;
 
-					if (neighbourIndex == input) continue;
+					if (neighbourIndex == simulationIndex) continue;
 					
 					var neighbourKey = spatial[spatialNeighbourIndex].key;
 					if (neighbourKey != key) break;
@@ -88,7 +95,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				}
 
 			}
-			velocities[input] += deltaTime * fluidSimulationConfig.viscosityStrength * viscosityForce;
+			velocities[simulationIndex] += deltaTime * fluidSimulationConfig.viscosityStrength * viscosityForce;
 		}
 	}
 }

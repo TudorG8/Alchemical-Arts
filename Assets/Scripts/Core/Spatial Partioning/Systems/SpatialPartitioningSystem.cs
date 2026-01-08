@@ -7,6 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Transforms;
 
 [assembly: RegisterGenericJobType(typeof(SortJob<SpatialEntry, SpatialEntryKeyComparer>.SegmentSort))]
 [assembly: RegisterGenericJobType(typeof(SortJob<SpatialEntry, SpatialEntryKeyComparer>.SegmentSortMerge))]
@@ -22,6 +23,12 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		private SpatialEntryKeyComparer spatialEntryKeyComparer;
 
+		private EntityQuery spatialQuery;
+
+		private EntityQuery fluidQuery;
+
+		private ComponentLookup<FluidItemTag> fluidLookup;
+
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
@@ -29,6 +36,11 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
 			spatialEntryKeyComparer = new SpatialEntryKeyComparer();
+			spatialQuery = SystemAPI.QueryBuilder()
+				.WithAll<SpatiallyPartionedItemState>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
+				.Build();
+			fluidQuery =  SystemAPI.QueryBuilder().WithAll<FluidItemTag>().Build();
+			fluidLookup = SystemAPI.GetComponentLookup<FluidItemTag>();
 		}
 
 		[BurstCompile]
@@ -43,7 +55,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{
-				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
+				predictedPositionsBuffer = fluidBuffersSystem.predictedPositionsBuffer,
 				radius = simulationConfig.radius,
 				count = fluidBuffersSystem.count,
 				spatial = fluidBuffersSystem.spatialBuffer,
@@ -54,14 +66,64 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			buildSpatialEntriesHandle.Complete(); // SortJob won't work without completing this
 
 			var sortJobHandle = fluidBuffersSystem.spatialBuffer.Slice(0, fluidBuffersSystem.count).SortJob(spatialEntryKeyComparer).Schedule();
+			sortJobHandle.Complete();
+
+			fluidLookup.Update(ref state);
+			fluidBuffersSystem.fluidSpatialBuffer.Clear();
+			var spatialEntities = spatialQuery.ToEntityArray(Allocator.TempJob);
+			var buildFluidSpatialDataJob = new BuildFluidSpatialData()
+			{
+				spatialBuffer = fluidBuffersSystem.spatialBuffer,
+				spatialEntities = spatialEntities,
+				fluidSpatialBuffer = fluidBuffersSystem.fluidSpatialBuffer,
+				componentLookup = fluidLookup,
+				count = fluidBuffersSystem.count
+			};
+			var buildFluidSpatialDataHandle = buildFluidSpatialDataJob.Schedule(sortJobHandle);
+			buildFluidSpatialDataHandle.Complete();
 
 			var buildSpatialKeyOffsetsJob = new BuildSpatialKeyOffsetsJob()
 			{
-				spatial = fluidBuffersSystem.spatialBuffer,
+				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
 				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer
 			};
-			handle = buildSpatialKeyOffsetsJob.ScheduleParallel(sortJobHandle);
+			handle = buildSpatialKeyOffsetsJob.Schedule(fluidBuffersSystem.fluidCount, 64, buildFluidSpatialDataHandle);
 			handle.Complete(); // Completing before we start doing actual work with forces
+
+			var x = 0;
+		}
+
+		[BurstCompile]
+		public partial struct BuildFluidSpatialData : IJob
+		{
+			public int count;
+
+			[ReadOnly]
+			public NativeArray<SpatialEntry> spatialBuffer;
+			
+			[ReadOnly]
+			[DeallocateOnJobCompletion]
+			public NativeArray<Entity> spatialEntities;
+
+			[WriteOnly]
+			public NativeList<FluidSpatialEntry> fluidSpatialBuffer;
+
+			[ReadOnly]
+			public ComponentLookup<FluidItemTag> componentLookup;
+
+
+			public void Execute()
+			{
+				for (int i = 0; i < count; i++)
+				{
+					if (!componentLookup.HasComponent(spatialBuffer[i].entity))
+						continue;
+
+					var fluidIndex = componentLookup[spatialBuffer[i].entity];
+
+					fluidSpatialBuffer.AddNoResize(new FluidSpatialEntry() { key = spatialBuffer[i].key, simulationIndex = spatialBuffer[i].simulationIndex, fluidIndex = fluidIndex.index});
+				}
+			}
 		}
 	}
 }

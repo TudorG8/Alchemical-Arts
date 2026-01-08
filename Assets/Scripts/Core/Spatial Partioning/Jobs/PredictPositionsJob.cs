@@ -1,5 +1,3 @@
-using AlchemicalArts.Core.Physics.Components;
-using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,27 +6,24 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(SimulatedItemTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct PredictPositionsJob : IJobEntity
 	{
 		[WriteOnly]
-		public NativeArray<float2> predictedPositions;
+		public NativeArray<float2> predictedPositionsBuffer;
 
 		[ReadOnly]
-		public NativeArray<float2> positions;
+		public NativeArray<float2> positionBuffer;
 
 		[ReadOnly]
-		public NativeArray<float2> velocities;
+		public NativeArray<float2> velocityBuffer;
 		
 		[ReadOnly]
 		public float predictionFactor;
 		
 
-		public void Execute(
-			[EntityIndexInQuery] int index)
+		public void Execute(in SpatiallyPartionedItemState spatiallyPartionedItemState)
 		{
-			predictedPositions[index] = positions[index] + velocities[index] * predictionFactor;
+			predictedPositionsBuffer[spatiallyPartionedItemState.index] = positionBuffer[spatiallyPartionedItemState.index] + velocityBuffer[spatiallyPartionedItemState.index] * predictionFactor;
 		}
 	}
 }
