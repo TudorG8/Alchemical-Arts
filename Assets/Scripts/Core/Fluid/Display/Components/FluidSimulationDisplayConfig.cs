@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AlchemicalArts.Core.Fluid.Display.Components
 {
-	public class FluidSimulationConfig : IComponentData
+	public class FluidSimulationDisplayConfig : IComponentData
 	{
 		public Shader shader;
 

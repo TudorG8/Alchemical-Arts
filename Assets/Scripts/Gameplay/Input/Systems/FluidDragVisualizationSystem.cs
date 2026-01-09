@@ -21,21 +21,21 @@ namespace AlchemicalArts.Gameplay.Input.Systems
 
 		public void OnUpdate(ref SystemState state)
 		{
-			// var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
-			// var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingParticlesModeStateEntity);
-			// var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingParticlesModeStateEntity);
-			// var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
+			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
+			var draggingParticlesModeState = SystemAPI.GetComponentRW<DraggingParticlesModeState>(draggingParticlesModeStateEntity);
+			var fluidInputState = SystemAPI.GetComponentRW<FluidInputState>(draggingParticlesModeStateEntity);
+			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
 
-			// var inputDataConfig = SystemAPI.GetSingleton<InputDataConfig>();
+			var inputDataConfig = SystemAPI.GetSingleton<InputDataConfig>();
 
-			// var targetEntity = fluidInputConfig.ValueRO.target;
-			// var targetEntityLocalTransform = SystemAPI.GetComponentRW<LocalTransform>(targetEntity);
-			// var spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(fluidInputConfig.ValueRO.target);
+			var targetEntity = fluidInputConfig.ValueRO.target;
+			var targetEntityLocalTransform = SystemAPI.GetComponentRW<LocalTransform>(targetEntity);
+			var spriteRenderer = state.EntityManager.GetComponentObject<SpriteRenderer>(fluidInputConfig.ValueRO.target);
 			
-			// targetEntityLocalTransform.ValueRW.Position = inputDataConfig.worldPosition.ToFloat3();
-			// targetEntityLocalTransform.ValueRW.Scale = fluidInputState.ValueRO.interactionRadius * 2;
+			targetEntityLocalTransform.ValueRW.Position = inputDataConfig.worldPosition.ToFloat3();
+			targetEntityLocalTransform.ValueRW.Scale = fluidInputState.ValueRO.interactionRadius * 2;
 
-			// spriteRenderer.enabled = draggingParticlesModeState.ValueRO.mode == DraggingParticlesMode.Idle;
+			spriteRenderer.enabled = draggingParticlesModeState.ValueRO.mode == DraggingParticlesMode.Idle;
 		}
 	}
 }

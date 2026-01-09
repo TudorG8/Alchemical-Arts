@@ -10,8 +10,7 @@ using Unity.Jobs;
 
 namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(ViscosityForceSystem))]
+	[UpdateInGroup(typeof(FluidWritebackGroup))]
 	public partial struct VelocityWritebackSystem : ISystem
 	{
 		public JobHandle handle;
@@ -28,25 +27,27 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state) 
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
 			ref var viscosityForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<ViscosityForceSystem>();
-			if (fluidBuffersSystem.count == 0)
+			if (spatialCoordinatorSystem.count == 0)
 				return;
+
 
 			var readVelocityBatchesJob = new ReadVelocityBatchesJob
 			{
-				batchVelocityBuffer = fluidBuffersSystem.batchVelocityBuffer,
-				velocityBuffer = fluidBuffersSystem.velocityBuffer,
-				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
+				batchVelocityBuffer = fluidCoordinatorSystem.batchVelocityBuffer,
+				velocityBuffer = spatialCoordinatorSystem.velocityBuffer,
 			};
-			state.Dependency = readVelocityBatchesJob.ScheduleParallel(viscosityForceSystem.handle);
+			var readVelocityBatchesHandle = readVelocityBatchesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, viscosityForceSystem.handle);
 
-			var setVelocityBatchesJob = new SetVelocityBatchesJob()
+
+			var setVelocityBatchesJob = new SetVelocityBatchesJob
 			{
-				batchVelocity = fluidBuffersSystem.batchVelocityBuffer,
-				count = fluidBuffersSystem.count
+				batchVelocity = fluidCoordinatorSystem.batchVelocityBuffer,
+				count = spatialCoordinatorSystem.count
 			};
-			handle = setVelocityBatchesJob.Schedule(state.Dependency);
+			handle = setVelocityBatchesJob.Schedule(readVelocityBatchesHandle);
 			handle.Complete();
 		}
 	}

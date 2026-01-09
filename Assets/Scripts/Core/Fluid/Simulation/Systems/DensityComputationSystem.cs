@@ -11,6 +11,7 @@ using Unity.Jobs;
 namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
+	[UpdateAfter(typeof(FluidCoordinatorSystem))]
 	public partial struct DensityComputationSystem : ISystem
 	{
 		public JobHandle handle;
@@ -27,31 +28,30 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
-			if (fluidBuffersSystem.count == 0)
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+			if (spatialCoordinatorSystem.count == 0)
 				return;
 
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
 			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
+
 			var computeDensitiesJob = new ComputeDensitiesJob()
 			{
-				densities = fluidBuffersSystem.densityBuffer,
-				nearDensities = fluidBuffersSystem.nearDensityBuffer,
-				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
-				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
-				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				numParticles = fluidBuffersSystem.fluidCount,
+				densities = fluidCoordinatorSystem.densityBuffer,
+				nearDensities = fluidCoordinatorSystem.nearDensityBuffer,
+				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
+				numParticles = fluidCoordinatorSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
-				hashingLimit = fluidBuffersSystem.hashingLimit
+				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			handle = computeDensitiesJob.ScheduleParallel(state.Dependency);
-			handle.Complete();
-
-			var x = "";
+			handle = computeDensitiesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, fluidCoordinatorSystem.handle);
 		}
 	}
 }

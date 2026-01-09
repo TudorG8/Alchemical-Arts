@@ -22,8 +22,9 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
-			if (fluidBuffersSystem.count == 0)
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+			if (fluidCoordinatorSystem.fluidCount == 0)
 				return;
 			
 			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
@@ -31,35 +32,36 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 			var fluidInputState = SystemAPI.GetComponentRO<FluidInputState>(draggingParticlesModeStateEntity);
 			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
 
+
 			var handle = state.Dependency;
 			switch(draggingParticlesModeState.ValueRO.mode)
 			{
 				case DraggingParticlesMode.Idle:
-					fluidBuffersSystem.inwardsForceBuffer.Clear();
+					fluidCoordinatorSystem.inwardsForceBuffer.Clear();
 					break;
 				case DraggingParticlesMode.Inwards:
-					if (fluidBuffersSystem.inwardsForceBuffer.Length == 0)
+					if (fluidCoordinatorSystem.inwardsForceBuffer.Length == 0)
 					{
 						var collectAffectedParticlesJob = new CollectAffectedParticlesJob
 						{
-							output = fluidBuffersSystem.inwardsForceBuffer.AsParallelWriter(),
-							positions = fluidBuffersSystem.positionBuffer,
+							output = fluidCoordinatorSystem.inwardsForceBuffer.AsParallelWriter(),
+							positions = spatialCoordinatorSystem.positionBuffer,
 							fluidInputState = fluidInputState.ValueRO,
 						};
-						handle = collectAffectedParticlesJob.ScheduleParallel(handle);
+						handle = collectAffectedParticlesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, handle);
 						break;
 					}
 					
 					var applyInputToCache = new ApplyInwardsForcesJob
 					{
-						velocities = fluidBuffersSystem.velocityBuffer,
-						positions = fluidBuffersSystem.positionBuffer,
+						velocities = spatialCoordinatorSystem.velocityBuffer,
+						positions = spatialCoordinatorSystem.positionBuffer,
 						fluidInputConfig = fluidInputConfig.ValueRO,
 						fluidInputState = fluidInputState.ValueRO,
 						deltaTime = SystemAPI.Time.DeltaTime,
-						indexes = fluidBuffersSystem.inwardsForceBuffer,
+						indexes = fluidCoordinatorSystem.inwardsForceBuffer,
 					};
-					handle = applyInputToCache.Schedule(fluidBuffersSystem.inwardsForceBuffer.Length, 64, handle);
+					handle = applyInputToCache.Schedule(fluidCoordinatorSystem.inwardsForceBuffer.Length, 64, handle);
 					break;
 			}
 

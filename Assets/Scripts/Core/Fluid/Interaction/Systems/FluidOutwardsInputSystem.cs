@@ -21,8 +21,9 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
-			if (fluidBuffersSystem.count == 0)
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+			if (fluidCoordinatorSystem.fluidCount == 0)
 				return;
 			
 			var draggingParticlesModeStateEntity = SystemAPI.GetSingletonEntity<DraggingParticlesModeState>();
@@ -33,15 +34,16 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 			if (draggingParticlesModeState.ValueRO.mode != DraggingParticlesMode.Outwards)
 				return;
 
+
 			var applyOutwardsForcesJob = new ApplyOutwardsForcesJob
 			{
-				velocities = fluidBuffersSystem.velocityBuffer,
-				positions = fluidBuffersSystem.positionBuffer,
+				velocities = spatialCoordinatorSystem.velocityBuffer,
+				positions = spatialCoordinatorSystem.positionBuffer,
 				fluidInputConfig = fluidInputConfig.ValueRO,
 				fluidInputState = fluidInputState.ValueRO,
 				deltaTime = SystemAPI.Time.DeltaTime,
 			};
-			state.Dependency = applyOutwardsForcesJob.ScheduleParallel(state.Dependency);
+			state.Dependency = applyOutwardsForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, state.Dependency);
 			state.Dependency.Complete();
 		}
 	}

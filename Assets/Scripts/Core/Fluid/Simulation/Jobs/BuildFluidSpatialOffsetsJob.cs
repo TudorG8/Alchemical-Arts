@@ -1,6 +1,4 @@
-using AlchemicalArts.Core.Physics.Components;
-using AlchemicalArts.Core.SpatialPartioning.Components;
-using AlchemicalArts.Core.SpatialPartioning.Models;
+using AlchemicalArts.Core.Fluid.Simulation.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,9 +7,8 @@ using Unity.Jobs;
 namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {		
 	[BurstCompile]
-	public partial struct BuildSpatialKeyOffsetsJob : IJobParallelFor
+	public partial struct BuildFluidSpatialOffsetsJob : IJobParallelFor
 	{
-		[WriteOnly]
 		[NativeDisableParallelForRestriction]
 		public NativeArray<int> spatialOffsets;
 		

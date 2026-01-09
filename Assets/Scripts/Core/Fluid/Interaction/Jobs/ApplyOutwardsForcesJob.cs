@@ -1,6 +1,4 @@
 using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Core.Physics.Components;
-using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,10 +7,9 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(FluidItemTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyOutwardsForcesJob : IJobEntity
 	{
+		[NativeDisableParallelForRestriction]
 		public NativeArray<float2> velocities;
 
 		[ReadOnly]
@@ -28,9 +25,10 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
 		public float deltaTime;
 
 
-		public void Execute([EntityIndexInQuery] int index)
+		public void Execute(
+			in SpatiallyPartionedIndex spatiallyPartionedIndex)
 		{
-			var offset = fluidInputState.position - positions[index];
+			var offset = fluidInputState.position - positions[spatiallyPartionedIndex.index];
 			var sqrDst = math.dot(offset, offset);
 			if (sqrDst < fluidInputState.interactionRadius * fluidInputState.interactionRadius)
 			{
@@ -39,7 +37,7 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
 
 				var springForce = -fluidInputConfig.interactionStrength * direction;
 
-				velocities[index] += springForce * deltaTime;
+				velocities[spatiallyPartionedIndex.index] += springForce * deltaTime;
 			}
 		}
 	}

@@ -28,9 +28,10 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
-			ref var fluidInwardsInputSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
-			if (fluidBuffersSystem.count == 0)
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+			ref var gravitySystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<GravitySystem>();
+			if (spatialCoordinatorSystem.count == 0)
 				return;
 
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
@@ -38,24 +39,24 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
 			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
+
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
-				velocities = fluidBuffersSystem.velocityBuffer,
-				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
-				spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
-				densities = fluidBuffersSystem.densityBuffer,
-				nearDensity = fluidBuffersSystem.nearDensityBuffer,
-				predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-				numParticles = fluidBuffersSystem.fluidCount,
+				velocities = spatialCoordinatorSystem.velocityBuffer,
+				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				densities = fluidCoordinatorSystem.densityBuffer,
+				nearDensity = fluidCoordinatorSystem.nearDensityBuffer,
+				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
+				numParticles = fluidCoordinatorSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				fluidSimulationConfig = fluidSimulationConfig,
 				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
 				deltaTime = SystemAPI.Time.DeltaTime,
-				hashingLimit = fluidBuffersSystem.hashingLimit
+				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			handle = applyPressureForcesJob.ScheduleParallel(fluidInwardsInputSystem.handle);
-			// handle = fluidInwardsInputSystem.handle;
+			handle = applyPressureForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, gravitySystem.handle);
 		}
 	}
 }

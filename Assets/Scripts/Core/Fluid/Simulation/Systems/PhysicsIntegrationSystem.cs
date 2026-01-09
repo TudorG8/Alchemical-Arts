@@ -6,8 +6,7 @@ using Unity.Entities;
 
 namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(VelocityWritebackSystem))]
+	[UpdateInGroup(typeof(FluidWritebackGroup), OrderLast = true)]
 	public partial struct PhysicsIntegrationSystem : ISystem
 	{
 		[BurstCompile]

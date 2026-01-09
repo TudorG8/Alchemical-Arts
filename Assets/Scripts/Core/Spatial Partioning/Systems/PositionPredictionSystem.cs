@@ -25,24 +25,22 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
-			ref var fluidPositionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionInitializationSystem>();
-			if (fluidBuffersSystem.count == 0)
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var positionInitializationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionInitializationSystem>();
+			if (spatialCoordinatorSystem.count == 0)
 				return;
 
-			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
+			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
-			fluidPositionInitializationSystem.handle.Complete();
 
 			var predictPositionsJob = new PredictPositionsJob
 			{
-				positionBuffer = fluidBuffersSystem.positionBuffer,
-				velocityBuffer = fluidBuffersSystem.velocityBuffer,
-				predictedPositionsBuffer = fluidBuffersSystem.predictedPositionsBuffer,
-				predictionFactor = 1f / simulationConfig.predictionFrames,
+				positions = spatialCoordinatorSystem.positionBuffer,
+				velocities = spatialCoordinatorSystem.velocityBuffer,
+				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
+				predictionFactor = 1f / spatialPartioningConfig.predictionFrames,
 			};
-			handle = predictPositionsJob.Schedule(fluidPositionInitializationSystem.handle);
-			handle.Complete();
+			handle = predictPositionsJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, positionInitializationSystem.handle);
 		}
 	}
 }

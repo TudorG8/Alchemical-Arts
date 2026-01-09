@@ -4,7 +4,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 {
@@ -12,19 +11,19 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 	public partial struct ReadInitialDataJob : IJobEntity
 	{
 		[NativeDisableParallelForRestriction]
-		public NativeArray<float2> positionBuffer;
+		public NativeArray<float2> positions;
 
 		[NativeDisableParallelForRestriction]
-		public NativeArray<float2> velocityBuffer;
+		public NativeArray<float2> velocities;
 
 
 		public void Execute(
-			in SpatiallyPartionedItemState spatiallyPartionedItemState,
-			in PhysicsBodyState body,
+			in SpatiallyPartionedIndex spatiallyPartionedIndex,
+			in PhysicsBodyState physicsBodyState,
 			in LocalTransform localTransform)
 		{
-			positionBuffer[spatiallyPartionedItemState.index] = localTransform.Position.xy;
-			velocityBuffer[spatiallyPartionedItemState.index] = body.physicsBody.linearVelocity;
+			positions[spatiallyPartionedIndex.index] = localTransform.Position.xy;
+			velocities[spatiallyPartionedIndex.index] = physicsBodyState.physicsBody.linearVelocity;
 		}
 	}
 }

@@ -28,21 +28,22 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
 			ref var densityComputationSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<DensityComputationSystem>();
-			if (fluidBuffersSystem.count == 0)
+			if (fluidCoordinatorSystem.fluidCount == 0)
 				return;
 
 			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
 
+
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
-				velocities = fluidBuffersSystem.velocityBuffer,
-				spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
+				velocities = spatialCoordinatorSystem.velocityBuffer,
 				deltaTime = SystemAPI.Time.DeltaTime,
 				gravity = fluidSimulationConfig.gravity
 			};
-			handle = applyGravityForcesJob.ScheduleParallel(densityComputationSystem.handle);
+			handle = applyGravityForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, densityComputationSystem.handle);
 		}
 	}
 }

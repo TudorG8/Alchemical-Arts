@@ -1,7 +1,5 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
-using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
-using AlchemicalArts.Core.SpatialPartioning.Models;
 using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,8 +9,6 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(FluidItemTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ComputeDensitiesJob : IJobEntity 
 	{
 		[NativeDisableParallelForRestriction]
@@ -47,16 +43,10 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int i,
-			in SpatiallyPartionedItemState spatiallyPartionedItemState,
-			in FluidItemTag fluidItemTag)
-		{
-			// var fluidIndex = spatial[i].fluidIndex;
-			// var simulationIndex = spatial[i].simulationIndex;
-			var fluidIndex = fluidItemTag.index;
-			var simulationIndex = spatiallyPartionedItemState.index;
-			
-			var position = predictedPositions[simulationIndex];
+			in SpatiallyPartionedIndex spatiallyPartionedItemState,
+			in FluidPartionedIndex fluidItemTag)
+		{	
+			var position = predictedPositions[spatiallyPartionedItemState.index];
 			var originCell = SpatialHashingUtility.GetCell2D(position, spatialPartioningConfig.radius);
 			var sqrRadius = spatialPartioningConfig.radius * spatialPartioningConfig.radius;
 			var density = 0f;
@@ -89,8 +79,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 				}
 			}
 
-			densities[fluidIndex] = density;
-			nearDensities[fluidIndex] = nearDensity;
+			densities[fluidItemTag.index] = density;
+			nearDensities[fluidItemTag.index] = nearDensity;
 		}
 	}
 }

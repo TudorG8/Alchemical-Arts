@@ -29,33 +29,34 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		[BurstCompile]
 		public void OnUpdate(ref SystemState state)
 		{
-			ref var fluidBuffersSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SimulationBuffersSystem>();
+			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
 			ref var pressureForceSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PressureForceSystem>();
-			if (fluidBuffersSystem.count == 0)
+			if (spatialCoordinatorSystem.count == 0)
 				return;
 
-			// var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
-			// var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
-			// var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
-			// var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
+			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
+			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
+			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
+			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
-			// var applyViscosityForcesJob = new ApplyViscosityForcesJob()
-			// {
-			// 	velocities = fluidBuffersSystem.velocityBuffer,
-			// 	spatial = fluidBuffersSystem.fluidSpatialBuffer.AsArray(),
-			// 	spatialOffsets = fluidBuffersSystem.spatialOffsetsBuffer,
-			// 	predictedPositions = fluidBuffersSystem.predictedPositionsBuffer,
-			// 	numParticles = fluidBuffersSystem.fluidCount,
-			// 	spatialPartioningConfig = spatialPartioningConfig,
-			// 	spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
-			// 	fluidSimulationConfig = fluidSimulationConfig,
-			// 	fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
-			// 	deltaTime = SystemAPI.Time.DeltaTime,
-			// 	hashingLimit = fluidBuffersSystem.hashingLimit,
-			// };
-			// handle = applyViscosityForcesJob.ScheduleParallel(pressureForceSystem.handle);
-			// handle.Complete();
-			handle = pressureForceSystem.handle;
+
+			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
+			{
+				velocities = spatialCoordinatorSystem.velocityBuffer,
+				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
+				numParticles = fluidCoordinatorSystem.fluidCount,
+				spatialPartioningConfig = spatialPartioningConfig,
+				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
+				fluidSimulationConfig = fluidSimulationConfig,
+				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
+				deltaTime = SystemAPI.Time.DeltaTime,
+				hashingLimit = spatialCoordinatorSystem.hashingLimit,
+			};
+			handle = applyViscosityForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, pressureForceSystem.handle);
+			handle.Complete();
 		}
 	}
 }

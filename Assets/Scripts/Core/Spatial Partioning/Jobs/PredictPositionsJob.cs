@@ -8,22 +8,23 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 	[BurstCompile]
 	public partial struct PredictPositionsJob : IJobEntity
 	{
-		[WriteOnly]
-		public NativeArray<float2> predictedPositionsBuffer;
+		[NativeDisableParallelForRestriction]
+		public NativeArray<float2> predictedPositions;
 
 		[ReadOnly]
-		public NativeArray<float2> positionBuffer;
+		public NativeArray<float2> positions;
 
 		[ReadOnly]
-		public NativeArray<float2> velocityBuffer;
+		public NativeArray<float2> velocities;
 		
 		[ReadOnly]
 		public float predictionFactor;
 		
 
-		public void Execute(in SpatiallyPartionedItemState spatiallyPartionedItemState)
+		public void Execute(
+			in SpatiallyPartionedIndex spatiallyPartionedIndex)
 		{
-			predictedPositionsBuffer[spatiallyPartionedItemState.index] = positionBuffer[spatiallyPartionedItemState.index] + velocityBuffer[spatiallyPartionedItemState.index] * predictionFactor;
+			predictedPositions[spatiallyPartionedIndex.index] = positions[spatiallyPartionedIndex.index] + velocities[spatiallyPartionedIndex.index] * predictionFactor;
 		}
 	}
 }

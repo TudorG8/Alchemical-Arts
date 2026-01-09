@@ -27,6 +27,7 @@ namespace AlchemicalArts.Core.Naming.Systems
 			var ecbSingleton = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>();
 			var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 
+
 			var setNamesJob = new SetNamesJob
 			{
 				ecb = commandBuffer,

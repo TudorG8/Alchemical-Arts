@@ -1,7 +1,5 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
-using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
-using AlchemicalArts.Core.SpatialPartioning.Models;
 using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,8 +9,6 @@ using Unity.Mathematics;
 namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 {
 	[BurstCompile]
-	[WithAll(typeof(FluidItemTag))]
-	[WithAll(typeof(PhysicsBodyState))]
 	public partial struct ApplyViscosityForcesJob : IJobEntity
 	{
 		[NativeDisableParallelForRestriction]
@@ -50,12 +46,9 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Jobs
 
 
 		public void Execute(
-			[EntityIndexInQuery] int i,
-			in SpatiallyPartionedItemState spatiallyPartionedItemState,
-			in FluidItemTag fluidItemTag)
+			in SpatiallyPartionedIndex spatiallyPartionedItemState,
+			in FluidPartionedIndex fluidItemTag)
 		{
-			// var fluidIndex = spatial[i].fluidIndex;
-			// var simulationIndex = spatial[i].simulationIndex;
 			var fluidIndex = fluidItemTag.index;
 			var simulationIndex = spatiallyPartionedItemState.index;
 			

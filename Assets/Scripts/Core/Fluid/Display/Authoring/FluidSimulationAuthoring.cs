@@ -31,7 +31,7 @@ namespace AlchemicalArts.Core.Fluid.Display.Authoring
 		public override void Bake(FluidSimulationAuthoring authoring)
 		{
 			var entity = GetEntity(TransformUsageFlags.None);
-			AddComponentObject(entity, new FluidSimulationConfig() 
+			AddComponentObject(entity, new FluidSimulationDisplayConfig() 
 			{
 				shader = authoring.Shader,
 				mesh = authoring.Mesh,
