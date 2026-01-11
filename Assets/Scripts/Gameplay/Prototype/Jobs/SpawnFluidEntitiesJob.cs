@@ -44,7 +44,6 @@ namespace AlchemicalArts.Gameplay.Prototype.Jobs
 			var obj = ecb.Instantiate(index, fluidSpawnerConfig.fluid);
 			ecb.SetComponent(index, obj, LocalTransform.FromPosition(localToWorld.Position + new float3(random.NextFloat(-0.1f, 0.1f), random.NextFloat(-0.1f, 0.1f), 0)));
 			ecb.AddComponent(index, obj, new Parent() { Value = folder });
-			ecb.AddComponent(index, obj, new PreviousParent() { Value = folder });
 			
 			fluidSpawnerState.count++;
 			fluidSpawnerState.timer = elapsedTime + fluidSpawnerConfig.delay;
