@@ -21,7 +21,10 @@ namespace AlchemicalArts.Core.Naming.BakingSystems
 			{
 				foreach(var transformLink in transformLinkBuffer)
 				{
-					commandBuffer.AddComponent(transformLink.Child, new EntityNameConfig { value = transformLink.Name });
+					if (transformLink.applyName)
+					{
+						commandBuffer.AddComponent(transformLink.Child, new EntityNameConfig { value = transformLink.Name });
+					}
 					if (transformLink.Parent != Entity.Null)
 					{
 						ParentUtility.ReparentLocalPosition(ref state, commandBuffer, transformLink.Child, transformLink.Parent);

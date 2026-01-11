@@ -10,6 +10,8 @@ namespace AlchemicalArts.Core.Naming.BakingComponents
 
 		public Entity Child;
 
+		public bool applyName;
+
 		public FixedString64Bytes Name;
 	}
 }

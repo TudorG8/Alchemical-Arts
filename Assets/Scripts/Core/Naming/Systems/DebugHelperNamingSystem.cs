@@ -41,16 +41,10 @@ namespace AlchemicalArts.Core.Naming.Systems
 					if (type.GetManagedType().Name == NAME_REFERENCE)
 					{
 						stringBuffer.Append("Unity Debug Helper");
-						break;
+						commandBuffer.AddComponent(entity, new EntityNameConfig() { value = stringBuffer });
+						state.Enabled = false;
 					}
 				}
-
-				if (stringBuffer.Length == 0)
-				{
-					stringBuffer.Append($"MISSING NAME: Entity({entity.Version}:{entity.Index})");
-				}
-
-				commandBuffer.AddComponent(entity, new EntityNameConfig() { value = stringBuffer });
 			}
 		}
 	}
