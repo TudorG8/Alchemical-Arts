@@ -8,10 +8,13 @@
         "Unity.Entities.Hybrid",
         "Unity.PerformanceTesting",
         "Unity.Mathematics",
+        "Unity.Transforms",
         "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",
+        "Unity.Physics",
         "UniTask",
         "AlchemicalArts.Shared",
+        "AlchemicalArts.Core.Physics",
         "AlchemicalArts.Gameplay.Prototype"
     ],
     "includePlatforms": [],

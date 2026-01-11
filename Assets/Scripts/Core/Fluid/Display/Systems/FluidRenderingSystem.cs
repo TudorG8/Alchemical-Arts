@@ -3,6 +3,7 @@ using AlchemicalArts.Core.Fluid.Display.Components;
 using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Extensions;
 using AlchemicalArts.Shared.Utility;
 using Unity.Collections;
 using Unity.Entities;

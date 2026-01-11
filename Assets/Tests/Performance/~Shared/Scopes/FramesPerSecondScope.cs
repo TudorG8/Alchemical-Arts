@@ -4,7 +4,7 @@ using AlchemicalArts.Shared.Utility;
 using Unity.PerformanceTesting;
 using UnityEngine;
 
-namespace AlchemicalArts.Tests.Performance.Scopes
+namespace AlchemicalArts.Tests.Performance.Shared.Scopes
 {
 	public class FramesPerSecondScope : IDisposable
 	{

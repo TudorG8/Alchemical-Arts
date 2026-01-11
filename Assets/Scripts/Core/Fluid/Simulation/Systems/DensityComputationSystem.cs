@@ -4,6 +4,7 @@ using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;

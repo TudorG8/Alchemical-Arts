@@ -2,6 +2,7 @@ using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;

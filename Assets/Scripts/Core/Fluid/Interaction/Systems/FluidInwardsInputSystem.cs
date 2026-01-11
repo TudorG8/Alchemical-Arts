@@ -7,6 +7,7 @@ using AlchemicalArts.Core.Fluid.Interaction.Components;
 using AlchemicalArts.Core.Fluid.Interaction.Models;
 using AlchemicalArts.Core.Fluid.Interaction.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Extensions;
 
 namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 {

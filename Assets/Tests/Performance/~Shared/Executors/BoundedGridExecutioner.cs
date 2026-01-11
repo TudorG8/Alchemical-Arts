@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace AlchemicalArts.Tests.Performance.Executors
+namespace AlchemicalArts.Tests.Performance.Shared.Executors
 {
 	public class BoundedGridExecutioner
 	{

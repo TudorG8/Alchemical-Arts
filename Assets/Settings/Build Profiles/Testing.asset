@@ -23,6 +23,9 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Tests/Performance/PhysicsEngine/Resources/Box2D/PhysicsEngineBenchmark
       - Box2D - Scene.unity
+  - m_enabled: 1
+    m_path: Assets/Tests/Performance/PhysicsEngine/Resources/DOTS/PhysicsEngineBenchmark
+      - DOTS - Scene.unity
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

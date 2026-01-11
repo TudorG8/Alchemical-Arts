@@ -3,6 +3,7 @@ using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Models;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
