@@ -12,6 +12,7 @@ using Unity.Jobs;
 [assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSort))]
 [assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSortMerge))]
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<TemperaturePartionedIndex>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<TemperatureSpatialEntry>))]
 
 [UpdateInGroup(typeof(TemperatureGroup), OrderFirst = true)]
 public partial struct TemperatureCoordinatorSystem : ISystem
@@ -84,11 +85,9 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 		var buildFluidSpatialEntriesHandle = buildFluidSpatialEntriesJob.ScheduleParallel(temperatureQuery, writeTemperaturePartionedHandle);
 		buildFluidSpatialEntriesHandle.Complete();
 
-
 		var sortJobHandle = spatialBuffer.Slice(0, temperatureCount).SortJob(new TemperatureSpatialEntryComparer()).Schedule();
 
-
-		var buildSpatialKeyOffsetsJob = new BuildTemperatureSpatialOffsetsJob()
+		var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<TemperatureSpatialEntry>()
 		{
 			spatial = spatialBuffer,
 			spatialOffsets = spatialOffsetsBuffer

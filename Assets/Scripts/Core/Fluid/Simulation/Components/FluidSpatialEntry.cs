@@ -1,14 +1,18 @@
 using System.Collections.Generic;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 
 namespace AlchemicalArts.Core.Fluid.Simulation.Components
 {
-	public struct FluidSpatialEntry
+	public struct FluidSpatialEntry : ISpatialEntry
 	{
 		public int key;
 
 		public int simulationIndex;
 
 		public int fluidIndex;
+
+
+		public int Key { get => key; set => key = value; }
 	}
 
 	public struct FluidSpatialEntryComparer : IComparer<FluidSpatialEntry>

@@ -1,13 +1,16 @@
 using System.Collections.Generic;
-using UnityEngine;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 
-public struct TemperatureSpatialEntry
+public struct TemperatureSpatialEntry : ISpatialEntry
 {
 	public int key;
 
 	public int simulationIndex;
 
 	public int temperatureIndex;
+
+
+	public int Key { get => key; set => key = value; }
 }
 
 public struct TemperatureSpatialEntryComparer : IComparer<TemperatureSpatialEntry>

@@ -15,6 +15,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 [assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSort))]
 [assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSortMerge))]
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<FluidPartionedIndex>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<FluidSpatialEntry>))]
 
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
@@ -100,7 +101,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			var sortJobHandle = fluidSpatialBuffer.Slice(0, fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
 
-			var buildSpatialKeyOffsetsJob = new BuildFluidSpatialOffsetsJob()
+			var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<FluidSpatialEntry>()
 			{
 				spatial = fluidSpatialBuffer,
 				spatialOffsets = fluidSpatialOffsetsBuffer

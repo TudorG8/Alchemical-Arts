@@ -1,6 +1,7 @@
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Models;
 using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
@@ -9,6 +10,8 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+
+[assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<SpatiallyPartionedIndex>))]
 
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
@@ -19,15 +22,15 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		public int count;
 		
+		public NativeArray<SpatialEntry> spatialBuffer;
+
+		public NativeArray<int> spatialOffsetsBuffer;
+		
 		public NativeArray<float2> positionBuffer;
 		
 		public NativeArray<float2> velocityBuffer;
 
 		public NativeArray<float2> predictedPositionsBuffer;
-
-		public NativeArray<SpatialEntry> spatialBuffer;
-
-		public NativeArray<int> spatialOffsetsBuffer;
 
 		public EntityQuery simulatedQuery;
 
