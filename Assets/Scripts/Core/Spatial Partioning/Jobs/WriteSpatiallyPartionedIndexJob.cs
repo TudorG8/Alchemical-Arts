@@ -1,3 +1,4 @@
+using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Entities;
 

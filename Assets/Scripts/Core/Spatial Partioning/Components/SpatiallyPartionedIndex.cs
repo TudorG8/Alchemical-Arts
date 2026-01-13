@@ -1,6 +1,11 @@
 using Unity.Entities;
 
-public struct SpatiallyPartionedIndex : IComponentData
+namespace AlchemicalArts.Core.SpatialPartioning.Components
 {
-	public int index;
+	public struct SpatiallyPartionedIndex : IComponentData, IIndexedComponent
+	{
+		public int index;
+
+		public int Index { get => index; set => index = value;}
+	}
 }

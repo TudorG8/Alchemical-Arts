@@ -36,6 +36,7 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 
 		protected override void OnCreate()
 		{
+			Enabled = false;
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<FluidSimulationDisplayConfig>().Build(entityManager);
 
@@ -76,7 +77,7 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 		{
 			ref var spatialPartioningCoordinatorSystem = ref World.Unmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 			ref var fluidCoordinatorSystem = ref World.Unmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
-			if (spatialPartioningCoordinatorSystem.count == 0)
+			if (fluidCoordinatorSystem.fluidCount == 0)
 				return;
 			
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;

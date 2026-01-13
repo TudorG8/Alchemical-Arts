@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7541379417781451787}
   - component: {fileID: 3000169508737096162}
   m_Layer: 4
-  m_Name: Fluid
+  m_Name: Fluid - Cold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,4 +196,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0491d9e4161ea7749adfb48118ff437b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AlchemicalArts.Gameplay.Temperature::TemperatureAuthoring
-  <Temperature>k__BackingField: 20
+  <Temperature>k__BackingField: 0

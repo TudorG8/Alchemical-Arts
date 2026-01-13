@@ -4,6 +4,7 @@ using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Core.SpatialPartioning.Utility;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
@@ -13,6 +14,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
 [assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSort))]
 [assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSortMerge))]
+[assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<FluidPartionedIndex>))]
 
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
@@ -39,6 +41,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		private int bufferCapacity;
 
+		private ComponentTypeHandle<FluidPartionedIndex> fluidIndexTypeHandle;
+
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
@@ -53,7 +57,9 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			nearDensityBuffer = new NativeArray<float>(bufferCapacity, Allocator.Persistent);
 			inwardsForceBuffer = new NativeList<int>(bufferCapacity, Allocator.Persistent);
 			batchVelocityBuffer = new NativeArray<BatchVelocity>(bufferCapacity, Allocator.Persistent);
+
 			fluidQuery =  SystemAPI.QueryBuilder().WithAll<FluidPartionedIndex>().WithAll<SpatiallyPartionedIndex>().Build();
+			fluidIndexTypeHandle = state.GetComponentTypeHandle<FluidPartionedIndex>();
 		}
 
 		[BurstCompile]
@@ -77,10 +83,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			ref var spatialPartioningCoordinator = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
-
-			var writeFluidPartionedIndexJob = new WriteFluidPartionedIndexJob();
-			var writeFluidPartionedIndexHandle = writeFluidPartionedIndexJob.ScheduleParallel(fluidQuery, state.Dependency);
-
+			fluidIndexTypeHandle.Update(ref state);
+			var writeFluidPartionedIndexHandle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(fluidQuery, fluidIndexTypeHandle, state.Dependency);
 
 			var buildFluidSpatialEntriesJob = new BuildFluidSpatialEntriesJob()
 			{
@@ -94,9 +98,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			var buildFluidSpatialEntriesHandle = buildFluidSpatialEntriesJob.ScheduleParallel(fluidQuery, writeFluidPartionedIndexHandle);
 			buildFluidSpatialEntriesHandle.Complete();
 
-
 			var sortJobHandle = fluidSpatialBuffer.Slice(0, fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
-
 
 			var buildSpatialKeyOffsetsJob = new BuildFluidSpatialOffsetsJob()
 			{

@@ -1,4 +1,5 @@
 using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

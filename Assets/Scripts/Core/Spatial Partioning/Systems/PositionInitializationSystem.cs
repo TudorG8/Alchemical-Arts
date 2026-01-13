@@ -36,7 +36,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				positions = spatialCoordinatorSystem.positionBuffer,
 				velocities = spatialCoordinatorSystem.velocityBuffer,
 			};
-			handle = readInitialDataJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, spatialCoordinatorSystem.handle);
+			state.Dependency = handle = readInitialDataJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, spatialCoordinatorSystem.handle);
 		}
 	}
 }

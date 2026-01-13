@@ -1,4 +1,5 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;

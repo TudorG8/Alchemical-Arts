@@ -1,8 +1,8 @@
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
-using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Models;
+using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -36,6 +36,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		private int bufferCapacity;
 
+		private ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexTypeHandle;
+
 
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
@@ -50,9 +52,11 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			predictedPositionsBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			spatialBuffer = new NativeArray<SpatialEntry>(bufferCapacity, Allocator.Persistent);
 			spatialOffsetsBuffer = new NativeArray<int>(bufferCapacity, Allocator.Persistent);
+			
 			simulatedQuery = SystemAPI.QueryBuilder()
 				.WithAll<SpatiallyPartionedIndex>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
+			spatialIndexTypeHandle = state.GetComponentTypeHandle<SpatiallyPartionedIndex>();
 		}
 
 		[BurstCompile]
@@ -72,9 +76,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			if (count == 0)
 				return;
 
-
-			var writeSpatiallyPartionedIndexJob = new WriteSpatiallyPartionedIndexJob();
-			handle = writeSpatiallyPartionedIndexJob.ScheduleParallel(simulatedQuery, state.Dependency);
+			spatialIndexTypeHandle.Update(ref state);
+			handle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(simulatedQuery, spatialIndexTypeHandle, state.Dependency);
 		}
 	}
 }
