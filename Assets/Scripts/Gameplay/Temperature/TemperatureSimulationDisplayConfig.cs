@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TemperatureSimulationDisplayConfig : IComponentData
 {
-    public Shader shader;
+	public Shader shader;
 
-    public Mesh mesh;
+	public Mesh mesh;
 
-    public Texture2D texture;
-    
-    public MinMaxFloatValue temperatureBounds;
-    
-    public float particleSize;
+	public Texture2D texture;
+	
+	public MinMaxFloatValue temperatureBounds;
+	
+	public float particleSize;
 }

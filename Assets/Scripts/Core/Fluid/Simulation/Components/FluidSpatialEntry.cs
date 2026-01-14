@@ -3,7 +3,7 @@ using AlchemicalArts.Core.SpatialPartioning.Components;
 
 namespace AlchemicalArts.Core.Fluid.Simulation.Components
 {
-	public struct FluidSpatialEntry : ISpatialEntry
+	public struct FluidSpatialEntry : ISpatialEntry, ISpatialEntryIndexer
 	{
 		public int key;
 
@@ -13,6 +13,10 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Components
 
 
 		public int Key { get => key; set => key = value; }
+		
+		public int SimulationIndex { get => simulationIndex; set => simulationIndex = value; }
+		
+		public int Index { get => fluidIndex; set => fluidIndex = value; }
 	}
 
 	public struct FluidSpatialEntryComparer : IComparer<FluidSpatialEntry>

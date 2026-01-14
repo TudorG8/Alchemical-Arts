@@ -1,8 +1,10 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
 using AlchemicalArts.Core.Fluid.Simulation.Groups;
 using AlchemicalArts.Core.Fluid.Simulation.Jobs;
+using AlchemicalArts.Core.Fluid.Simulation.Systems;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Utility;
 using AlchemicalArts.Shared.Extensions;
@@ -19,14 +21,15 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
-	[UpdateInGroup(typeof(FluidPhysicsGroup), OrderFirst = true)]
+	[UpdateInGroup(typeof(SpatialPartioningGroup))]
+	[UpdateAfter(typeof(SpatialPartioningSystem))]
 	public partial struct FluidCoordinatorSystem : ISystem
 	{
 		public int fluidCount;
 
-		public NativeArray<FluidSpatialEntry> fluidSpatialBuffer;
+		public NativeArray<FluidSpatialEntry> spatialBuffer;
 		
-		public NativeArray<int> fluidSpatialOffsetsBuffer;
+		public NativeArray<int> spatialOffsetsBuffer;
 
 		public NativeArray<float> densityBuffer;
 
@@ -40,7 +43,10 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		public JobHandle handle;
 
+
 		private int bufferCapacity;
+
+		private ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexTypeHandle;
 
 		private ComponentTypeHandle<FluidPartionedIndex> fluidIndexTypeHandle;
 
@@ -52,22 +58,23 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			state.RequireForUpdate<SpatialPartioningConfig>();
 			bufferCapacity = 10000;
 			
-			fluidSpatialBuffer = new NativeArray<FluidSpatialEntry>(bufferCapacity, Allocator.Persistent);
-			fluidSpatialOffsetsBuffer = new NativeArray<int>(bufferCapacity, Allocator.Persistent);
+			spatialBuffer = new NativeArray<FluidSpatialEntry>(bufferCapacity, Allocator.Persistent);
+			spatialOffsetsBuffer = new NativeArray<int>(bufferCapacity, Allocator.Persistent);
 			densityBuffer = new NativeArray<float>(bufferCapacity, Allocator.Persistent);
 			nearDensityBuffer = new NativeArray<float>(bufferCapacity, Allocator.Persistent);
 			inwardsForceBuffer = new NativeList<int>(bufferCapacity, Allocator.Persistent);
 			batchVelocityBuffer = new NativeArray<BatchVelocity>(bufferCapacity, Allocator.Persistent);
 
 			fluidQuery =  SystemAPI.QueryBuilder().WithAll<FluidPartionedIndex>().WithAll<SpatiallyPartionedIndex>().Build();
-			fluidIndexTypeHandle = state.GetComponentTypeHandle<FluidPartionedIndex>();
+			fluidIndexTypeHandle = state.GetComponentTypeHandle<FluidPartionedIndex>(isReadOnly: false);
+			spatialIndexTypeHandle = state.GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: true);
 		}
 
 		[BurstCompile]
 		public void OnDestroy(ref SystemState state)
 		{
-			fluidSpatialBuffer.Dispose();
-			fluidSpatialOffsetsBuffer.Dispose();
+			spatialBuffer.Dispose();
+			spatialOffsetsBuffer.Dispose();
 			densityBuffer.Dispose();
 			nearDensityBuffer.Dispose();
 			inwardsForceBuffer.Dispose();
@@ -85,28 +92,22 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
 			fluidIndexTypeHandle.Update(ref state);
+			spatialIndexTypeHandle.Update(ref state);
 			var writeFluidPartionedIndexHandle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(fluidQuery, fluidIndexTypeHandle, state.Dependency);
 
-			var buildFluidSpatialEntriesJob = new BuildFluidSpatialEntriesJob()
+			var calculateBaseEntityIndexHandle = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, writeFluidPartionedIndexHandle, out var indexHandle);
+			var buildSpatialEntriesJob = new BuildSpatialEntriesJob<FluidSpatialEntry, FluidPartionedIndex>()
 			{
-				fluidSpatialBuffer = fluidSpatialBuffer,
-				fluidSpatialOffsetsBuffer = fluidSpatialOffsetsBuffer,
+				baseEntityIndex = calculateBaseEntityIndexHandle,
+				spatialBuffer = spatialBuffer,
+				spatialOffsetsBuffer = spatialOffsetsBuffer,
 				predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,
 				radius = simulationConfig.radius,
-				count = fluidCount,
-				hashingLimit = spatialPartioningCoordinator.hashingLimit
+				hashingLimit = spatialPartioningCoordinator.hashingLimit,
+				spatialIndexHandle = spatialIndexTypeHandle,
+				componentIndexHandle = fluidIndexTypeHandle,
 			};
-			var buildFluidSpatialEntriesHandle = buildFluidSpatialEntriesJob.ScheduleParallel(fluidQuery, writeFluidPartionedIndexHandle);
-			buildFluidSpatialEntriesHandle.Complete();
-
-			var sortJobHandle = fluidSpatialBuffer.Slice(0, fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
-
-			var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<FluidSpatialEntry>()
-			{
-				spatial = fluidSpatialBuffer,
-				spatialOffsets = fluidSpatialOffsetsBuffer
-			};
-			handle = buildSpatialKeyOffsetsJob.Schedule(fluidCount, 64, sortJobHandle);
+			handle = buildSpatialEntriesJob.ScheduleParallel(fluidQuery, indexHandle);
 		}
 	}
 }

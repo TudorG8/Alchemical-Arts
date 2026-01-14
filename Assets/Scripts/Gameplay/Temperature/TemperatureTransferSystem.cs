@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Fluid.Simulation.Groups;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
@@ -9,8 +8,7 @@ using Unity.Jobs;
 
 namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
-	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-	[UpdateAfter(typeof(FluidWritebackGroup))]
+	[UpdateInGroup(typeof(TemperatureGroup))]
 	public partial struct TemperatureTransferSystem : ISystem
 	{
 		public JobHandle handle;
@@ -28,7 +26,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		{
 			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 			ref var temperatureCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<TemperatureCoordinatorSystem>();
-			if (spatialCoordinatorSystem.count == 0)
+			ref var temperatureSpatialSortingSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<TemperatureSpatialSortingSystem>();
+			if (temperatureCoordinatorSystem.temperatureCount == 0)
 				return;
 
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
@@ -45,10 +44,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			handle = transferTemperatureJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureCoordinatorSystem.handle);
+			handle = transferTemperatureJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureSpatialSortingSystem.handle);
 			handle.Complete();
-
-			var x = "";
 		}
 	}
 }

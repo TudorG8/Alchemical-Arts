@@ -1,0 +1,44 @@
+using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Extensions;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Jobs;
+
+[UpdateInGroup(typeof(SpatialSortingGroup))]
+public partial struct FluidSpatialSortingSystem : ISystem
+{
+	public JobHandle handle;
+
+
+	[BurstCompile]
+	public void OnCreate(ref SystemState state)
+	{
+		state.RequireForUpdate<PhysicsWorldState>();
+		state.RequireForUpdate<SpatialPartioningConfig>();
+	}
+
+	[BurstCompile]
+	public void OnUpdate(ref SystemState state)
+	{
+		ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+		ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+		if (fluidCoordinatorSystem.fluidCount == 0)
+			return;
+
+		fluidCoordinatorSystem.handle.Complete();
+		var sortJobHandle = fluidCoordinatorSystem.spatialBuffer.Slice(0, fluidCoordinatorSystem.fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
+
+		var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<FluidSpatialEntry>()
+		{
+			spatial = fluidCoordinatorSystem.spatialBuffer,
+			spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer
+		};
+		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(fluidCoordinatorSystem.fluidCount, 64, sortJobHandle);
+	}
+}

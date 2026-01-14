@@ -44,8 +44,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
 				velocities = spatialCoordinatorSystem.velocityBuffer,
-				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
-				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				spatial = fluidCoordinatorSystem.spatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer,
 				densities = fluidCoordinatorSystem.densityBuffer,
 				nearDensity = fluidCoordinatorSystem.nearDensityBuffer,
 				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,

@@ -5,5 +5,5 @@ public struct TemperaturePartionedIndex : IComponentData, IIndexedComponent
 {
 	public int index;
 
-	public int Index { get => index; set => index = value;}
+	public int Index { readonly get => index; set => index = value;}
 }

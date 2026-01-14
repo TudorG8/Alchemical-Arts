@@ -59,7 +59,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			simulatedQuery = SystemAPI.QueryBuilder()
 				.WithAll<SpatiallyPartionedIndex>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
 				.Build();
-			spatialIndexTypeHandle = state.GetComponentTypeHandle<SpatiallyPartionedIndex>();
+			spatialIndexTypeHandle = state.GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: false);
 		}
 
 		[BurstCompile]

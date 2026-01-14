@@ -4,5 +4,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Groups
 {
 	[UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
 	[UpdateBefore(typeof(FixedStepSimulationSystemGroup))]
-	public partial class SpatialPartioningGroup : ComponentSystemGroup { }
+	[UpdateAfter(typeof(SpatialPartioningGroup))]
+	public partial class SpatialSortingGroup : ComponentSystemGroup { }
 }

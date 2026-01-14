@@ -6,7 +6,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateInGroup(typeof(TemperatureGroup))]
 [UpdateAfter(typeof(TemperatureTransferSystem))]
 partial struct TemperatureWritebackSystem : ISystem
 {
@@ -29,7 +29,7 @@ partial struct TemperatureWritebackSystem : ISystem
 		{
 			temperatureStateBuffer = temperatureCoordinatorSystem.temperatureStateBuffer,
 		};
-		var handle = writeTemperatureStateJob.ScheduleParallel(temperatureTransferSystem.handle);
+		var handle = writeTemperatureStateJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureTransferSystem.handle);
 		handle.Complete();
 	}
 }
@@ -41,7 +41,6 @@ public partial struct WriteTemperatureStateJob : IJobEntity
 	public NativeArray<TemperatureState> temperatureStateBuffer;
 	
 	public void Execute(
-		[EntityIndexInQuery] int index,
 		ref TemperatureState temperatureState,
 		in TemperaturePartionedIndex temperaturePartionedIndex)
 	{

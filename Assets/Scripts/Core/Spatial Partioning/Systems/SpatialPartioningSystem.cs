@@ -38,7 +38,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
-
 			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
 			{
 				spatial = spatialCoordinatorSystem.spatialBuffer,
@@ -48,11 +47,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				count = spatialCoordinatorSystem.count,
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, positionPredictionSystem.handle);
-			buildSpatialEntriesHandle.Complete();
-
-
-			handle = spatialCoordinatorSystem.spatialBuffer.Slice(0, spatialCoordinatorSystem.count).SortJob(new SpatialEntryKeyComparer()).Schedule();
+			handle = buildSpatialEntriesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, positionPredictionSystem.handle);
 		}
 	}
 }

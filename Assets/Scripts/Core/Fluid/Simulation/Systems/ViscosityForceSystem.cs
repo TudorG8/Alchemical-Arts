@@ -45,8 +45,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var applyViscosityForcesJob = new ApplyViscosityForcesJob()
 			{
 				velocities = spatialCoordinatorSystem.velocityBuffer,
-				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
-				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				spatial = fluidCoordinatorSystem.spatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer,
 				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
 				numParticles = fluidCoordinatorSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,

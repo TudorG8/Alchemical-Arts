@@ -1,0 +1,47 @@
+using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Groups;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Shared.Extensions;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Jobs;
+
+[assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSort))]
+[assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSortMerge))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<TemperatureSpatialEntry>))]
+
+[UpdateInGroup(typeof(SpatialSortingGroup))]
+public partial struct TemperatureSpatialSortingSystem : ISystem
+{
+	public JobHandle handle;
+
+
+	[BurstCompile]
+	public void OnCreate(ref SystemState state)
+	{
+		state.RequireForUpdate<PhysicsWorldState>();
+		state.RequireForUpdate<SpatialPartioningConfig>();
+	}
+
+	[BurstCompile]
+	public void OnUpdate(ref SystemState state)
+	{
+		ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+		ref var temperatureCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<TemperatureCoordinatorSystem>();
+		if (temperatureCoordinatorSystem.temperatureCount == 0)
+			return;
+
+		temperatureCoordinatorSystem.handle.Complete();
+		var sortJobHandle = temperatureCoordinatorSystem.spatialBuffer.Slice(0, temperatureCoordinatorSystem.temperatureCount).SortJob(new TemperatureSpatialEntryComparer()).Schedule();
+
+		var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<TemperatureSpatialEntry>()
+		{
+			spatial = temperatureCoordinatorSystem.spatialBuffer,
+			spatialOffsets = temperatureCoordinatorSystem.spatialOffsetsBuffer
+		};
+		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(temperatureCoordinatorSystem.temperatureCount, 64, sortJobHandle);
+	}
+}

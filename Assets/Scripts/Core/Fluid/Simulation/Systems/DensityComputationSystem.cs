@@ -12,7 +12,6 @@ using Unity.Jobs;
 namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 {
 	[UpdateInGroup(typeof(FluidPhysicsGroup))]
-	[UpdateAfter(typeof(FluidCoordinatorSystem))]
 	public partial struct DensityComputationSystem : ISystem
 	{
 		public JobHandle handle;
@@ -31,6 +30,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 		{
 			ref var spatialCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 			ref var fluidCoordinatorSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidCoordinatorSystem>();
+			ref var fluidSpatialSortingSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<FluidSpatialSortingSystem>();
 			if (spatialCoordinatorSystem.count == 0)
 				return;
 
@@ -43,8 +43,8 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			{
 				densities = fluidCoordinatorSystem.densityBuffer,
 				nearDensities = fluidCoordinatorSystem.nearDensityBuffer,
-				spatial = fluidCoordinatorSystem.fluidSpatialBuffer,
-				spatialOffsets = fluidCoordinatorSystem.fluidSpatialOffsetsBuffer,
+				spatial = fluidCoordinatorSystem.spatialBuffer,
+				spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer,
 				predictedPositions = spatialCoordinatorSystem.predictedPositionsBuffer,
 				numParticles = fluidCoordinatorSystem.fluidCount,
 				spatialPartioningConfig = spatialPartioningConfig,
@@ -52,7 +52,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				fluidSimulationConstantsConfig = fluidSimulationConstantsConfig,
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			handle = computeDensitiesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, fluidCoordinatorSystem.handle);
+			handle = computeDensitiesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, fluidSpatialSortingSystem.handle);
 		}
 	}
 }

@@ -28,5 +28,12 @@ namespace AlchemicalArts.Core.SpatialPartioning.Utility
 		{
 			return (int)(hash % (uint)length);
 		}
+
+		public static int GetCellKey(float2 position, float radius, int hashingLimit)
+		{
+			var cell = GetCell2D(position, radius);
+			var hash = HashCell2D(cell);
+			return KeyFromHash(hash, hashingLimit);
+		}
 	}
 }
