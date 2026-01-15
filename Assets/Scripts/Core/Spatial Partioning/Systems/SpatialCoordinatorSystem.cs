@@ -78,8 +78,10 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			if (count == 0)
 				return;
 
+			// Make sure all jobs from the previous frame finished, in case there were no sync points
+			state.Dependency.Complete();
+			
 			spatialIndexTypeHandle.Update(ref state);
-
 
 			var entityIndexes = simulatedQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, state.Dependency, out var indexHandle);
 			

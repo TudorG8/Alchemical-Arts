@@ -3,7 +3,6 @@ using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
-using AlchemicalArts.Core.SpatialPartioning.Utility;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,8 +10,8 @@ using Unity.Entities;
 using Unity.Jobs;
 
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<TemperaturePartionedIndex>))]
-[assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
 [assembly: RegisterGenericJobType(typeof(CopyIndexedComponentToBufferJob<TemperatureState, TemperaturePartionedIndex>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
 
 [UpdateInGroup(typeof(SpatialPartioningGroup))]
 [UpdateAfter(typeof(SpatialPartioningSystem))]

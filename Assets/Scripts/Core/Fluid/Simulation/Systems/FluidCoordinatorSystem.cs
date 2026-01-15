@@ -1,4 +1,5 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Fluid.Simulation.Systems;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
@@ -10,10 +11,8 @@ using Unity.Entities;
 using Unity.Jobs;
 using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 
-[assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSort))]
-[assembly: RegisterGenericJobType(typeof(SortJob<FluidSpatialEntry, FluidSpatialEntryComparer>.SegmentSortMerge))]
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<FluidPartionedIndex>))]
-[assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<FluidSpatialEntry>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<FluidSpatialEntry, FluidPartionedIndex>))]
 
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
@@ -86,12 +85,16 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			ref var spatialPartioningCoordinator = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+			ref var velocityWritebackSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<VelocityWritebackSystem>();
 			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
 			fluidIndexTypeHandle.Update(ref state);
 			spatialIndexTypeHandle.Update(ref state);
+
+			// In case there are no sync points after velocityWritebackSystem, this needs to be done:
+			var startHandle = JobHandle.CombineDependencies(positionPredictionSystem.handle, velocityWritebackSystem.handle);
 			
-			var entityIndexes = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, positionPredictionSystem.handle, out var indexHandle);
+			var entityIndexes = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, startHandle, out var indexHandle);
 
 			var writeTemperaturePartionedJob = new WritePartionedIndexJob<FluidPartionedIndex>
 			{

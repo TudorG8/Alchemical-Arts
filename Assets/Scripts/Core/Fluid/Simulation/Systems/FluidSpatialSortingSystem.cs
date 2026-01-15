@@ -9,6 +9,9 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 
+[assembly: RegisterGenericJobType(typeof(SortSpatialEntriesJob<FluidSpatialEntry, FluidSpatialEntryComparer>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<FluidSpatialEntry>))]
+
 [UpdateInGroup(typeof(SpatialSortingGroup))]
 public partial struct FluidSpatialSortingSystem : ISystem
 {

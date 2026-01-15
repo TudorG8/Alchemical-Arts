@@ -25,7 +25,7 @@ partial struct TemperatureWritebackSystem : ISystem
 		if (temperatureCoordinatorSystem.temperatureCount == 0)
 			return;
 
-		var writeTemperatureStateJob = new WriteTemperatureStateJob()
+		var writeTemperatureStateJob = new WriteTemperatureStateJob() 
 		{
 			temperatureStateBuffer = temperatureCoordinatorSystem.temperatureStateBuffer,
 		};

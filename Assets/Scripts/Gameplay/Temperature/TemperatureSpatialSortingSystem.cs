@@ -5,12 +5,10 @@ using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 
-[assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSort))]
-[assembly: RegisterGenericJobType(typeof(SortJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>.SegmentSortMerge))]
+[assembly: RegisterGenericJobType(typeof(SortSpatialEntriesJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>))]
 [assembly: RegisterGenericJobType(typeof(BuildSpatialOffsetsJob<TemperatureSpatialEntry>))]
 
 [UpdateInGroup(typeof(SpatialSortingGroup))]

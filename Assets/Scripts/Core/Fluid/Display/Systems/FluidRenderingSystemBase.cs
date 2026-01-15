@@ -1,14 +1,19 @@
 using System.Runtime.InteropServices;
 using AlchemicalArts.Core.Fluid.Display.Components;
-using AlchemicalArts.Core.Fluid.Simulation.Jobs;
+using AlchemicalArts.Core.Fluid.Simulation.Components;
 using AlchemicalArts.Core.Physics.Components;
+using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
 using AlchemicalArts.Shared.Extensions;
 using AlchemicalArts.Shared.Utility;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+
+[assembly: RegisterGenericJobType(typeof(CopySpatialToLocalArrayJob<FluidPartionedIndex, float2>))]
 
 namespace AlchemicalArts.Core.Fluid.Display.Systems
 {
@@ -33,15 +38,21 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 
 		private EntityQuery fluidQuery;
 
+		private ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexTypeHandle;
+
+		private ComponentTypeHandle<FluidPartionedIndex> fluidIndexTypeHandle;
+
 
 		protected override void OnCreate()
 		{
-			Enabled = false;
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<FluidSimulationDisplayConfig>().Build(entityManager);
 
 			RequireForUpdate<PhysicsWorldState>();
 			RequireForUpdate(simulationStateQuery);
+
+			fluidIndexTypeHandle = GetComponentTypeHandle<FluidPartionedIndex>(isReadOnly: true);
+			spatialIndexTypeHandle = GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: true);
 		}
 
 		protected override void OnDestroy()
@@ -84,23 +95,30 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 			var fluidSimulationStateEntity = simulationStateQuery.GetSingletonEntity();
 			var fluidSimulationState = entityManager.GetComponentData<FluidSimulationDisplayConfig>(fluidSimulationStateEntity);
 
+			fluidIndexTypeHandle.Update(this);
+			spatialIndexTypeHandle.Update(this);
 
-			var copyFluidPositionJob = new CopyFluidPositionJob()
+			var copyFluidPositionJob = new CopySpatialToLocalArrayJob<FluidPartionedIndex, float2>()
 			{
 				positionsBufferOutput = positions,
 				positionsBufferInput = spatialPartioningCoordinatorSystem.positionBuffer,
+				spatialIndexersHandle = spatialIndexTypeHandle,
+				indexerHandle = fluidIndexTypeHandle,
 			};
-			Dependency = copyFluidPositionJob.ScheduleParallel(Dependency);
+			var copyFluidPositionHandle = copyFluidPositionJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, Dependency);
 
-
-			var copyFluidVelocityJob = new CopyFluidVelocityJob()
+			var copyFluidVelocityJob = new CopySpatialToLocalArrayJob<FluidPartionedIndex, float2>()
 			{
-				velocityBufferOutput = velocities,
-				velocityBufferInput = spatialPartioningCoordinatorSystem.velocityBuffer,
+				positionsBufferOutput = velocities,
+				positionsBufferInput = spatialPartioningCoordinatorSystem.velocityBuffer,
+				spatialIndexersHandle = spatialIndexTypeHandle,
+				indexerHandle = fluidIndexTypeHandle,
 			};
-			Dependency = copyFluidVelocityJob.ScheduleParallel(Dependency);
-			Dependency.Complete();
+			var copyFluidVelocityHandle = copyFluidVelocityJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, copyFluidPositionHandle);
 
+			var handle = JobHandle.CombineDependencies(copyFluidPositionHandle, copyFluidVelocityHandle);
+			Dependency = handle;
+			handle.Complete();
 
 			positionsBuffer.SetData(positions, 0, 0, fluidCoordinatorSystem.fluidCount);
 			velocitiesBuffer.SetData(velocities, 0, 0, fluidCoordinatorSystem.fluidCount);
