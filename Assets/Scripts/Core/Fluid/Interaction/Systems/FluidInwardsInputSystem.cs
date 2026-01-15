@@ -34,13 +34,14 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 			var fluidInputConfig = SystemAPI.GetComponentRW<FluidInputConfig>(draggingParticlesModeStateEntity);
 
 
-			var handle = state.Dependency;
 			switch(draggingParticlesModeState.ValueRO.mode)
 			{
 				case DraggingParticlesMode.Idle:
 					fluidCoordinatorSystem.inwardsForceBuffer.Clear();
-					break;
+					return;
+				
 				case DraggingParticlesMode.Inwards:
+					var handle = fluidCoordinatorSystem.handle;
 					if (fluidCoordinatorSystem.inwardsForceBuffer.Length == 0)
 					{
 						var collectAffectedParticlesJob = new CollectAffectedParticlesJob
@@ -50,23 +51,25 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 							fluidInputState = fluidInputState.ValueRO,
 						};
 						handle = collectAffectedParticlesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, handle);
-						break;
 					}
-					
-					var applyInputToCache = new ApplyInwardsForcesJob
+					else
 					{
-						velocities = spatialCoordinatorSystem.velocityBuffer,
-						positions = spatialCoordinatorSystem.positionBuffer,
-						fluidInputConfig = fluidInputConfig.ValueRO,
-						fluidInputState = fluidInputState.ValueRO,
-						deltaTime = SystemAPI.Time.DeltaTime,
-						indexes = fluidCoordinatorSystem.inwardsForceBuffer,
-					};
-					handle = applyInputToCache.Schedule(fluidCoordinatorSystem.inwardsForceBuffer.Length, 64, handle);
+						var applyInputToCache = new ApplyInwardsForcesJob
+						{
+							velocities = spatialCoordinatorSystem.velocityBuffer,
+							positions = spatialCoordinatorSystem.positionBuffer,
+							fluidInputConfig = fluidInputConfig.ValueRO,
+							fluidInputState = fluidInputState.ValueRO,
+							deltaTime = SystemAPI.Time.DeltaTime,
+							indexes = fluidCoordinatorSystem.inwardsForceBuffer,
+						};
+						handle = applyInputToCache.Schedule(fluidCoordinatorSystem.inwardsForceBuffer.Length, 64, handle);
+					}
+
+					state.Dependency = handle;
+					fluidCoordinatorSystem.RegisterNewHandle(handle);
 					break;
 			}
-
-			handle.Complete();
 		}
 	}
 }

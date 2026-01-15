@@ -109,8 +109,9 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 			spatialIndexHandle = spatialIndexTypeHandle,
 			componentIndexHandle = temperatureIndexTypeHandle,
 		};
-		var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(temperatureQuery, copyIndexedComponentToBufferHandle);
+		handle = buildSpatialEntriesJob.ScheduleParallel(temperatureQuery, copyIndexedComponentToBufferHandle);
+		state.Dependency = handle;
 
-		handle = calculateBaseEntityIndexHandle.Dispose(buildSpatialEntriesHandle);
+		calculateBaseEntityIndexHandle.Dispose(handle);
 	}
 }

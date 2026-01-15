@@ -44,6 +44,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				gravity = fluidSimulationConfig.gravity
 			};
 			handle = applyGravityForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, densityComputationSystem.handle);
+			state.Dependency = handle;
 		}
 	}
 }

@@ -45,7 +45,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
 			handle = transferTemperatureJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureSpatialSortingSystem.handle);
-			handle.Complete();
+			state.Dependency = handle;
 		}
 	}
 }

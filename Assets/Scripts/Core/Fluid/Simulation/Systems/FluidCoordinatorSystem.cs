@@ -112,13 +112,14 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				componentIndexHandle = fluidIndexTypeHandle,
 			};
 			var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(fluidQuery, writeTemperaturePartionedHandle);
+			state.Dependency = buildSpatialEntriesHandle;
 
 			handle = entityIndexes.Dispose(buildSpatialEntriesHandle);
 		}
 
 		public void RegisterNewHandle(JobHandle handle)
 		{
-			this.handle = handle;
+			this.handle = JobHandle.CombineDependencies(this.handle, handle);
 		}
 	}
 }

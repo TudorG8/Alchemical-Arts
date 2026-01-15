@@ -52,6 +52,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
 			handle = computeDensitiesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, fluidSpatialSortingSystem.handle);
+			state.Dependency = handle;
 		}
 	}
 }

@@ -40,7 +40,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				batchVelocityBuffer = fluidCoordinatorSystem.batchVelocityBuffer,
 				velocityBuffer = spatialCoordinatorSystem.velocityBuffer,
 			};
-			var readVelocityBatchesHandle = readVelocityBatchesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, viscosityForceSystem.handle);
+			var readVelocityBatchesHandle = readVelocityBatchesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, fluidCoordinatorSystem.handle);
 
 			var setVelocityBatchesJob = new SetVelocityBatchesJob
 			{
@@ -48,6 +48,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				count = spatialCoordinatorSystem.count
 			};
 			handle = setVelocityBatchesJob.Schedule(readVelocityBatchesHandle);
+			state.Dependency = handle;
 			handle.Complete();
 		}
 	}

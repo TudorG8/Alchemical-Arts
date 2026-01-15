@@ -31,6 +31,7 @@ partial struct TemperatureWritebackSystem : ISystem
 		};
 		var handle = writeTemperatureStateJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureTransferSystem.handle);
 		handle.Complete();
+		state.Dependency = handle;
 	}
 }
 

@@ -30,8 +30,6 @@ public partial struct FluidSpatialSortingSystem : ISystem
 		if (fluidCoordinatorSystem.fluidCount == 0)
 			return;
 
-		// fluidCoordinatorSystem.handle.Complete();
-		// var sortJobHandle = fluidCoordinatorSystem.spatialBuffer.Slice(0, fluidCoordinatorSystem.fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
 
 		var sortSpatialEntriesJob = new SortSpatialEntriesJob<FluidSpatialEntry, FluidSpatialEntryComparer>()
 		{
@@ -47,5 +45,6 @@ public partial struct FluidSpatialSortingSystem : ISystem
 			spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer
 		};
 		handle = buildSpatialKeyOffsetsJob.Schedule(fluidCoordinatorSystem.fluidCount, 64, sortSpatialEntriesHandle);
+		state.Dependency = handle;
 	}
 }

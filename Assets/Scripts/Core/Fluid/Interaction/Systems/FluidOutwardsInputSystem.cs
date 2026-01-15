@@ -35,7 +35,6 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 			if (draggingParticlesModeState.ValueRO.mode != DraggingParticlesMode.Outwards)
 				return;
 
-
 			var applyOutwardsForcesJob = new ApplyOutwardsForcesJob
 			{
 				velocities = spatialCoordinatorSystem.velocityBuffer,
@@ -44,8 +43,9 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 				fluidInputState = fluidInputState.ValueRO,
 				deltaTime = SystemAPI.Time.DeltaTime,
 			};
-			state.Dependency = applyOutwardsForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, state.Dependency);
-			state.Dependency.Complete();
+			var applyOutwardsForcesHandle = applyOutwardsForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, fluidCoordinatorSystem.handle);
+			state.Dependency = applyOutwardsForcesHandle;
+			fluidCoordinatorSystem.RegisterNewHandle(applyOutwardsForcesHandle);
 		}
 	}
 }

@@ -34,8 +34,6 @@ public partial struct TemperatureSpatialSortingSystem : ISystem
 		if (temperatureCoordinatorSystem.temperatureCount == 0)
 			return;
 
-		// temperatureCoordinatorSystem.handle.Complete();
-		// var sortJobHandle = temperatureCoordinatorSystem.spatialBuffer.Slice(0, temperatureCoordinatorSystem.temperatureCount).SortJob(new TemperatureSpatialEntryComparer()).Schedule();
 
 		var sortSpatialEntriesJob = new SortSpatialEntriesJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>()
 		{
@@ -50,6 +48,7 @@ public partial struct TemperatureSpatialSortingSystem : ISystem
 			spatial = temperatureCoordinatorSystem.spatialBuffer,
 			spatialOffsets = temperatureCoordinatorSystem.spatialOffsetsBuffer
 		};
-		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(temperatureCoordinatorSystem.temperatureCount, 64, sortSpatialEntriesHandle);
+		handle = buildSpatialKeyOffsetsJob.Schedule(temperatureCoordinatorSystem.temperatureCount, 64, sortSpatialEntriesHandle);
+		state.Dependency = handle;
 	}
 }
