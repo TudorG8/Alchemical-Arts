@@ -11,7 +11,7 @@ using Unity.Entities;
 using Unity.Jobs;
 
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<TemperaturePartionedIndex>))]
-[assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
+[assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
 
 [UpdateInGroup(typeof(SpatialPartioningGroup))]
 [UpdateAfter(typeof(SpatialPartioningSystem))]
@@ -81,9 +81,9 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 		state.Dependency = writeTemperaturePartionedHandle;
 		
 		var calculateBaseEntityIndexHandle = temperatureQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, writeTemperaturePartionedHandle, out var indexHandle);
-		var buildSpatialEntriesJob = new BuildSpatialEntriesJob<TemperatureSpatialEntry, TemperaturePartionedIndex>()
+		var buildSpatialEntriesJob = new BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>()
 		{
-			baseEntityIndex = calculateBaseEntityIndexHandle,
+			entityIndexes = calculateBaseEntityIndexHandle,
 			spatialBuffer = spatialBuffer,
 			spatialOffsetsBuffer = spatialOffsetsBuffer,
 			predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,

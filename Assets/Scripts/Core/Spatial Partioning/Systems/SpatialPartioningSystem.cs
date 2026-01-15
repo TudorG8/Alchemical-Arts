@@ -38,7 +38,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
-			var buildSpatialEntriesJob = new BuildSpatialEntriesJob
+			var buildSpatialEntriesJob = new BuildSpatialEntriesWithEntityJob
 			{
 				spatial = spatialCoordinatorSystem.spatialBuffer,
 				spatialOffsets = spatialCoordinatorSystem.spatialOffsetsBuffer,

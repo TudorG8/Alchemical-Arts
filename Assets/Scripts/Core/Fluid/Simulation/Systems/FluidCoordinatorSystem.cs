@@ -96,9 +96,9 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			var writeFluidPartionedIndexHandle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(fluidQuery, fluidIndexTypeHandle, state.Dependency);
 
 			var calculateBaseEntityIndexHandle = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, writeFluidPartionedIndexHandle, out var indexHandle);
-			var buildSpatialEntriesJob = new BuildSpatialEntriesJob<FluidSpatialEntry, FluidPartionedIndex>()
+			var buildSpatialEntriesJob = new BuildSpatialEntriesWithIndexJob<FluidSpatialEntry, FluidPartionedIndex>()
 			{
-				baseEntityIndex = calculateBaseEntityIndexHandle,
+				entityIndexes = calculateBaseEntityIndexHandle,
 				spatialBuffer = spatialBuffer,
 				spatialOffsetsBuffer = spatialOffsetsBuffer,
 				predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,
