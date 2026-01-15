@@ -19,7 +19,7 @@ namespace AlchemicalArts.Core.SpatialPartioning.Utility
 			var writePartionedIndexJob = new WritePartionedIndexJob<T>
 			{
 				componentTypeHandle = componentTypeHandle,
-				baseEntityIndex = calculateBaseEntityIndexHandle
+				entityIndexes = calculateBaseEntityIndexHandle
 			};
 			return writePartionedIndexJob.ScheduleParallel(query, indexHandle);
 		}

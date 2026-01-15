@@ -40,7 +40,6 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
 			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
-
 			var applyPressureForcesJob = new ApplyPressureForcesJob()
 			{
 				velocities = spatialCoordinatorSystem.velocityBuffer,

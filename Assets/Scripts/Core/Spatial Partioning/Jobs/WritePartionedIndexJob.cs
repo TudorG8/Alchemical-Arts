@@ -13,12 +13,12 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 
 		[ReadOnly]
 		[DeallocateOnJobCompletion]
-		public NativeArray<int> baseEntityIndex;
+		public NativeArray<int> entityIndexes;
 		
 		public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
 		{
 			var components = chunk.GetNativeArray(ref componentTypeHandle);
-			var baseIndex = baseEntityIndex[unfilteredChunkIndex];
+			var baseIndex = entityIndexes[unfilteredChunkIndex];
 			
 			for(int i = 0; i < chunk.Count; i++)
 			{

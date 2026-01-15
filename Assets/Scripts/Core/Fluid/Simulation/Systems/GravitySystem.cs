@@ -37,7 +37,6 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 
 			var fluidSimulationConfig = SystemAPI.GetSingleton<FluidSimulationConfig>();
 
-
 			var applyGravityForcesJob = new ApplyGravityForcesJob
 			{
 				velocities = spatialCoordinatorSystem.velocityBuffer,

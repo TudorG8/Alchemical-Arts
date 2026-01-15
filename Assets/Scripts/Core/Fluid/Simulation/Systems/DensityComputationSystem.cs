@@ -38,7 +38,6 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
 			var fluidSimulationConstantsConfig = SystemAPI.GetSingleton<FluidSimulationConstantsConfig>();
 
-
 			var computeDensitiesJob = new ComputeDensitiesJob()
 			{
 				densities = fluidCoordinatorSystem.densityBuffer,
