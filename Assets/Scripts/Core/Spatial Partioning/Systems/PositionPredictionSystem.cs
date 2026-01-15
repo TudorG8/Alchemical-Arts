@@ -42,7 +42,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				predictionFactor = 1f / spatialPartioningConfig.predictionFrames,
 			};
 			handle = predictPositionsJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, positionInitializationSystem.handle);
-			handle.Complete();
 		}
 	}
 }

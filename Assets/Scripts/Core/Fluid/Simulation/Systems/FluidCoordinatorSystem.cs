@@ -1,12 +1,8 @@
 using AlchemicalArts.Core.Fluid.Simulation.Components;
-using AlchemicalArts.Core.Fluid.Simulation.Groups;
-using AlchemicalArts.Core.Fluid.Simulation.Jobs;
-using AlchemicalArts.Core.Fluid.Simulation.Systems;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
-using AlchemicalArts.Core.SpatialPartioning.Utility;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Collections;
@@ -89,16 +85,24 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				return;
 
 			ref var spatialPartioningCoordinator = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+			ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
 			var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
 			fluidIndexTypeHandle.Update(ref state);
 			spatialIndexTypeHandle.Update(ref state);
-			var writeFluidPartionedIndexHandle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(fluidQuery, fluidIndexTypeHandle, state.Dependency);
+			
+			var entityIndexes = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, positionPredictionSystem.handle, out var indexHandle);
 
-			var calculateBaseEntityIndexHandle = fluidQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, writeFluidPartionedIndexHandle, out var indexHandle);
+			var writeTemperaturePartionedJob = new WritePartionedIndexJob<FluidPartionedIndex>
+			{
+				componentTypeHandle = fluidIndexTypeHandle,
+				entityIndexes = entityIndexes
+			};
+			var writeTemperaturePartionedHandle = writeTemperaturePartionedJob.ScheduleParallel(fluidQuery, indexHandle);
+
 			var buildSpatialEntriesJob = new BuildSpatialEntriesWithIndexJob<FluidSpatialEntry, FluidPartionedIndex>()
 			{
-				entityIndexes = calculateBaseEntityIndexHandle,
+				entityIndexes = entityIndexes,
 				spatialBuffer = spatialBuffer,
 				spatialOffsetsBuffer = spatialOffsetsBuffer,
 				predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,
@@ -107,7 +111,14 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				spatialIndexHandle = spatialIndexTypeHandle,
 				componentIndexHandle = fluidIndexTypeHandle,
 			};
-			handle = buildSpatialEntriesJob.ScheduleParallel(fluidQuery, indexHandle);
+			var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(fluidQuery, writeTemperaturePartionedHandle);
+
+			handle = entityIndexes.Dispose(buildSpatialEntriesHandle);
+		}
+
+		public void RegisterNewHandle(JobHandle handle)
+		{
+			this.handle = handle;
 		}
 	}
 }

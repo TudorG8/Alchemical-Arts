@@ -12,6 +12,7 @@ using Unity.Jobs;
 
 [assembly: RegisterGenericJobType(typeof(WritePartionedIndexJob<TemperaturePartionedIndex>))]
 [assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
+[assembly: RegisterGenericJobType(typeof(CopyIndexedComponentToBufferJob<TemperatureState, TemperaturePartionedIndex>))]
 
 [UpdateInGroup(typeof(SpatialPartioningGroup))]
 [UpdateAfter(typeof(SpatialPartioningSystem))]
@@ -32,9 +33,11 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 
 	private int bufferCapacity;
 
-	private ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexTypeHandle;
-
 	private ComponentTypeHandle<TemperaturePartionedIndex> temperatureIndexTypeHandle;
+	
+	private ComponentTypeHandle<TemperatureState> temperatureStateTypeHandle;
+
+	private ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexTypeHandle;
 
 
 	[BurstCompile]
@@ -49,7 +52,9 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 		temperatureStateBuffer = new NativeArray<TemperatureState>(bufferCapacity, Allocator.Persistent);
 		
 		temperatureQuery =  SystemAPI.QueryBuilder().WithAll<TemperaturePartionedIndex>().WithAll<SpatiallyPartionedIndex>().WithAll<TemperatureState>().Build();
+		
 		temperatureIndexTypeHandle = state.GetComponentTypeHandle<TemperaturePartionedIndex>(isReadOnly: false);
+		temperatureStateTypeHandle = state.GetComponentTypeHandle<TemperatureState>(isReadOnly: true);
 		spatialIndexTypeHandle = state.GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: true);
 	}
 
@@ -69,18 +74,30 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 			return;
 		
 		ref var spatialPartioningCoordinator = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
+		ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
 		var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
-		var temperatureStates = temperatureQuery.ToComponentDataArray<TemperatureState>(Allocator.Temp);
-		NativeArray<TemperatureState>.Copy(temperatureStates, 0, temperatureStateBuffer, 0, temperatureCount);
-
 		temperatureIndexTypeHandle.Update(ref state);
+		temperatureStateTypeHandle.Update(ref state);
 		spatialIndexTypeHandle.Update(ref state);
+
+		var calculateBaseEntityIndexHandle = temperatureQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, positionPredictionSystem.handle, out var indexHandle);
+
+		var writeTemperaturePartionedJob = new WritePartionedIndexJob<TemperaturePartionedIndex>
+		{
+			componentTypeHandle = temperatureIndexTypeHandle,
+			entityIndexes = calculateBaseEntityIndexHandle
+		};
+		var writeTemperaturePartionedHandle = writeTemperaturePartionedJob.ScheduleParallel(temperatureQuery, indexHandle);
 		
-		var writeTemperaturePartionedHandle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(temperatureQuery, temperatureIndexTypeHandle, state.Dependency);
-		state.Dependency = writeTemperaturePartionedHandle;
-		
-		var calculateBaseEntityIndexHandle = temperatureQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, writeTemperaturePartionedHandle, out var indexHandle);
+		var copyIndexedComponentToBufferJob = new CopyIndexedComponentToBufferJob<TemperatureState, TemperaturePartionedIndex>() 
+		{
+			componentTypeHandle = temperatureStateTypeHandle,
+			indexerHandle = temperatureIndexTypeHandle,
+			componentBuffer = temperatureStateBuffer,
+		};
+		var copyIndexedComponentToBufferHandle = copyIndexedComponentToBufferJob.ScheduleParallel(temperatureQuery, writeTemperaturePartionedHandle);
+
 		var buildSpatialEntriesJob = new BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>()
 		{
 			entityIndexes = calculateBaseEntityIndexHandle,
@@ -88,10 +105,12 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 			spatialOffsetsBuffer = spatialOffsetsBuffer,
 			predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,
 			radius = simulationConfig.radius,
-			hashingLimit = spatialPartioningCoordinator.hashingLimit,
+			hashingLimit = spatialPartioningCoordinator.hashingLimit, 
 			spatialIndexHandle = spatialIndexTypeHandle,
 			componentIndexHandle = temperatureIndexTypeHandle,
 		};
-		handle = buildSpatialEntriesJob.ScheduleParallel(temperatureQuery, indexHandle);
+		var buildSpatialEntriesHandle = buildSpatialEntriesJob.ScheduleParallel(temperatureQuery, copyIndexedComponentToBufferHandle);
+
+		handle = calculateBaseEntityIndexHandle.Dispose(buildSpatialEntriesHandle);
 	}
 }

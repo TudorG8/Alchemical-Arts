@@ -56,7 +56,7 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 				hashingLimit = spatialCoordinatorSystem.hashingLimit,
 			};
 			handle = applyViscosityForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, pressureForceSystem.handle);
-			handle.Complete();
+			// fluidCoordinatorSystem.RegisterNewHandle(applyViscosityForcesJob.ScheduleParallel(fluidCoordinatorSystem.fluidQuery, pressureForceSystem.handle));
 		}
 	}
 }

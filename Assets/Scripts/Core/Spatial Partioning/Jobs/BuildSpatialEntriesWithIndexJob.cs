@@ -13,6 +13,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 		where T : unmanaged, ISpatialEntryIndexer
 		where U : unmanaged, IComponentData, IIndexedComponent
 	{
+		public ComponentTypeHandle<U> componentIndexHandle;
+
 		[NativeDisableParallelForRestriction]
 		public NativeArray<T> spatialBuffer;
 
@@ -25,8 +27,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 		[ReadOnly]
 		public ComponentTypeHandle<SpatiallyPartionedIndex> spatialIndexHandle;
 		
-		public ComponentTypeHandle<U> componentIndexHandle;
-
 		[ReadOnly]
 		public float radius;
 
@@ -35,7 +35,8 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 
 		[ReadOnly]
 		public NativeArray<int> entityIndexes;
-		
+
+
 		public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
 		{
 			var spatialComponents = chunk.GetNativeArray(ref spatialIndexHandle);

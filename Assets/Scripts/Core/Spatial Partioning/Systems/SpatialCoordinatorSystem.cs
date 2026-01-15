@@ -3,7 +3,6 @@ using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Models;
-using AlchemicalArts.Core.SpatialPartioning.Utility;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -80,7 +79,19 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 				return;
 
 			spatialIndexTypeHandle.Update(ref state);
-			handle = PartitionedIndexJobUtility.ScheduleWritePartitionedIndex(simulatedQuery, spatialIndexTypeHandle, state.Dependency);
+
+
+			var entityIndexes = simulatedQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, state.Dependency, out var indexHandle);
+			
+			var writePartionedIndexJob = new WritePartionedIndexJob<SpatiallyPartionedIndex>
+			{
+				componentTypeHandle = spatialIndexTypeHandle,
+				entityIndexes = entityIndexes
+			};
+			handle = writePartionedIndexJob.ScheduleParallel(simulatedQuery, indexHandle);
+			state.Dependency = handle;
+			
+			entityIndexes.Dispose(handle);
 		}
 	}
 }

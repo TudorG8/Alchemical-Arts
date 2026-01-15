@@ -12,7 +12,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 		public ComponentTypeHandle<T> componentTypeHandle;
 
 		[ReadOnly]
-		[DeallocateOnJobCompletion]
 		public NativeArray<int> entityIndexes;
 		
 		public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)

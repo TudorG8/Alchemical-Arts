@@ -6,7 +6,6 @@ using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 
@@ -31,14 +30,22 @@ public partial struct FluidSpatialSortingSystem : ISystem
 		if (fluidCoordinatorSystem.fluidCount == 0)
 			return;
 
-		fluidCoordinatorSystem.handle.Complete();
-		var sortJobHandle = fluidCoordinatorSystem.spatialBuffer.Slice(0, fluidCoordinatorSystem.fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
+		// fluidCoordinatorSystem.handle.Complete();
+		// var sortJobHandle = fluidCoordinatorSystem.spatialBuffer.Slice(0, fluidCoordinatorSystem.fluidCount).SortJob(new FluidSpatialEntryComparer()).Schedule();
+
+		var sortSpatialEntriesJob = new SortSpatialEntriesJob<FluidSpatialEntry, FluidSpatialEntryComparer>()
+		{
+			spatial = fluidCoordinatorSystem.spatialBuffer,
+			spatialComparer = new FluidSpatialEntryComparer(),
+			count = spatialCoordinatorSystem.count,
+		};
+		var sortSpatialEntriesHandle = sortSpatialEntriesJob.Schedule(fluidCoordinatorSystem.handle);
 
 		var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<FluidSpatialEntry>()
 		{
 			spatial = fluidCoordinatorSystem.spatialBuffer,
 			spatialOffsets = fluidCoordinatorSystem.spatialOffsetsBuffer
 		};
-		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(fluidCoordinatorSystem.fluidCount, 64, sortJobHandle);
+		handle = buildSpatialKeyOffsetsJob.Schedule(fluidCoordinatorSystem.fluidCount, 64, sortSpatialEntriesHandle);
 	}
 }

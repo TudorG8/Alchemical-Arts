@@ -34,14 +34,22 @@ public partial struct TemperatureSpatialSortingSystem : ISystem
 		if (temperatureCoordinatorSystem.temperatureCount == 0)
 			return;
 
-		temperatureCoordinatorSystem.handle.Complete();
-		var sortJobHandle = temperatureCoordinatorSystem.spatialBuffer.Slice(0, temperatureCoordinatorSystem.temperatureCount).SortJob(new TemperatureSpatialEntryComparer()).Schedule();
+		// temperatureCoordinatorSystem.handle.Complete();
+		// var sortJobHandle = temperatureCoordinatorSystem.spatialBuffer.Slice(0, temperatureCoordinatorSystem.temperatureCount).SortJob(new TemperatureSpatialEntryComparer()).Schedule();
+
+		var sortSpatialEntriesJob = new SortSpatialEntriesJob<TemperatureSpatialEntry, TemperatureSpatialEntryComparer>()
+		{
+			spatial = temperatureCoordinatorSystem.spatialBuffer,
+			spatialComparer = new TemperatureSpatialEntryComparer(),
+			count = spatialCoordinatorSystem.count,
+		};
+		var sortSpatialEntriesHandle = sortSpatialEntriesJob.Schedule(temperatureCoordinatorSystem.handle);
 
 		var buildSpatialKeyOffsetsJob = new BuildSpatialOffsetsJob<TemperatureSpatialEntry>()
 		{
 			spatial = temperatureCoordinatorSystem.spatialBuffer,
 			spatialOffsets = temperatureCoordinatorSystem.spatialOffsetsBuffer
 		};
-		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(temperatureCoordinatorSystem.temperatureCount, 64, sortJobHandle);
+		state.Dependency = handle = buildSpatialKeyOffsetsJob.Schedule(temperatureCoordinatorSystem.temperatureCount, 64, sortSpatialEntriesHandle);
 	}
 }

@@ -42,7 +42,6 @@ namespace AlchemicalArts.Core.Fluid.Simulation.Systems
 			};
 			var readVelocityBatchesHandle = readVelocityBatchesJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, viscosityForceSystem.handle);
 
-
 			var setVelocityBatchesJob = new SetVelocityBatchesJob
 			{
 				batchVelocity = fluidCoordinatorSystem.batchVelocityBuffer,

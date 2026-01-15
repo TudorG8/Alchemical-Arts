@@ -30,13 +30,12 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			if (spatialCoordinatorSystem.count == 0)
 				return;
 
-
 			var readInitialDataJob = new ReadInitialDataJob
 			{
 				positions = spatialCoordinatorSystem.positionBuffer,
 				velocities = spatialCoordinatorSystem.velocityBuffer,
 			};
-			state.Dependency = handle = readInitialDataJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, spatialCoordinatorSystem.handle);
+			handle = readInitialDataJob.ScheduleParallel(spatialCoordinatorSystem.simulatedQuery, spatialCoordinatorSystem.handle);
 		}
 	}
 }

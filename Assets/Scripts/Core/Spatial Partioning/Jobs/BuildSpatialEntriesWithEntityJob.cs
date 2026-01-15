@@ -31,14 +31,13 @@ namespace AlchemicalArts.Core.SpatialPartioning.Jobs
 
 
 		public void Execute(
-			in SpatiallyPartionedIndex spatiallyPartionedIndex,
-			in Entity entity)
+			in SpatiallyPartionedIndex spatiallyPartionedIndex)
 		{
 			var cell = SpatialHashingUtility.GetCell2D(predictedPositions[spatiallyPartionedIndex.index], radius);
 			var hash = SpatialHashingUtility.HashCell2D(cell);
 			var cellKey = SpatialHashingUtility.KeyFromHash(hash, hashingLimit);
 			
-			spatial[spatiallyPartionedIndex.index] = new SpatialEntry() { simulationIndex = spatiallyPartionedIndex.index, key = cellKey, entity = entity };
+			spatial[spatiallyPartionedIndex.index] = new SpatialEntry() { simulationIndex = spatiallyPartionedIndex.index, key = cellKey};
 			spatialOffsets[spatiallyPartionedIndex.index] = int.MaxValue;
 		}
 	}
