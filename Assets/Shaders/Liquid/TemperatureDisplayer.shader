@@ -19,9 +19,10 @@ Shader "AlchemicalArts/Temperature/TemperatureDisplayer" {
 			#include "UnityCG.cginc"
 			
 			StructuredBuffer<float2> Positions;
-			StructuredBuffer<float> Temperatures;
+			StructuredBuffer<float> Values;
 			float Radius;
-			float MaxTemperature;
+			float MinValue;
+			float MaxValue;
 			Texture2D<float4> ColourMap;
 
 			SamplerState linear_clamp_sampler;
@@ -35,8 +36,8 @@ Shader "AlchemicalArts/Temperature/TemperatureDisplayer" {
 
 			FluidData vert (appdata_full v, uint instanceID : SV_InstanceID)
 			{
-				float speed = Temperatures[instanceID];
-				float speedT = saturate(speed / MaxTemperature);
+				float speed = Values[instanceID];
+				float speedT = saturate((speed - MinValue) / (MaxValue - MinValue));
 				
 				float3 centreWorld = float3(Positions[instanceID], 0);
 				float3 worldVertPos = centreWorld + mul(unity_ObjectToWorld, v.vertex * Radius);

@@ -21,10 +21,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 
 		public int count;
 		
-		public NativeArray<SpatialEntry> spatialBuffer;
-
-		public NativeArray<int> spatialOffsetsBuffer;
-		
 		public NativeArray<float2> positionBuffer;
 		
 		public NativeArray<float2> velocityBuffer;
@@ -52,8 +48,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			positionBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			velocityBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
 			predictedPositionsBuffer = new NativeArray<float2>(bufferCapacity, Allocator.Persistent);
-			spatialBuffer = new NativeArray<SpatialEntry>(bufferCapacity, Allocator.Persistent);
-			spatialOffsetsBuffer = new NativeArray<int>(bufferCapacity, Allocator.Persistent);
 			
 			simulatedQuery = SystemAPI.QueryBuilder()
 				.WithAll<SpatiallyPartionedIndex>().WithAll<PhysicsBodyState>().WithAll<LocalTransform>()
@@ -67,8 +61,6 @@ namespace AlchemicalArts.Core.SpatialPartioning.Systems
 			positionBuffer.Dispose();
 			velocityBuffer.Dispose();
 			predictedPositionsBuffer.Dispose();
-			spatialBuffer.Dispose();
-			spatialOffsetsBuffer.Dispose();
 		}
 
 		[BurstCompile]

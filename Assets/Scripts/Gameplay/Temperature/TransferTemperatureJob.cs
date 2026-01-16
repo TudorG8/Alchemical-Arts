@@ -4,7 +4,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 [BurstCompile]
 public partial struct TransferTemperatureJob : IJobEntity
@@ -34,7 +33,6 @@ public partial struct TransferTemperatureJob : IJobEntity
 	public int hashingLimit;
 
 	public void Execute(
-		[EntityIndexInQuery] int index,
 		in SpatiallyPartionedIndex spatiallyPartionedItemState,
 		in TemperaturePartionedIndex temperaturePartionedIndex)
 	{

@@ -35,7 +35,7 @@ namespace AlchemicalArts.Gameplay.Prototype.Systems
 		public void OnUpdate(ref SystemState state)
 		{
 			var elapsedTime = SystemAPI.Time.ElapsedTime;
-			var commandBuffer = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+			var commandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 			var fluidFolder = SystemAPI.GetSingleton<FolderManagerConfig>().fluidFolder;
 
 

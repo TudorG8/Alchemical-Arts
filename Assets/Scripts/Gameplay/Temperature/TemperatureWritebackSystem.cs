@@ -1,20 +1,35 @@
 using AlchemicalArts.Core.Fluid.Simulation.Systems;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Core.SpatialPartioning.Jobs;
+using AlchemicalArts.Core.SpatialPartioning.Systems;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
+
+[assembly: RegisterGenericJobType(typeof(WriteIndexedNativeArray<TemperaturePartionedIndex, TemperatureState>))]
 
 [UpdateInGroup(typeof(TemperatureGroup))]
-[UpdateAfter(typeof(TemperatureTransferSystem))]
+[UpdateAfter(typeof(PositionPredictionSystem))]
 partial struct TemperatureWritebackSystem : ISystem
 {
+	public JobHandle handle;
+
+
+	private ComponentTypeHandle<TemperaturePartionedIndex> temperatureIndexTypeHandle;
+	
+	private ComponentTypeHandle<TemperatureState> temperatureStateTypeHandle;
+
+
 	[BurstCompile]
 	public void OnCreate(ref SystemState state)
 	{
 		state.RequireForUpdate<PhysicsWorldState>();
 		state.RequireForUpdate<SpatialPartioningConfig>();
+
+		temperatureIndexTypeHandle = state.GetComponentTypeHandle<TemperaturePartionedIndex>(isReadOnly: true);
+		temperatureStateTypeHandle = state.GetComponentTypeHandle<TemperatureState>(isReadOnly: false);
 	}
 
 	[BurstCompile]
@@ -25,26 +40,16 @@ partial struct TemperatureWritebackSystem : ISystem
 		if (temperatureCoordinatorSystem.temperatureCount == 0)
 			return;
 
-		var writeTemperatureStateJob = new WriteTemperatureStateJob() 
-		{
-			temperatureStateBuffer = temperatureCoordinatorSystem.temperatureStateBuffer,
-		};
-		var handle = writeTemperatureStateJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureTransferSystem.handle);
-		handle.Complete();
-		state.Dependency = handle;
-	}
-}
+		temperatureIndexTypeHandle.Update(ref state);
+		temperatureStateTypeHandle.Update(ref state);
 
-[BurstCompile]
-public partial struct WriteTemperatureStateJob : IJobEntity
-{
-	[NativeDisableParallelForRestriction]
-	public NativeArray<TemperatureState> temperatureStateBuffer;
-	
-	public void Execute(
-		ref TemperatureState temperatureState,
-		in TemperaturePartionedIndex temperaturePartionedIndex)
-	{
-		temperatureState = temperatureStateBuffer[temperaturePartionedIndex.Index];
+		var writeTemperatureStateJob = new WriteIndexedNativeArray<TemperaturePartionedIndex, TemperatureState>()
+		{
+			buffer = temperatureCoordinatorSystem.temperatureStateBuffer,
+			componentHandle = temperatureStateTypeHandle,
+			spatialIndexHandle = temperatureIndexTypeHandle,
+		};
+		handle = writeTemperatureStateJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureTransferSystem.handle);
+		state.Dependency = handle;
 	}
 }

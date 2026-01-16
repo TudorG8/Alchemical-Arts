@@ -14,7 +14,7 @@ using Unity.Jobs;
 [assembly: RegisterGenericJobType(typeof(BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>))]
 
 [UpdateInGroup(typeof(SpatialPartioningGroup))]
-[UpdateAfter(typeof(SpatialPartioningSystem))]
+[UpdateAfter(typeof(PositionPredictionSystem))]
 public partial struct TemperatureCoordinatorSystem : ISystem
 {
 	public int temperatureCount;
@@ -72,20 +72,25 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 		if (temperatureCount == 0)
 			return;
 		
+
 		ref var spatialPartioningCoordinator = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<SpatialCoordinatorSystem>();
 		ref var positionPredictionSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<PositionPredictionSystem>();
+		ref var temperatureWritebackSystem = ref state.WorldUnmanaged.GetUnmanagedSystemRefWithoutHandle<TemperatureWritebackSystem>();
 		var simulationConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 
 		temperatureIndexTypeHandle.Update(ref state);
 		temperatureStateTypeHandle.Update(ref state);
 		spatialIndexTypeHandle.Update(ref state);
 
-		var calculateBaseEntityIndexHandle = temperatureQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, positionPredictionSystem.handle, out var indexHandle);
+		// In case there are no sync points after temperatureWritebackSystem, this needs to be done:
+		var startHandle = JobHandle.CombineDependencies(positionPredictionSystem.handle, temperatureWritebackSystem.handle);
+
+		var entityIndexes = temperatureQuery.CalculateBaseEntityIndexArrayAsync(Allocator.TempJob, startHandle, out var indexHandle);
 
 		var writeTemperaturePartionedJob = new WritePartionedIndexJob<TemperaturePartionedIndex>
 		{
 			componentTypeHandle = temperatureIndexTypeHandle,
-			entityIndexes = calculateBaseEntityIndexHandle
+			entityIndexes = entityIndexes
 		};
 		var writeTemperaturePartionedHandle = writeTemperaturePartionedJob.ScheduleParallel(temperatureQuery, indexHandle);
 		
@@ -99,7 +104,7 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 
 		var buildSpatialEntriesJob = new BuildSpatialEntriesWithIndexJob<TemperatureSpatialEntry, TemperaturePartionedIndex>()
 		{
-			entityIndexes = calculateBaseEntityIndexHandle,
+			entityIndexes = entityIndexes,
 			spatialBuffer = spatialBuffer,
 			spatialOffsetsBuffer = spatialOffsetsBuffer,
 			predictedPositionsBuffer = spatialPartioningCoordinator.predictedPositionsBuffer,
@@ -111,6 +116,6 @@ public partial struct TemperatureCoordinatorSystem : ISystem
 		handle = buildSpatialEntriesJob.ScheduleParallel(temperatureQuery, copyIndexedComponentToBufferHandle);
 		state.Dependency = handle;
 
-		calculateBaseEntityIndexHandle.Dispose(handle);
+		entityIndexes.Dispose(handle);
 	}
 }

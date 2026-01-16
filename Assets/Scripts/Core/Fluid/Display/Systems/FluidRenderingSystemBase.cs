@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using AlchemicalArts.Core.Fluid.Display.Components;
 using AlchemicalArts.Core.Fluid.Simulation.Components;
+using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
@@ -45,6 +46,7 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 
 		protected override void OnCreate()
 		{
+			Enabled = false;
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<FluidSimulationDisplayConfig>().Build(entityManager);
 

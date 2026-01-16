@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AlchemicalArts.Core.Fluid.Simulation.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 
 public struct TemperatureSpatialEntry : ISpatialEntry, ISpatialEntryIndexer

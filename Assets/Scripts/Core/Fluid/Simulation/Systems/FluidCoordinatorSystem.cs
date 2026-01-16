@@ -17,7 +17,7 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsBody;
 namespace AlchemicalArts.Core.SpatialPartioning.Systems
 {
 	[UpdateInGroup(typeof(SpatialPartioningGroup))]
-	[UpdateAfter(typeof(SpatialPartioningSystem))]
+	[UpdateAfter(typeof(PositionPredictionSystem))]
 	public partial struct FluidCoordinatorSystem : ISystem
 	{
 		public int fluidCount;
