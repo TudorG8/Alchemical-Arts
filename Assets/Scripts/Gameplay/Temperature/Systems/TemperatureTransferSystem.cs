@@ -1,12 +1,14 @@
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Gameplay.Temperature.Groups;
+using AlchemicalArts.Gameplay.Temperature.Jobs;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 
-namespace AlchemicalArts.Core.Fluid.Simulation.Systems
+namespace AlchemicalArts.Gameplay.Temperature.Systems
 {
 	[UpdateInGroup(typeof(TemperatureGroup))]
 	public partial struct TemperatureTransferSystem : ISystem
