@@ -38,7 +38,8 @@ namespace AlchemicalArts.Gameplay.Temperature.Jobs
 
 		public void Execute(
 			in SpatiallyPartionedIndex spatiallyPartionedItemState,
-			in TemperaturePartionedIndex temperaturePartionedIndex)
+			in TemperaturePartionedIndex temperaturePartionedIndex,
+			in TemperatureEnabledTransmissionTag temperatureEnabledTransmissionTag)
 		{
 			var deltaTime = 1 / 120f;
 			var position = predictedPositions[spatiallyPartionedItemState.index];
@@ -70,7 +71,7 @@ namespace AlchemicalArts.Gameplay.Temperature.Jobs
 					if (sqrDstToNeighbour > sqrRadius) continue;
 
 					var temperatureDifference = temperatureStateBuffer[temperaturePartionedIndex.Index].temperature - temperatureStateBuffer[neighbourTemperatureIndex].temperature;
-					var transfer = temperatureDifference * deltaTime * math.sqrt(20 * 20);
+					var transfer = temperatureDifference * deltaTime * math.sqrt(80 * 80);
 					var inputState = temperatureStateBuffer[temperaturePartionedIndex.Index];
 					var neighbourState = temperatureStateBuffer[neighbourTemperatureIndex];
 

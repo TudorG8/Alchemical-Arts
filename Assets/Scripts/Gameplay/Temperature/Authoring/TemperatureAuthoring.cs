@@ -16,6 +16,7 @@ namespace AlchemicalArts.Gameplay.Temperature.Authoring
 		{
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			AddComponent(entity, new TemperaturePartionedIndex());
+			AddComponent(entity, new TemperatureEnabledTransmissionTag());
 			AddComponent(entity, new TemperatureState() { temperature = authoring.Temperature});
 		}
 	}

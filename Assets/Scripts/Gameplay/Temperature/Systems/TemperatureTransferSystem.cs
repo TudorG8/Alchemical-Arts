@@ -1,19 +1,27 @@
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
+using AlchemicalArts.Gameplay.Temperature.Components;
 using AlchemicalArts.Gameplay.Temperature.Groups;
 using AlchemicalArts.Gameplay.Temperature.Jobs;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
 
 namespace AlchemicalArts.Gameplay.Temperature.Systems
 {
 	[UpdateInGroup(typeof(TemperatureGroup))]
 	public partial struct TemperatureTransferSystem : ISystem
 	{
+		private const int FRAME_COUNT = 5;
+
 		public JobHandle handle;
+
+		private int batch;
+
+		private EntityQuery transmissionQuery;
 
 
 		[BurstCompile]
@@ -21,6 +29,9 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 		{
 			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
+			batch = 0;
+
+			transmissionQuery = SystemAPI.QueryBuilder().WithPresent<TemperatureEnabledTransmissionTag>().Build();
 		}
 
 		[BurstCompile]
@@ -32,6 +43,18 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 			if (temperatureCoordinatorSystem.temperatureCount == 0)
 				return;
 
+			var entitiesToProcess = math.min(temperatureCoordinatorSystem.temperatureCount / FRAME_COUNT, 2000);
+			var startIndex = batch * entitiesToProcess;
+			var endIndex = math.min(startIndex + entitiesToProcess, temperatureCoordinatorSystem.temperatureCount);
+
+			state.EntityManager.SetComponentEnabled<TemperatureEnabledTransmissionTag>(transmissionQuery, false);
+			var entities = transmissionQuery.ToEntityArray(state.WorldUpdateAllocator);
+
+			for (int i = startIndex; i < endIndex; i++)
+			{
+				state.EntityManager.SetComponentEnabled<TemperatureEnabledTransmissionTag>(entities[i], true);
+			}
+			
 			var spatialPartioningConfig = SystemAPI.GetSingleton<SpatialPartioningConfig>();
 			var spatialPartioningConstantsConfig = SystemAPI.GetSingleton<SpatialPartioningConstantsConfig>();
 
@@ -46,8 +69,10 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 				spatialPartioningConstantsConfig = spatialPartioningConstantsConfig,
 				hashingLimit = spatialCoordinatorSystem.hashingLimit
 			};
-			handle = transferTemperatureJob.ScheduleParallel(temperatureCoordinatorSystem.temperatureQuery, temperatureSpatialSortingSystem.handle);
+			handle = transferTemperatureJob.ScheduleParallel(temperatureSpatialSortingSystem.handle);
 			state.Dependency = handle;
+
+			batch = (batch + 1) % FRAME_COUNT;
 		}
 	}
 }
