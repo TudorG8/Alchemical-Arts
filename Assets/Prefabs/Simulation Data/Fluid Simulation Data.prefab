@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core::PotionCraft.Core.Naming.Authoring.EntityHierarchyAuthoring
   <IncludeChildren>k__BackingField: 1
+  <IncludeName>k__BackingField: 1
 --- !u!114 &57373103879328378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionCraft.Core.Fluid.Simulation::PotionCraft.Core.Fluid.Simulation.Authoring.SimulationConfigAuthoring
   <SimulationState>k__BackingField:
     gravity: 9.8
-    targetDensity: 55
-    pressureMultiplier: 500
+    targetDensity: 30
+    pressureMultiplier: 700
     nearPressureMultiplier: 4
     viscosityStrength: 0.1
