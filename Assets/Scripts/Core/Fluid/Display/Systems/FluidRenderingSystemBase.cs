@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using AlchemicalArts.Core.Fluid.Display.Components;
+using AlchemicalArts.Core.Fluid.Display.Groups;
 using AlchemicalArts.Core.Fluid.Simulation.Components;
-using AlchemicalArts.Core.Fluid.Simulation.Jobs;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace AlchemicalArts.Core.Fluid.Display.Systems
 {
-	[UpdateInGroup(typeof(PresentationSystemGroup))]
+	[UpdateInGroup(typeof(FluidRenderingGroup))]
 	public partial class FluidRenderingSystemBase : SystemBase
 	{
 		private EntityQuery simulationStateQuery;
@@ -46,12 +46,18 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 
 		protected override void OnCreate()
 		{
-			Enabled = false;
+			// Enabled = false;
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<FluidSimulationDisplayConfig>().Build(entityManager);
 
 			RequireForUpdate<PhysicsWorldState>();
 			RequireForUpdate(simulationStateQuery);
+
+			positions = new NativeArray<float2>(10000, Allocator.Persistent);
+			velocities = new NativeArray<float2>(10000, Allocator.Persistent);
+			positionsBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
+			velocitiesBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
+			bounds = new Bounds(Vector3.zero, Vector3.one * 10000);
 
 			fluidIndexTypeHandle = GetComponentTypeHandle<FluidPartionedIndex>(isReadOnly: true);
 			spatialIndexTypeHandle = GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: true);
@@ -72,13 +78,8 @@ namespace AlchemicalArts.Core.Fluid.Display.Systems
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			var fluidSimulationState = entityManager.GetComponentData<FluidSimulationDisplayConfig>(fluidSimulationStateEntity);
 			
-			positions = new NativeArray<float2>(10000, Allocator.Persistent);
-			velocities = new NativeArray<float2>(10000, Allocator.Persistent);
-			positionsBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
-			velocitiesBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
 			material = new Material(fluidSimulationState.shader);
-			bounds = new Bounds(Vector3.zero, Vector3.one * 10000);
-
+			
 			material.SetBuffer("Positions", positionsBuffer);
 			material.SetBuffer("Velocities", velocitiesBuffer);
 			material.SetFloat("Radius", fluidSimulationState.particleSize);

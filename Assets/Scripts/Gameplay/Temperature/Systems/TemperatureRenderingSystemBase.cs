@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using AlchemicalArts.Core.Fluid.Display.Groups;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
@@ -16,7 +17,7 @@ using UnityEngine;
 
 namespace AlchemicalArts.Gameplay.Temperature.Systems
 {
-	[UpdateInGroup(typeof(PresentationSystemGroup))]
+	[UpdateInGroup(typeof(FluidRenderingGroup))]
 	public partial class TemperatureRenderingSystemBase : SystemBase
 	{
 		private EntityQuery simulationStateQuery;
@@ -42,12 +43,18 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 
 		protected override void OnCreate()
 		{
-			// Enabled = false;
+			Enabled = false;
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<TemperatureSimulationDisplayConfig>().Build(entityManager);
 
 			RequireForUpdate<PhysicsWorldState>();
 			RequireForUpdate(simulationStateQuery);
+
+			positions = new NativeArray<float2>(10000, Allocator.Persistent);
+			temperatures = new NativeArray<float>(10000, Allocator.Persistent);
+			positionsBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
+			temperatureBuffer = new ComputeBuffer(10000, Marshal.SizeOf<float>());
+			bounds = new Bounds(Vector3.zero, Vector3.one * 10000);
 
 			temperatureIndexTypeHandle = GetComponentTypeHandle<TemperaturePartionedIndex>(isReadOnly: true);
 			spatialIndexTypeHandle = GetComponentTypeHandle<SpatiallyPartionedIndex>(isReadOnly: true);
@@ -68,12 +75,7 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			var fluidSimulationState = entityManager.GetComponentData<TemperatureSimulationDisplayConfig>(simulationStateEntity);
 			
-			positions = new NativeArray<float2>(10000, Allocator.Persistent);
-			temperatures = new NativeArray<float>(10000, Allocator.Persistent);
-			positionsBuffer = new ComputeBuffer(10000, Marshal.SizeOf<Vector2>());
-			temperatureBuffer = new ComputeBuffer(10000, Marshal.SizeOf<float>());
 			material = new Material(fluidSimulationState.shader);
-			bounds = new Bounds(Vector3.zero, Vector3.one * 10000);
 
 			material.SetBuffer("Positions", positionsBuffer);
 			material.SetBuffer("Values", temperatureBuffer);
