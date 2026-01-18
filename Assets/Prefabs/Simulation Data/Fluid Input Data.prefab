@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionCraft.Core::PotionCraft.Core.Naming.Authoring.EntityHierarchyAuthoring
   <IncludeChildren>k__BackingField: 1
+  <IncludeName>k__BackingField: 1
 --- !u!114 &1985077062887312112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,7 +62,7 @@ MonoBehaviour:
   <InteractionStrength>k__BackingField: 150
   <InteractionRadius>k__BackingField:
     bounds:
-      minimum: 0.5
+      minimum: 0.35
       maximum: 3
     value: 1
   <Damping>k__BackingField: 8
