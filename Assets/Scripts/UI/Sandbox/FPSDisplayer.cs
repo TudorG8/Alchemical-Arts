@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace AlchemicalArts.UI
+namespace AlchemicalArts.UI.Sandbox
 {
 	public class FPSDisplayer : MonoBehaviour
 	{

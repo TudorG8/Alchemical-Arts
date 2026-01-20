@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Groups;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
@@ -46,7 +45,6 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
 			bufferCapacity = 10000;
 			

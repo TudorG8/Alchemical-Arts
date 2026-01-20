@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Naming.Authoring;
 using AlchemicalArts.Core.Physics.Components;
 using Unity.Entities;
 using UnityEngine;
@@ -6,7 +5,6 @@ using UnityEngine.LowLevelPhysics2D;
 
 namespace AlchemicalArts.Core.Physics.Authoring
 {
-	[RequireComponent(typeof(EntityHierarchyAuthoring))]
 	public class PhysicsWorldSetupAuthoring : MonoBehaviour
 	{
 		[field: SerializeField]

@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
@@ -27,7 +26,6 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<PhysicsWorldState>();
 			state.RequireForUpdate<SpatialPartioningConfig>();
 
 			temperatureIndexTypeHandle = state.GetComponentTypeHandle<TemperaturePartionedIndex>(isReadOnly: true);

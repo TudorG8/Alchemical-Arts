@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Naming.Authoring;
 using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.Physics.Extensions;
 using AlchemicalArts.Shared.Extensions;

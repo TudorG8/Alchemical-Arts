@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices;
 using AlchemicalArts.Core.Fluid.Display.Groups;
-using AlchemicalArts.Core.Physics.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
 using AlchemicalArts.Core.SpatialPartioning.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
@@ -47,7 +46,6 @@ namespace AlchemicalArts.Gameplay.Temperature.Systems
 			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			simulationStateQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<TemperatureSimulationDisplayConfig>().Build(entityManager);
 
-			RequireForUpdate<PhysicsWorldState>();
 			RequireForUpdate(simulationStateQuery);
 
 			positions = new NativeArray<float2>(10000, Allocator.Persistent);
