@@ -27,7 +27,7 @@ public class FluidInteractionService : MonoBehaviour
 
 	public void SetInteractionMode(DraggingParticlesMode mode)
 	{
-		if (!FluidInputRWQuery.TryGetSingletonRW<DraggingParticlesModeState>(out var draggingParticlesModeState))
+		if (World.DefaultGameObjectInjectionWorld == null || !FluidInputRWQuery.TryGetSingletonRW<DraggingParticlesModeState>(out var draggingParticlesModeState))
 		{
 			return;
 		}
