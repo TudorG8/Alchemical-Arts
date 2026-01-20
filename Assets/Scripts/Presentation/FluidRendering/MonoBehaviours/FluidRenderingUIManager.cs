@@ -13,9 +13,10 @@ namespace AlchemicalArts.Presentation.FluidRendering.MonoBehaviours
 		private FluidRenderingService FluidRenderingService { get; set;}
 
 
-		private void Awake()
+		private void Start()
 		{
 			HookupElements();
+			UpdateElementState();
 		}
 
 		private void Update()

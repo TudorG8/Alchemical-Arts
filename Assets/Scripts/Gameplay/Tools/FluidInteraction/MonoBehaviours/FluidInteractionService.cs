@@ -54,7 +54,7 @@ public class FluidInteractionService : MonoBehaviour
 		}
 
 		fluidInputState.ValueRW.interactionRadius = fluidInputConfig.interactionRadiusBounds
-			.Clamp(fluidInputState.ValueRW.interactionRadius - scrollDelta * fluidInputConfig.scrollSpeed * Time.deltaTime);
+			.Clamp(fluidInputState.ValueRW.interactionRadius + scrollDelta * fluidInputConfig.scrollSpeed * Time.deltaTime);
 	}
 
 

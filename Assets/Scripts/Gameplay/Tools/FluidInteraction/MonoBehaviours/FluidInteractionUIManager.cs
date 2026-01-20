@@ -22,9 +22,10 @@ public class FluidInteractionUIManager : MonoBehaviour
 	private FluidInteractionService FluidInteractionService { get; set; }
 
 
-	private void Awake()
+	private void Start()
 	{
 		HookupElements();
+		UpdateElementState();
 	}
 
 	private void Update()

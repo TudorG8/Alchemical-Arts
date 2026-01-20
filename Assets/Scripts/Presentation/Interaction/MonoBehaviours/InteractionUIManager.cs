@@ -23,9 +23,10 @@ namespace AlchemicalArts.Presentation.Interaction.MonoBehaviours
 		private InteractionService InteractionService { get; set; }
 
 
-		private void Awake()
+		private void Start()
 		{
 			HookupElements();
+			UpdateElementState();
 		}
 
 		private void Update()
