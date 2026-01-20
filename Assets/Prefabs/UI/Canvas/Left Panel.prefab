@@ -156,10 +156,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7906473241477338670, guid: 8e2d3d93b464b7e41868cda63f668e3e, type: 3}
-      propertyPath: buttons.Array.data[0].<Panel>k__BackingField
-      value: 
-      objectReference: {fileID: 2078294904409303797}
-    - target: {fileID: 7906473241477338670, guid: 8e2d3d93b464b7e41868cda63f668e3e, type: 3}
       propertyPath: <Buttons>k__BackingField.Array.data[0].<Panel>k__BackingField
       value: 
       objectReference: {fileID: 2078294904409303797}
