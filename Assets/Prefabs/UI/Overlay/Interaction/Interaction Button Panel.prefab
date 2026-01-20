@@ -293,10 +293,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799b57e4b834d0247b71f2cf00815067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionUIManager
-  buttons:
+  <Buttons>k__BackingField:
   - <Button>k__BackingField: {fileID: 8238152341638816575}
     <Panel>k__BackingField: {fileID: 0}
-  service: {fileID: 0}
+  <InteractionService>k__BackingField: {fileID: 0}
 --- !u!224 &7362490937316199281 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3691656948293988447, guid: 48cbfda01b3796c459cae5022eb29fe2, type: 3}

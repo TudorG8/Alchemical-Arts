@@ -1291,18 +1291,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574a9e25e5ccd9b43a9976293a93622d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AlchemicalArts.Gameplay.Display.Fluid::FluidDraggingUIManager
-  dragSettings:
-  - mode: 0
-    displayText: Idle
-    color: {r: 0.90196085, g: 0.74509805, b: 0.41176474, a: 1}
-  - mode: 1
-    displayText: Inwards
-    color: {r: 0.4518023, g: 0.9019608, b: 0.4117647, a: 1}
-  - mode: 2
-    displayText: Outwards
-    color: {r: 0.9019608, g: 0.41176483, b: 0.4117647, a: 1}
-  modeText: {fileID: 4101624213646638090}
-  sizeSlider: {fileID: 414263953765112838}
+  <DragSettings>k__BackingField:
+  - {fileID: 11400000, guid: 6fd13e0a042324e48a8fddb3efa3b9c4, type: 2}
+  - {fileID: 11400000, guid: 94c022402fc242d4e9c67d3fe924e641, type: 2}
+  - {fileID: 11400000, guid: 02c61fd90221c3848b088c467fddd146, type: 2}
+  - {fileID: 11400000, guid: c4f5a378e88227d44858038baecc40f8, type: 2}
+  <ModeText>k__BackingField: {fileID: 4101624213646638090}
+  <SizeSlider>k__BackingField: {fileID: 414263953765112838}
+  <FluidInteractionService>k__BackingField: {fileID: 0}
 --- !u!1 &6375287468028151888
 GameObject:
   m_ObjectHideFlags: 0

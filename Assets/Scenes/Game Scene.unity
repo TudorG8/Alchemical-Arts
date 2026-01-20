@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: AlchemicalArts.Gameplay.Display.Fluid::FluidDraggingTool
   <Camera>k__BackingField: {fileID: 1993627402}
+  <FluidInteractionService>k__BackingField: {fileID: 675837620}
 --- !u!1001 &304019949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -413,6 +414,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1119882667460055378, guid: f639ddfffbf916541bb3fcabe20b11c0, type: 3}
+      propertyPath: <InteractionService>k__BackingField
+      value: 
+      objectReference: {fileID: 675837618}
     - target: {fileID: 1780135335776668710, guid: f639ddfffbf916541bb3fcabe20b11c0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -737,6 +742,10 @@ PrefabInstance:
       propertyPath: dragSettings.Array.data[3].displayText
       value: Outwards
       objectReference: {fileID: 0}
+    - target: {fileID: 5026127699850472449, guid: f639ddfffbf916541bb3fcabe20b11c0, type: 3}
+      propertyPath: <FluidInteractionService>k__BackingField
+      value: 
+      objectReference: {fileID: 675837620}
     - target: {fileID: 5429449819401448431, guid: f639ddfffbf916541bb3fcabe20b11c0, type: 3}
       propertyPath: m_Enabled
       value: 1
