@@ -1,4 +1,5 @@
 using AlchemicalArts.Presentation.Interaction.Models;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace AlchemicalArts.Presentation.Interaction.MonoBehaviours
 
 		public void SetInteractionMode(InteractionMode mode)
 		{
-			if (!InteractionModeQuery.TryGetSingletonRW<InteractionModeState>(out var interactionModeState))
+			if (!InteractionModeRWQuery.TryGetSingletonRW<InteractionModeState>(out var interactionModeState))
 			{
 				return;
 			}
@@ -34,10 +35,10 @@ namespace AlchemicalArts.Presentation.Interaction.MonoBehaviours
 			var queryBuilder = new EntityQueryBuilder(Allocator.Temp);
 			InteractionModeQuery = queryBuilder
 				.WithAll<InteractionModeState>()
-				.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 			InteractionModeRWQuery = queryBuilder
 				.WithAllRW<InteractionModeState>()
-				.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 		}
 	}
 }

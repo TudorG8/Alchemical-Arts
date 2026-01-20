@@ -70,11 +70,11 @@ public class FluidInteractionService : MonoBehaviour
 			.WithAllRW<DraggingParticlesModeState>()
 			.WithAllRW<FluidInputState>()
 			.WithAll<FluidInputConfig>()
-			.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+			.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 		FluidInputQuery = queryBuilder
 			.WithAll<DraggingParticlesModeState>()
 			.WithAll<FluidInputState>()
 			.WithAll<FluidInputConfig>()
-			.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+			.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 	}
 }

@@ -1,5 +1,6 @@
 using AlchemicalArts.Presentation.FluidRendering.Components;
 using AlchemicalArts.Presentation.FluidRendering.Models;
+using AlchemicalArts.Shared.Extensions;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace AlchemicalArts.Presentation.FluidRendering.MonoBehaviours
 
 		public void SetRenderingMode(FluidRenderingMode fluidRenderingMode)
 		{
-			if (!FluidRenderingQuery.TryGetSingletonRW<FluidRenderingState>(out var fluidRenderingState))
+			if (!FluidRenderingQueryRW.TryGetSingletonRW<FluidRenderingState>(out var fluidRenderingState))
 			{
 				return;
 			}
@@ -35,10 +36,10 @@ namespace AlchemicalArts.Presentation.FluidRendering.MonoBehaviours
 			var queryBuilder = new EntityQueryBuilder(Allocator.Temp);
 			FluidRenderingQuery = queryBuilder
 				.WithAll<FluidRenderingState>()
-				.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 			FluidRenderingQueryRW = queryBuilder
 				.WithAllRW<FluidRenderingState>()
-				.Build(World.DefaultGameObjectInjectionWorld.EntityManager);
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
 		}
 	}
 }
