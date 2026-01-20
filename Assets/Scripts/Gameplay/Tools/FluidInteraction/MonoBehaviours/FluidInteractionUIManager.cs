@@ -1,11 +1,13 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Collections.Generic;
 using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
 using AlchemicalArts.Gameplay.Tools.FluidInteraction.Data;
 using AlchemicalArts.Shared.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using ZLinq;
 
 namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.MonoBehaviours
 {
@@ -49,7 +51,15 @@ namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.MonoBehaviours
 				return;
 			}
 
-			var dragSetting = DragSettings.FirstOrDefault(d => d.Mode == draggingParticlesModeState.mode);
+			FluidDragSettings dragSetting = null;
+			foreach(var setting in DragSettings)
+			{
+				if (setting.Mode == draggingParticlesModeState.mode)
+				{
+					dragSetting = setting;
+					break;
+				}
+			}
 			if (dragSetting != null)
 			{
 				ModeText.text = dragSetting.DisplayText.GetLocalizedString();
