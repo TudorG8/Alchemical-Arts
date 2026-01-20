@@ -66,12 +66,12 @@ MonoBehaviour:
     m_PointSize: 96
     m_Scale: 1
     m_UnitsPerEM: 1000
-    m_LineHeight: 96.864
-    m_AscentLine: 72
-    m_CapLine: 83
-    m_MeanLine: 70
+    m_LineHeight: 100.37
+    m_AscentLine: 82.6
+    m_CapLine: 82.6
+    m_MeanLine: 82.6
     m_Baseline: 0
-    m_DescentLine: 9.2
+    m_DescentLine: -12.9
     m_SuperscriptOffset: 72
     m_SuperscriptSize: 0.5
     m_SubscriptOffset: -24
@@ -96,7 +96,7 @@ MonoBehaviour:
     atlasHeight: 1024
     characterSetSelectionMode: 0
     characterSequence: 32 - 126, 160, 8203, 8230, 9633
-    referencedFontAssetGUID: 18f57c4b0b9a084448192cc88f2f84c2
+    referencedFontAssetGUID: 
     referencedTextAssetGUID: 
     fontStyle: 0
     fontStyleModifier: 0
