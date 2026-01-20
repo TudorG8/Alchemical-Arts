@@ -9,5 +9,15 @@ namespace AlchemicalArts.Shared.Extensions
 		{
 			return math.clamp(value, input.minimum, input.maximum);
 		}
+
+		public static float Percentage(this MinMaxFloatValue input, float value)
+		{
+			return (value - input.minimum) / (input.maximum - input.minimum);
+		}
+
+		public static float PercentageValue(this MinMaxFloatValue input, float percentage)
+		{
+			return input.minimum + (input.maximum - input.minimum) * percentage;
+		}
 	}
 }
