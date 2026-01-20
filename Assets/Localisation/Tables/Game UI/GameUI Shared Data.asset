@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: GameUI Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: GameUI
+  m_TableCollectionNameGuidString: e21a975443b199f4aa95e49f14c69e4d
+  m_Entries:
+  - m_Id: 21218034966528
+    m_Key: GameUI.FluidDragMode.Outwards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21181829734400
+    m_Key: GameUI.FluidDragMode.Inwards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20171493203968
+    m_Key: GameUI.FluidDragMode.Idle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23849348358144
+    m_Key: Game Scene/UI Game Canvas/Right Panel/Overlay Button Panel/Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15382986350592
+    m_Key: Game Scene/UI Game Canvas/Left Panel/Interaction Button Panel/Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23635472408576
+    m_Key: Game Scene/UI Game Canvas/Left Panel/Fluid Interaction Tool Panel/Content/Size
+      Change Row/Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22851150143488
+    m_Key: Game Scene/UI Game Canvas/Left Panel/Fluid Interaction Tool Panel/Content/Mode
+      Information Row/Label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22665355059200
+    m_Key: Game Scene/UI Game Canvas/Left Panel/Fluid Interaction Tool Panel/Content/Header
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3056171104643055825
+  references:
+    version: 2
+    RefIds:
+    - rid: 3056171104643055825
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1768931984271

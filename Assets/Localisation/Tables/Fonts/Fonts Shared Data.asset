@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Fonts Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: Fonts
+  m_TableCollectionNameGuidString: ebf547816f30ea648b76788448996069
+  m_Entries:
+  - m_Id: 7590633472
+    m_Key: Primary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 219344265216
+    m_Key: PrimaryMaterial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 47314886656
+    m_Key: Secondary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237564321792
+    m_Key: SecondaryMaterial
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items:
+    - rid: 3056171104643055862
+    - rid: 3056171104643055863
+  m_KeyGenerator:
+    rid: 3056171104643055861
+  references:
+    version: 2
+    RefIds:
+    - rid: 3056171104643055861
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1768934744654
+    - rid: 3056171104643055862
+      type: {class: AssetTypeMetadata, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries:
+        - m_KeyId: 7590633472
+          m_TableCodes:
+          - en
+          - fr
+        - m_KeyId: 47314886656
+          m_TableCodes:
+          - en
+          - fr
+        - m_KeyId: 219344265216
+          m_TableCodes:
+          - en
+          - fr
+        - m_KeyId: 237564321792
+          m_TableCodes:
+          - en
+          - fr
+        m_TypeString: TMPro.TMP_FontAsset, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+    - rid: 3056171104643055863
+      type: {class: AssetTypeMetadata, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries:
+        - m_KeyId: 219344265216
+          m_TableCodes:
+          - en
+          - fr
+        - m_KeyId: 237564321792
+          m_TableCodes:
+          - en
+          - fr
+        m_TypeString: UnityEngine.Material, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null

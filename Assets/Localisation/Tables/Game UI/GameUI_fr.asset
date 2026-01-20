@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: GameUI_fr
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: e21a975443b199f4aa95e49f14c69e4d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 15382986350592
+    m_Localized: INTERACTION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20171493203968
+    m_Localized: Inactif
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22665355059200
+    m_Localized: Mode de trainee fluide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21181829734400
+    m_Localized: "Vers l'int\xE9rieur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21218034966528
+    m_Localized: "Vers l'ext\xE9rieur"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22851150143488
+    m_Localized: Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23635472408576
+    m_Localized: Taille
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23849348358144
+    m_Localized: REVETEMENT
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
