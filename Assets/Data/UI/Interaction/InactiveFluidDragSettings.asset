@@ -13,5 +13,16 @@ MonoBehaviour:
   m_Name: InactiveFluidDragSettings
   m_EditorClassIdentifier: AlchemicalArts.Gameplay.Tools.FluidInteraction::AlchemicalArts.Gameplay.Tools.Data.FluidDragSettings
   <Mode>k__BackingField: 0
-  <DisplayText>k__BackingField: Idle
+  <DisplayText>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:e21a975443b199f4aa95e49f14c69e4d
+    m_TableEntryReference:
+      m_KeyId: 20171493203968
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Color>k__BackingField: {r: 0.90196085, g: 0.74509805, b: 0.41176474, a: 1}
+  references:
+    version: 2
+    RefIds: []

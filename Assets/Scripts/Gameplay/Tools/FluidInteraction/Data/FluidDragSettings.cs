@@ -1,5 +1,6 @@
 using AlchemicalArts.Core.Fluid.Interaction.Models;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace AlchemicalArts.Gameplay.Tools.Data
 {
@@ -11,7 +12,7 @@ namespace AlchemicalArts.Gameplay.Tools.Data
 		public DraggingParticlesMode Mode { get; private set; }
 
 		[field:SerializeField]
-		public string DisplayText { get; private set; }
+		public LocalizedString DisplayText { get; private set; }
 
 		[field:SerializeField]
 		public Color Color { get; private set; }

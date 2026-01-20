@@ -50,7 +50,7 @@ public class FluidInteractionUIManager : MonoBehaviour
 		var dragSetting = DragSettings.FirstOrDefault(d => d.Mode == draggingParticlesModeState.mode);
 		if (dragSetting != null)
 		{
-			ModeText.text = dragSetting.DisplayText;
+			ModeText.text = dragSetting.DisplayText.GetLocalizedString();
 			ModeText.color = dragSetting.Color;
 		}
 

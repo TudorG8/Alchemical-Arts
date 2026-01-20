@@ -13,5 +13,16 @@ MonoBehaviour:
   m_Name: OutwardsFluidDragSettings
   m_EditorClassIdentifier: AlchemicalArts.Gameplay.Tools.FluidInteraction::AlchemicalArts.Gameplay.Tools.Data.FluidDragSettings
   <Mode>k__BackingField: 3
-  <DisplayText>k__BackingField: Outwards
+  <DisplayText>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: GUID:e21a975443b199f4aa95e49f14c69e4d
+    m_TableEntryReference:
+      m_KeyId: 21218034966528
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   <Color>k__BackingField: {r: 0.9019608, g: 0.4305724, b: 0.4117647, a: 1}
+  references:
+    version: 2
+    RefIds: []
