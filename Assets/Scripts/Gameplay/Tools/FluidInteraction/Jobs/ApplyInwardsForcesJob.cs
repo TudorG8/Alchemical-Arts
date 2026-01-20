@@ -1,10 +1,10 @@
-using AlchemicalArts.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Jobs
 {
 	[BurstCompile]
 	public partial struct ApplyInwardsForcesJob : IJobParallelFor

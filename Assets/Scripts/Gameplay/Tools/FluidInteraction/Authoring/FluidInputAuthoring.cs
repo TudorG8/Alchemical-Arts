@@ -1,10 +1,10 @@
-using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Models;
 using AlchemicalArts.Shared.Models;
 using Unity.Entities;
 using UnityEngine;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Authoring
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Authoring
 {
 	public class FluidInputAuthoring : MonoBehaviour
 	{

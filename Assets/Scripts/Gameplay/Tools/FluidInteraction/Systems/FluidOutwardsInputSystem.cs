@@ -1,13 +1,13 @@
 using Unity.Burst;
 using Unity.Entities;
-using AlchemicalArts.Core.Fluid.Interaction.Groups;
-using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Core.Fluid.Interaction.Models;
-using AlchemicalArts.Core.Fluid.Interaction.Jobs;
 using AlchemicalArts.Core.SpatialPartioning.Systems;
 using AlchemicalArts.Shared.Extensions;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Groups;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Models;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Jobs;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Systems
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Systems
 {
 	[UpdateInGroup(typeof(FluidInteractionGroup))]
 	public partial struct FluidOutwardsInputSystem : ISystem

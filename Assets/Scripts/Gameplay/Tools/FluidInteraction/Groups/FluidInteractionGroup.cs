@@ -1,7 +1,7 @@
 using AlchemicalArts.Core.Fluid.Simulation.Groups;
 using Unity.Entities;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Groups
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Groups
 {
 	[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 	[UpdateAfter(typeof(FluidPhysicsGroup))]

@@ -1,11 +1,11 @@
-using AlchemicalArts.Core.Fluid.Interaction.Components;
 using AlchemicalArts.Core.SpatialPartioning.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Jobs
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Jobs
 {
 	[BurstCompile]
 	public partial struct ApplyOutwardsForcesJob : IJobEntity

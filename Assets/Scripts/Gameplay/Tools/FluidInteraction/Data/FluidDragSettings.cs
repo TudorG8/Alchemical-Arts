@@ -1,4 +1,4 @@
-using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Models;
 using UnityEngine;
 using UnityEngine.Localization;
 

@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace AlchemicalArts.Core.Fluid.Interaction.Components
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Components
 {
 	public struct FluidInputState : IComponentData
 	{

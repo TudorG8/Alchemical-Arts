@@ -1,5 +1,5 @@
-using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Models;
 using AlchemicalArts.Shared.Extensions;
 using Unity.Burst;
 using Unity.Entities;

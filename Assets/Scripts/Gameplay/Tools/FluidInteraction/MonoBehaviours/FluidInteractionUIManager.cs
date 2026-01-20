@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using AlchemicalArts.Core.Fluid.Interaction.Components;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Components;
 using AlchemicalArts.Gameplay.Tools.FluidInteraction.Data;
 using AlchemicalArts.Shared.Extensions;
 using TMPro;

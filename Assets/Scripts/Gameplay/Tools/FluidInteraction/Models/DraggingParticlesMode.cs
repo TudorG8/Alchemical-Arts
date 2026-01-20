@@ -1,4 +1,4 @@
-namespace AlchemicalArts.Core.Fluid.Interaction.Models
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Models
 {
 	public enum DraggingParticlesMode
 	{
