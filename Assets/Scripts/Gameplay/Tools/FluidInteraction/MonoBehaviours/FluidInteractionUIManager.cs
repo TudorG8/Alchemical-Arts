@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Core.Fluid.Interaction.Models;
+using AlchemicalArts.Gameplay.Tools.Data;
 using AlchemicalArts.Shared.Extensions;
 using TMPro;
 using UnityEngine;
@@ -9,20 +9,6 @@ using UnityEngine.UI;
 
 public class FluidInteractionUIManager : MonoBehaviour
 {
-	[System.Serializable]
-	private class FluidDragSettings : ScriptableObject
-	{
-		[field:SerializeField]
-		public DraggingParticlesMode Mode { get; private set; }
-
-		[field:SerializeField]
-		public string DisplayText { get; private set; }
-
-		[field:SerializeField]
-		public Color Color { get; private set; }
-	}
-
-
 	[field: SerializeField]
 	private List<FluidDragSettings> DragSettings { get; set; }
 
