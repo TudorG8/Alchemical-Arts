@@ -2,7 +2,7 @@ using AlchemicalArts.Core.Fluid.Interaction.Models;
 using UnityEngine;
 using UnityEngine.Localization;
 
-namespace AlchemicalArts.Gameplay.Tools.Data
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Data
 {
 	[System.Serializable]
 	[CreateAssetMenu(fileName = "FluidDragSettings", menuName = "AlchemicalArts/UI/FluidDragSettings", order = 0)]

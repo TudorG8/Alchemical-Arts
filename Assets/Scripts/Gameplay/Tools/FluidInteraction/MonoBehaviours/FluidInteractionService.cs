@@ -6,75 +6,78 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class FluidInteractionService : MonoBehaviour
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.MonoBehaviours
 {
-	public EntityQuery FluidInputQuery { get; private set; }
-
-
-	private EntityQuery FluidInputRWQuery { get; set;}
-
-
-	public void SetInteractionRadiusToPercentage(float percentage)
+	public class FluidInteractionService : MonoBehaviour
 	{
-		if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState) ||
-			!FluidInputRWQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+		public EntityQuery FluidInputQuery { get; private set; }
+
+
+		private EntityQuery FluidInputRWQuery { get; set;}
+
+
+		public void SetInteractionRadiusToPercentage(float percentage)
 		{
-			return;
+			if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState) ||
+				!FluidInputRWQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+			{
+				return;
+			}
+
+			fluidInputState.ValueRW.interactionRadius = fluidInputConfig.interactionRadiusBounds.PercentageValue(percentage);
 		}
 
-		fluidInputState.ValueRW.interactionRadius = fluidInputConfig.interactionRadiusBounds.PercentageValue(percentage);
-	}
-
-	public void SetInteractionMode(DraggingParticlesMode mode)
-	{
-		if (World.DefaultGameObjectInjectionWorld == null || !FluidInputRWQuery.TryGetSingletonRW<DraggingParticlesModeState>(out var draggingParticlesModeState))
+		public void SetInteractionMode(DraggingParticlesMode mode)
 		{
-			return;
+			if (World.DefaultGameObjectInjectionWorld == null || !FluidInputRWQuery.TryGetSingletonRW<DraggingParticlesModeState>(out var draggingParticlesModeState))
+			{
+				return;
+			}
+
+			draggingParticlesModeState.ValueRW.mode = mode;
 		}
 
-		draggingParticlesModeState.ValueRW.mode = mode;
-	}
-
-	public void SetInteractionPosition(float2 position)
-	{
-		if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState))
+		public void SetInteractionPosition(float2 position)
 		{
-			return;
+			if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState))
+			{
+				return;
+			}
+
+			fluidInputState.ValueRW.position = position;
 		}
 
-		fluidInputState.ValueRW.position = position;
-	}
-
-	public void ApplyScrollDelta(float scrollDelta)
-	{
-		if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState) ||
-			!FluidInputRWQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+		public void ApplyScrollDelta(float scrollDelta)
 		{
-			return;
+			if (!FluidInputRWQuery.TryGetSingletonRW<FluidInputState>(out var fluidInputState) ||
+				!FluidInputRWQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+			{
+				return;
+			}
+
+			fluidInputState.ValueRW.interactionRadius = fluidInputConfig.interactionRadiusBounds
+				.Clamp(fluidInputState.ValueRW.interactionRadius + scrollDelta * fluidInputConfig.scrollSpeed * Time.deltaTime);
 		}
 
-		fluidInputState.ValueRW.interactionRadius = fluidInputConfig.interactionRadiusBounds
-			.Clamp(fluidInputState.ValueRW.interactionRadius + scrollDelta * fluidInputConfig.scrollSpeed * Time.deltaTime);
-	}
 
+		private void Awake()
+		{
+			Initialize();
+		}
 
-	private void Awake()
-	{
-		Initialize();
-	}
-
-	private void Initialize()
-	{
-		var queryBuilder = new EntityQueryBuilder(Allocator.Temp);
-		FluidInputRWQuery = queryBuilder
-			.WithAllRW<DraggingParticlesModeState>()
-			.WithAllRW<FluidInputState>()
-			.WithAll<FluidInputConfig>()
-			.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
-		FluidInputQuery = queryBuilder
-			.WithAll<DraggingParticlesModeState>()
-			.WithAll<FluidInputState>()
-			.WithAll<FluidInputConfig>()
-			.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
+		private void Initialize()
+		{
+			var queryBuilder = new EntityQueryBuilder(Allocator.Temp);
+			FluidInputRWQuery = queryBuilder
+				.WithAllRW<DraggingParticlesModeState>()
+				.WithAllRW<FluidInputState>()
+				.WithAll<FluidInputConfig>()
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
+			FluidInputQuery = queryBuilder
+				.WithAll<DraggingParticlesModeState>()
+				.WithAll<FluidInputState>()
+				.WithAll<FluidInputConfig>()
+				.BuildAndReset(World.DefaultGameObjectInjectionWorld.EntityManager);
+		}
 	}
 }

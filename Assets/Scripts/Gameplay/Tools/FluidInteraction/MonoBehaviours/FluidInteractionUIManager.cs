@@ -1,59 +1,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using AlchemicalArts.Core.Fluid.Interaction.Components;
-using AlchemicalArts.Gameplay.Tools.Data;
+using AlchemicalArts.Gameplay.Tools.FluidInteraction.Data;
 using AlchemicalArts.Shared.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FluidInteractionUIManager : MonoBehaviour
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.MonoBehaviours
 {
-	[field: SerializeField]
-	private List<FluidDragSettings> DragSettings { get; set; }
-
-	[field: SerializeField]
-	private TextMeshProUGUI ModeText { get; set; }
-
-	[field: SerializeField]
-	private Slider SizeSlider { get; set; }
-	
-	[field: SerializeField]
-	private FluidInteractionService FluidInteractionService { get; set; }
-
-
-	private void Start()
+	public class FluidInteractionUIManager : MonoBehaviour
 	{
-		HookupElements();
-		UpdateElementState();
-	}
+		[field: SerializeField]
+		private List<FluidDragSettings> DragSettings { get; set; }
 
-	private void Update()
-	{
-		UpdateElementState();
-	}
+		[field: SerializeField]
+		private TextMeshProUGUI ModeText { get; set; }
 
-	private void HookupElements()
-	{
-		SizeSlider.onValueChanged.AddListener(FluidInteractionService.SetInteractionRadiusToPercentage);
-	}
+		[field: SerializeField]
+		private Slider SizeSlider { get; set; }
+		
+		[field: SerializeField]
+		private FluidInteractionService FluidInteractionService { get; set; }
 
-	private void UpdateElementState()
-	{
-		if (!FluidInteractionService.FluidInputQuery.TryGetSingleton<DraggingParticlesModeState>(out var draggingParticlesModeState) ||
-			!FluidInteractionService.FluidInputQuery.TryGetSingleton<FluidInputState>(out var fluidInputState) ||
-			!FluidInteractionService.FluidInputQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+
+		private void Start()
 		{
-			return;
+			HookupElements();
+			UpdateElementState();
 		}
 
-		var dragSetting = DragSettings.FirstOrDefault(d => d.Mode == draggingParticlesModeState.mode);
-		if (dragSetting != null)
+		private void Update()
 		{
-			ModeText.text = dragSetting.DisplayText.GetLocalizedString();
-			ModeText.color = dragSetting.Color;
+			UpdateElementState();
 		}
 
-		SizeSlider.SetValueWithoutNotify(fluidInputConfig.interactionRadiusBounds.Percentage(fluidInputState.interactionRadius));
+		private void HookupElements()
+		{
+			SizeSlider.onValueChanged.AddListener(FluidInteractionService.SetInteractionRadiusToPercentage);
+		}
+
+		private void UpdateElementState()
+		{
+			if (!FluidInteractionService.FluidInputQuery.TryGetSingleton<DraggingParticlesModeState>(out var draggingParticlesModeState) ||
+				!FluidInteractionService.FluidInputQuery.TryGetSingleton<FluidInputState>(out var fluidInputState) ||
+				!FluidInteractionService.FluidInputQuery.TryGetSingleton<FluidInputConfig>(out var fluidInputConfig))
+			{
+				return;
+			}
+
+			var dragSetting = DragSettings.FirstOrDefault(d => d.Mode == draggingParticlesModeState.mode);
+			if (dragSetting != null)
+			{
+				ModeText.text = dragSetting.DisplayText.GetLocalizedString();
+				ModeText.color = dragSetting.Color;
+			}
+
+			SizeSlider.SetValueWithoutNotify(fluidInputConfig.interactionRadiusBounds.Percentage(fluidInputState.interactionRadius));
+		}
 	}
 }

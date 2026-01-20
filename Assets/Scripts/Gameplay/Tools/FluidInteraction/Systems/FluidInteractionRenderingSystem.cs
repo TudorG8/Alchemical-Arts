@@ -6,7 +6,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace AlchemicalArts.Gameplay.Input.Systems
+namespace AlchemicalArts.Gameplay.Tools.FluidInteraction.Systems
 {
 	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public partial struct FluidInteractionRenderingSystem : ISystem
