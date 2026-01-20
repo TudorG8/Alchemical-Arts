@@ -31,7 +31,7 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Authoring
 			var entity = GetEntity(TransformUsageFlags.Dynamic);
 			AddComponent(entity, new DraggingParticlesModeState()
 			{
-				mode = DraggingParticlesMode.Idle
+				mode = DraggingParticlesMode.Inactive
 			});
 			
 			AddComponent(entity, new FluidInputState()

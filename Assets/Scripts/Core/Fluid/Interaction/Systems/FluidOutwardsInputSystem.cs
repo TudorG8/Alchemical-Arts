@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Input.Components;
 using Unity.Burst;
 using Unity.Entities;
 using AlchemicalArts.Core.Fluid.Interaction.Groups;
@@ -16,7 +15,7 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<InputDataConfig>();
+			state.RequireForUpdate<DraggingParticlesModeState>();
 		}
 
 		[BurstCompile]

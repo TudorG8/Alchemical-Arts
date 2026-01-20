@@ -1,4 +1,3 @@
-using AlchemicalArts.Core.Input.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
@@ -17,7 +16,7 @@ namespace AlchemicalArts.Core.Fluid.Interaction.Systems
 		[BurstCompile]
 		public void OnCreate(ref SystemState state)
 		{
-			state.RequireForUpdate<InputDataConfig>();
+			state.RequireForUpdate<DraggingParticlesModeState>();
 		}
 
 		[BurstCompile]
